@@ -47,7 +47,7 @@ Page({
       checked: pageState.vibrationEnabled,
       checked_change_func: (_widget, checked) => this.setVibrationEnabled(checked),
     });
-    this.addText(text("vibrationDescription"), 45, 184, 390, 58, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
+    this.addText(text("vibrationDescription"), 45, 184, 390, 48, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
     const timeoutLabel = {
       0: text("timeoutSystemShort"),
@@ -55,13 +55,13 @@ Page({
       30000: text("timeout30Short"),
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
-    this.addText(text("screenTimeout"), 68, 240, 226, 72, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
-    this.addText(timeoutLabel, 282, 240, 82, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT);
-    this.addText("›", 366, 238, 42, 72, TYPOGRAPHY.title1, COLORS.textSecondaryInfo);
+    this.addText(text("screenTimeout"), 68, 252, 226, 72, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
+    this.addText(timeoutLabel, 282, 252, 82, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT);
+    this.addText("›", 366, 250, 42, 72, TYPOGRAPHY.title1, COLORS.textSecondaryInfo);
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 54,
-      y: 240,
+      y: 252,
       w: 372,
       h: 72,
       normal_src: "image/settings_row_normal.png",
@@ -72,7 +72,7 @@ Page({
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: `${text("about")}  ›`,
       x: 92,
-      y: 338,
+      y: 344,
       w: 296,
       h: 66,
       color: COLORS.textButton,

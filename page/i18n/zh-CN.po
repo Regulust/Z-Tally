@@ -94,12 +94,6 @@ msgstr "已保存 30 条记录。\n请删除部分历史后再保存。"
 msgid "back"
 msgstr "返回"
 
-msgid "cancel"
-msgstr "取消"
-
-msgid "confirm"
-msgstr "确认"
-
 msgid "resetConfirmTitle"
 msgstr "清零计数器？"
 

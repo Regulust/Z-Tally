@@ -3,15 +3,18 @@ from pathlib import Path
 from PIL import Image
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
-WORKSPACE_DIR = PROJECT_DIR.parent
-SOURCE_ICON = WORKSPACE_DIR / "Z-Tally_icon_light_240.png"
+PROJECT_DIR = Path(__file__).parent.parent
+SOURCE_ICON = PROJECT_DIR / "release" / "icon-source.png"
+SAFE_MARGIN = 2
 
 
 def save_resized(source: Image.Image, path: Path, size: int) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    resized = source.resize((size, size), Image.Resampling.LANCZOS)
-    resized.save(path, "PNG", optimize=True)
+    content_size = size - SAFE_MARGIN * 2
+    resized = source.resize((content_size, content_size), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    canvas.alpha_composite(resized, (SAFE_MARGIN, SAFE_MARGIN))
+    canvas.save(path, "PNG", optimize=True)
 
 
 def main() -> None:

@@ -94,12 +94,6 @@ msgstr "30 results saved.\nDelete some history before saving again."
 msgid "back"
 msgstr "Back"
 
-msgid "cancel"
-msgstr "Cancel"
-
-msgid "confirm"
-msgstr "Confirm"
-
 msgid "resetConfirmTitle"
 msgstr "Reset counter?"
 

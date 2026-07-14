@@ -9,6 +9,8 @@ import {
   KEY_SELECT,
   KEY_SHORTCUT,
   KEY_EVENT_CLICK,
+  MODAL_CONFIRM,
+  createModal,
   showToast,
 } from "@zos/interaction";
 import { log as Logger } from "@zos/utils";
@@ -21,7 +23,6 @@ let vibrator = null;
 let pageState = null;
 let pageWidgets = [];
 let currentView = "main";
-let pendingAction = null;
 let counterValueWidget = null;
 let minusButtonWidget = null;
 let saveButtonWidget = null;
@@ -374,30 +375,21 @@ Page({
   requestReset() {
     const counter = this.activeCounter();
     if (counter.value === 0) return;
-    pendingAction = { type: "reset", counterId: counter.id };
-    this.renderConfirm(
-      text("resetConfirmTitle"),
-      formatText("resetConfirmDetail", { counter: localizedCounterName(counter.id) }),
-    );
-  },
-
-  confirmAction() {
-    if (!pendingAction) return this.renderMain();
-
-    if (pendingAction.type === "reset") {
-      const counter = pageState.counters.find((item) => item.id === pendingAction.counterId);
-      if (counter) counter.value = 0;
-    }
-
-    pendingAction = null;
-    this.persistNow();
-    this.pulse();
-    this.renderMain();
-  },
-
-  cancelAction() {
-    pendingAction = null;
-    this.renderMain();
+    const counterId = counter.id;
+    currentView = "modal";
+    createModal({
+      content: `${text("resetConfirmTitle")}\n${formatText("resetConfirmDetail", { counter: localizedCounterName(counterId) })}`,
+      onClick: ({ type }) => {
+        currentView = "main";
+        if (type !== MODAL_CONFIRM) return;
+        const target = pageState.counters.find((item) => item.id === counterId);
+        if (!target) return;
+        target.value = 0;
+        this.persistNow();
+        this.pulse();
+        this.updateCounterControls();
+      },
+    });
   },
 
   renderMain() {
@@ -462,12 +454,4 @@ Page({
     this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/gt/history/index.page" }) });
   },
 
-  renderConfirm(title, detail) {
-    currentView = "confirm";
-    this.clearWidgets();
-    this.addText(title, 50, 105, 380, 58, TYPOGRAPHY.title);
-    this.addText(detail, 55, 170, 370, 70, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-    this.addButton({ text: text("cancel"), x: 70, y: 277, w: 150, h: 68, size: TYPOGRAPHY.caption, onClick: () => this.cancelAction() });
-    this.addButton({ text: text("confirm"), x: 260, y: 277, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed, onClick: () => this.confirmAction() });
-  },
 });

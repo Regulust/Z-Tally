@@ -1,5 +1,6 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
+import { MODAL_CONFIRM, createModal } from "@zos/interaction";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
@@ -8,8 +9,6 @@ const COLORS = {
   background: 0x000000,
   sysWarning: 0xad3c23,
   sysWarningPressed: 0x7b2b19,
-  sysButtonBg: 0x383838,
-  sysButtonPressed: 0x282828,
   textTitle: 0xffffff,
   textButton: 0xffffff,
   textSecondaryInfo: 0x808080,
@@ -19,7 +18,6 @@ let pageState = null;
 let widgets = [];
 let vibrator = null;
 let vibrationStopTimer = null;
-let pendingDeleteId = null;
 
 function text(key) {
   return getText(key) || key;
@@ -111,7 +109,6 @@ Page({
 
   renderHistory() {
     this.clearWidgets();
-    pendingDeleteId = null;
     this.addText(text("history"), 0, 14, 480, 50, TYPOGRAPHY.title);
     this.addText(`${pageState.results.length} / ${HISTORY_LIMIT}`, 0, 58, 480, 32, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
@@ -184,7 +181,7 @@ Page({
           radius: 17,
           normal_color: COLORS.sysWarning,
           press_color: COLORS.sysWarningPressed,
-          click_func: () => this.renderDeleteConfirm(item.id),
+          click_func: () => this.requestDelete(item.id),
         });
       });
       list.createWidget(hmUI.widget.FILL_RECT, {
@@ -201,31 +198,16 @@ Page({
     }
   },
 
-  renderDeleteConfirm(resultId) {
-    pendingDeleteId = resultId;
-    this.clearWidgets();
-    this.addText(text("deleteConfirmTitle"), 50, 108, 380, 62, TYPOGRAPHY.title);
-    this.addText(text("deleteConfirmDetail"), 55, 176, 370, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-    this.addWidget(hmUI.widget.BUTTON, {
-      text: text("cancel"), x: 68, y: 280, w: 154, h: 70,
-      color: COLORS.textButton, text_size: TYPOGRAPHY.subheadline, radius: 20,
-      normal_color: COLORS.sysButtonBg, press_color: COLORS.sysButtonPressed,
-      click_func: () => this.renderHistory(),
+  requestDelete(resultId) {
+    createModal({
+      content: `${text("deleteConfirmTitle")}\n${text("deleteConfirmDetail")}`,
+      onClick: ({ type }) => {
+        if (type !== MODAL_CONFIRM) return;
+        pageState.results = pageState.results.filter((item) => item.id !== resultId);
+        saveState(pageState);
+        this.pulse();
+        this.renderHistory();
+      },
     });
-    this.addWidget(hmUI.widget.BUTTON, {
-      text: text("confirm"), x: 258, y: 280, w: 154, h: 70,
-      color: COLORS.textButton, text_size: TYPOGRAPHY.subheadline, radius: 20,
-      normal_color: COLORS.sysWarning, press_color: COLORS.sysWarningPressed,
-      click_func: () => this.confirmDelete(),
-    });
-  },
-
-  confirmDelete() {
-    if (pendingDeleteId) {
-      pageState.results = pageState.results.filter((item) => item.id !== pendingDeleteId);
-      saveState(pageState);
-      this.pulse();
-    }
-    this.renderHistory();
   },
 });
