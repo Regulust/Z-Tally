@@ -110,7 +110,7 @@ msgid "tutorialTitle"
 msgstr "Quick start"
 
 msgid "tutorialCount"
-msgstr "Tap center / Down key: +1"
+msgstr "Tap center / Lower Button: +1"
 
 msgid "tutorialCounters"
 msgstr "1, 2, 3: separate counters"

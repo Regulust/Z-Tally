@@ -110,7 +110,7 @@ msgid "tutorialTitle"
 msgstr "快速入门"
 
 msgid "tutorialCount"
-msgstr "点中央 / 下键：+1"
+msgstr "点中央 / 下按钮：+1"
 
 msgid "tutorialCounters"
 msgstr "1、2、3：独立计数器"
