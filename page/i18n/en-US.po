@@ -1,0 +1,119 @@
+msgid "appName"
+msgstr "Z-Tally"
+
+msgid "tapPlusOne"
+msgstr "TAP  +1"
+
+msgid "save"
+msgstr "Save"
+
+msgid "reset"
+msgstr "Reset"
+
+msgid "history"
+msgstr "History"
+
+msgid "saved"
+msgstr "Saved"
+
+msgid "noSavedResults"
+msgstr "No saved results"
+
+msgid "counter"
+msgstr "Counter"
+
+msgid "counter1"
+msgstr "Counter 1"
+
+msgid "counter2"
+msgstr "Counter 2"
+
+msgid "counter3"
+msgstr "Counter 3"
+
+msgid "settings"
+msgstr "Settings"
+
+msgid "vibration"
+msgstr "Vibration"
+
+msgid "vibrationDescription"
+msgstr "One light pulse for successful actions"
+
+msgid "screenTimeout"
+msgstr "Screen timeout"
+
+msgid "timeoutSystemShort"
+msgstr "System"
+
+msgid "timeout15Short"
+msgstr "15 sec"
+
+msgid "timeout30Short"
+msgstr "30 sec"
+
+msgid "timeout1mShort"
+msgstr "1 min"
+
+msgid "timeoutSystemDefault"
+msgstr "System default"
+
+msgid "timeout15"
+msgstr "15 seconds"
+
+msgid "timeout30"
+msgstr "30 seconds"
+
+msgid "timeout1m"
+msgstr "1 minute"
+
+msgid "screenOnlyAffects"
+msgstr "Only affects Z-Tally"
+
+msgid "about"
+msgstr "About"
+
+msgid "aboutDescription"
+msgstr "A simple three-counter tally app"
+
+msgid "aboutFeatures"
+msgstr "Fast counting • Local history\nOffline and private"
+
+msgid "version"
+msgstr "Version 1.0.0"
+
+msgid "targetDevice"
+msgstr "For Amazfit Balance"
+
+msgid "developer"
+msgstr "Developer: Regulus"
+
+msgid "historyFullTitle"
+msgstr "History is full"
+
+msgid "historyFullDetail"
+msgstr "30 results saved.\nDelete some history before saving again."
+
+msgid "back"
+msgstr "Back"
+
+msgid "cancel"
+msgstr "Cancel"
+
+msgid "confirm"
+msgstr "Confirm"
+
+msgid "resetConfirmTitle"
+msgstr "Reset counter?"
+
+msgid "resetConfirmDetail"
+msgstr "{counter} will return to 0."
+
+msgid "deleteConfirmTitle"
+msgstr "Delete result?"
+
+msgid "deleteConfirmDetail"
+msgstr "This cannot be undone."
+
+msgid "errorTitle"
+msgstr "Z-Tally error"

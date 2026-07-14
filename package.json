@@ -1,0 +1,10 @@
+{
+  "name": "z-tally",
+  "version": "1.0.0",
+  "description": "A multi-counter tally app for Amazfit Balance running Zepp OS 4.0+",
+  "private": true,
+  "license": "ISC",
+  "devDependencies": {
+    "@zeppos/device-types": "^3.0.0"
+  }
+}

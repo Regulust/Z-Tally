@@ -1,0 +1,119 @@
+msgid "appName"
+msgstr "Z-Tally"
+
+msgid "tapPlusOne"
+msgstr "点击  +1"
+
+msgid "save"
+msgstr "保存"
+
+msgid "reset"
+msgstr "清零"
+
+msgid "history"
+msgstr "历史"
+
+msgid "saved"
+msgstr "已保存"
+
+msgid "noSavedResults"
+msgstr "暂无历史记录"
+
+msgid "counter"
+msgstr "计数器"
+
+msgid "counter1"
+msgstr "计数器 1"
+
+msgid "counter2"
+msgstr "计数器 2"
+
+msgid "counter3"
+msgstr "计数器 3"
+
+msgid "settings"
+msgstr "设置"
+
+msgid "vibration"
+msgstr "振动"
+
+msgid "vibrationDescription"
+msgstr "成功操作时轻震一次"
+
+msgid "screenTimeout"
+msgstr "亮屏时间"
+
+msgid "timeoutSystemShort"
+msgstr "系统"
+
+msgid "timeout15Short"
+msgstr "15 秒"
+
+msgid "timeout30Short"
+msgstr "30 秒"
+
+msgid "timeout1mShort"
+msgstr "1 分钟"
+
+msgid "timeoutSystemDefault"
+msgstr "跟随系统"
+
+msgid "timeout15"
+msgstr "15 秒"
+
+msgid "timeout30"
+msgstr "30 秒"
+
+msgid "timeout1m"
+msgstr "1 分钟"
+
+msgid "screenOnlyAffects"
+msgstr "仅影响 Z-Tally"
+
+msgid "about"
+msgstr "关于"
+
+msgid "aboutDescription"
+msgstr "简洁的三组计数器"
+
+msgid "aboutFeatures"
+msgstr "快速计数 • 本地历史\n离线使用，保护隐私"
+
+msgid "version"
+msgstr "版本 1.0.0"
+
+msgid "targetDevice"
+msgstr "适用于 Amazfit Balance"
+
+msgid "developer"
+msgstr "开发者：Regulus"
+
+msgid "historyFullTitle"
+msgstr "历史记录已满"
+
+msgid "historyFullDetail"
+msgstr "已保存 30 条记录。\n请删除部分历史后再保存。"
+
+msgid "back"
+msgstr "返回"
+
+msgid "cancel"
+msgstr "取消"
+
+msgid "confirm"
+msgstr "确认"
+
+msgid "resetConfirmTitle"
+msgstr "清零计数器？"
+
+msgid "resetConfirmDetail"
+msgstr "{counter} 将归零。"
+
+msgid "deleteConfirmTitle"
+msgstr "删除记录？"
+
+msgid "deleteConfirmDetail"
+msgstr "此操作无法撤销。"
+
+msgid "errorTitle"
+msgstr "Z-Tally 错误"

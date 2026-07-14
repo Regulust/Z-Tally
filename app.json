@@ -1,0 +1,56 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 28139,
+    "appName": "Z-Tally",
+    "appType": "app",
+    "version": {
+      "code": 1,
+      "name": "1.0.0"
+    },
+    "icon": "icon.png",
+    "vender": "Regulus",
+    "description": "A simple multi-counter tally app for Amazfit Balance"
+  },
+  "permissions": [
+    "device:os.local_storage"
+  ],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "3.0.0",
+      "target": "3.0.0",
+      "minVersion": "3.0"
+    }
+  },
+  "debug": false,
+  "targets": {
+    "gt": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/gt/home/index.page",
+            "page/gt/history/index.page",
+            "page/gt/settings/index.page",
+            "page/gt/screen-timeout/index.page",
+            "page/gt/about/index.page"
+          ]
+        }
+      },
+      "platforms": [
+        {
+          "st": "r"
+        }
+      ],
+      "designWidth": 480
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "appName": "Z-Tally"
+    },
+    "zh-CN": {
+      "appName": "Z-Tally"
+    }
+  },
+  "defaultLanguage": "en-US"
+}
