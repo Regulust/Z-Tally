@@ -1,9 +1,6 @@
 msgid "appName"
 msgstr "Z-Tally"
 
-msgid "tapPlusOne"
-msgstr "TAP  +1"
-
 msgid "save"
 msgstr "Save"
 
@@ -38,7 +35,7 @@ msgid "vibration"
 msgstr "Vibration"
 
 msgid "vibrationDescription"
-msgstr "One light pulse for successful actions"
+msgstr "Light pulse for actions"
 
 msgid "screenTimeout"
 msgstr "Screen timeout"
@@ -117,3 +114,18 @@ msgstr "This cannot be undone."
 
 msgid "errorTitle"
 msgstr "Z-Tally error"
+
+msgid "tutorialTitle"
+msgstr "Quick start"
+
+msgid "tutorialCount"
+msgstr "Tap the center to count +1"
+
+msgid "tutorialCounters"
+msgstr "1, 2, and 3 are independent counters"
+
+msgid "tutorialSave"
+msgstr "Save stores the current result in History"
+
+msgid "tutorialStart"
+msgstr "Start counting"

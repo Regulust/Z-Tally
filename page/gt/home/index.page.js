@@ -12,7 +12,8 @@ import {
   showToast,
 } from "@zos/interaction";
 import { log as Logger } from "@zos/utils";
-import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
+import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
+import { TYPOGRAPHY } from "../../../utils/theme";
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
@@ -29,6 +30,7 @@ let persistTimer = null;
 let vibrationStopTimer = null;
 let incrementFromPhysicalKey = null;
 let keyListenerRegistered = false;
+let tutorialOpened = false;
 
 const COLORS = {
   sysItemBg: 0x303030,
@@ -70,8 +72,8 @@ function counterTextSize(value) {
   if (digits <= 4) return 82;
   if (digits <= 6) return 68;
   if (digits <= 8) return 54;
-  if (digits <= 10) return 44;
-  return 36;
+  if (digits <= 10) return TYPOGRAPHY.largeTitle;
+  return TYPOGRAPHY.title1;
 }
 
 Page({
@@ -83,6 +85,7 @@ Page({
     }
     pageState = loadState();
     pageWidgets = [];
+    tutorialOpened = false;
   },
 
   build() {
@@ -112,6 +115,10 @@ Page({
       }
       this.applyScreenBrightTime();
       this.renderMain();
+      if (!tutorialOpened && !hasSeenTutorial()) {
+        tutorialOpened = true;
+        setTimeout(() => push({ url: "page/gt/tutorial/index.page" }), 0);
+      }
     } catch (error) {
       logger.error(`page render failed: ${error}`);
       pageWidgets = pageWidgets || [];
@@ -122,7 +129,7 @@ Page({
         w: 400,
         h: 220,
         color: COLORS.textWarning,
-        text_size: 24,
+        text_size: TYPOGRAPHY.caption,
         align_h: hmUI.align.CENTER_H,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.WRAP,
@@ -238,7 +245,7 @@ Page({
     });
   },
 
-  addButton({ text, x, y, w, h, onClick, color = COLORS.textButton, normal = COLORS.sysButtonBg, pressed = COLORS.sysButtonPressed, size = 28, radius = 18 }) {
+  addButton({ text, x, y, w, h, onClick, color = COLORS.textButton, normal = COLORS.sysButtonBg, pressed = COLORS.sysButtonPressed, size = TYPOGRAPHY.subheadline, radius = 18 }) {
     return this.addWidget(hmUI.widget.BUTTON, {
       text,
       x,
@@ -305,7 +312,7 @@ Page({
         w: 104,
         h: 58,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
-        text_size: 28,
+        text_size: TYPOGRAPHY.subheadline,
         radius: 18,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
@@ -321,7 +328,7 @@ Page({
         w: 104,
         h: 58,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
-        text_size: 23,
+        text_size: TYPOGRAPHY.caption,
         radius: 18,
         normal_color: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03,
         press_color: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed,
@@ -354,7 +361,7 @@ Page({
         w: 180,
         h: 52,
         color: COLORS.textButton,
-        text_size: 21,
+        text_size: TYPOGRAPHY.caption,
         radius: 18,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
@@ -398,7 +405,7 @@ Page({
     this.clearWidgets();
     const counter = this.activeCounter();
 
-    this.addText(text("appName"), 0, 22, 480, 42, 30);
+    this.addText(text("appName"), 0, 18, 480, 48, TYPOGRAPHY.title);
 
     pageState.counters.forEach((item, index) => {
       const active = item.id === counter.id;
@@ -408,7 +415,7 @@ Page({
         y: 67,
         w: 72,
         h: 44,
-        size: 22,
+        size: TYPOGRAPHY.caption,
         radius: 16,
         normal: active ? COLORS.sysKey : COLORS.sysButtonBg,
         pressed: active ? COLORS.sysKeyPressed : COLORS.sysButtonPressed,
@@ -428,14 +435,12 @@ Page({
       pressed: COLORS.sysItemPressed,
       onClick: () => this.changeValue(1),
     });
-    this.addText(text("tapPlusOne"), 0, 269, 480, 30, 18, COLORS.textSecondaryInfo);
-
-    minusButtonWidget = this.addButton({ text: "−1", x: 62, y: 318, w: 104, h: 58, size: 28, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    minusButtonWidget = this.addButton({ text: "−1", x: 62, y: 318, w: 104, h: 58, size: TYPOGRAPHY.subheadline, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
-    saveButtonWidget = this.addButton({ text: text("save"), x: 188, y: 318, w: 104, h: 58, size: 23, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    saveButtonWidget = this.addButton({ text: text("save"), x: 188, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
-    this.addButton({ text: text("reset"), x: 314, y: 318, w: 104, h: 58, size: 21, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
-    historyButtonWidget = this.addButton({ text: `${text("history")}  ${pageState.results.length}`, x: 120, y: 398, w: 180, h: 52, size: 20, onClick: () => push({ url: "page/gt/history/index.page" }) });
+    this.addButton({ text: text("reset"), x: 314, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
+    historyButtonWidget = this.addButton({ text: `${text("history")}  ${pageState.results.length}`, x: 120, y: 398, w: 180, h: 52, size: TYPOGRAPHY.caption, onClick: () => push({ url: "page/gt/history/index.page" }) });
     this.addWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 308,
@@ -451,18 +456,18 @@ Page({
   renderStorageFull() {
     currentView = "storage-full";
     this.clearWidgets();
-    this.addText(text("historyFullTitle"), 55, 105, 370, 58, 32);
-    this.addText(text("historyFullDetail"), 60, 166, 360, 105, 21, COLORS.textSecondaryInfo);
-    this.addButton({ text: text("back"), x: 70, y: 292, w: 150, h: 68, size: 24, onClick: () => this.renderMain() });
-    this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: 24, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/gt/history/index.page" }) });
+    this.addText(text("historyFullTitle"), 55, 105, 370, 58, TYPOGRAPHY.title);
+    this.addText(text("historyFullDetail"), 60, 166, 360, 105, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
+    this.addButton({ text: text("back"), x: 70, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, onClick: () => this.renderMain() });
+    this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/gt/history/index.page" }) });
   },
 
   renderConfirm(title, detail) {
     currentView = "confirm";
     this.clearWidgets();
-    this.addText(title, 50, 105, 380, 58, 34);
-    this.addText(detail, 55, 170, 370, 70, 21, COLORS.textSecondaryInfo);
-    this.addButton({ text: text("cancel"), x: 70, y: 277, w: 150, h: 68, size: 24, onClick: () => this.cancelAction() });
-    this.addButton({ text: text("confirm"), x: 260, y: 277, w: 150, h: 68, size: 24, normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed, onClick: () => this.confirmAction() });
+    this.addText(title, 50, 105, 380, 58, TYPOGRAPHY.title);
+    this.addText(detail, 55, 170, 370, 70, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
+    this.addButton({ text: text("cancel"), x: 70, y: 277, w: 150, h: 68, size: TYPOGRAPHY.caption, onClick: () => this.cancelAction() });
+    this.addButton({ text: text("confirm"), x: 260, y: 277, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed, onClick: () => this.confirmAction() });
   },
 });

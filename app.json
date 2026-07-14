@@ -1,7 +1,7 @@
 {
   "configVersion": "v3",
   "app": {
-    "appId": 28139,
+    "appId": 1120339,
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
@@ -10,7 +10,7 @@
     },
     "icon": "icon.png",
     "vender": "Regulus",
-    "description": "A simple multi-counter tally app for Amazfit Balance"
+    "description": "A simple multi-counter tally app for Amazfit Balance series"
   },
   "permissions": [
     "device:os.local_storage"
@@ -29,6 +29,7 @@
         "page": {
           "pages": [
             "page/gt/home/index.page",
+            "page/gt/tutorial/index.page",
             "page/gt/history/index.page",
             "page/gt/settings/index.page",
             "page/gt/screen-timeout/index.page",

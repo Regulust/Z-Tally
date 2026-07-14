@@ -1,6 +1,7 @@
 import { LocalStorage } from "@zos/storage";
 
 export const STORAGE_KEY = "z-tally-state";
+export const TUTORIAL_SEEN_KEY = "z-tally-tutorial-seen";
 export const HISTORY_LIMIT = 30;
 export const SCREEN_BRIGHT_OPTIONS = [0, 15000, 30000, 60000];
 export const COUNTER_IDS = ["counter-1", "counter-2", "counter-3"];
@@ -73,4 +74,18 @@ export function loadState() {
 export function saveState(state) {
   const storage = new LocalStorage();
   storage.setItem(STORAGE_KEY, JSON.stringify(normalizeState(state)));
+}
+
+export function hasSeenTutorial() {
+  try {
+    const storage = new LocalStorage();
+    return storage.getItem(TUTORIAL_SEEN_KEY, "") === "1";
+  } catch (_error) {
+    return false;
+  }
+}
+
+export function markTutorialSeen() {
+  const storage = new LocalStorage();
+  storage.setItem(TUTORIAL_SEEN_KEY, "1");
 }

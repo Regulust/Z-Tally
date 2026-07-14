@@ -1,9 +1,6 @@
 msgid "appName"
 msgstr "Z-Tally"
 
-msgid "tapPlusOne"
-msgstr "点击  +1"
-
 msgid "save"
 msgstr "保存"
 
@@ -117,3 +114,18 @@ msgstr "此操作无法撤销。"
 
 msgid "errorTitle"
 msgstr "Z-Tally 错误"
+
+msgid "tutorialTitle"
+msgstr "快速入门"
+
+msgid "tutorialCount"
+msgstr "点击中央计数区域，每次 +1"
+
+msgid "tutorialCounters"
+msgstr "顶部 1、2、3 是三组独立计数器"
+
+msgid "tutorialSave"
+msgstr "点击保存，将当前结果存入历史"
+
+msgid "tutorialStart"
+msgstr "开始使用"

@@ -3,6 +3,7 @@ import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { loadState, saveState } from "../../../utils/state";
+import { TYPOGRAPHY } from "../../../utils/theme";
 
 const COLORS = {
   sysButtonBg: 0x383838,
@@ -31,8 +32,8 @@ Page({
   },
 
   build() {
-    this.addText(text("settings"), 130, 24, 220, 62, 34);
-    this.addText(text("vibration"), 68, 122, 225, 60, 27, COLORS.textTitle, hmUI.align.LEFT);
+    this.addText(text("settings"), 130, 24, 220, 62, TYPOGRAPHY.title);
+    this.addText(text("vibration"), 68, 122, 225, 60, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
     hmUI.createWidget(hmUI.widget.SLIDE_SWITCH, {
       x: 320,
       y: 128,
@@ -46,7 +47,7 @@ Page({
       checked: pageState.vibrationEnabled,
       checked_change_func: (_widget, checked) => this.setVibrationEnabled(checked),
     });
-    this.addText(text("vibrationDescription"), 62, 184, 356, 58, 20, COLORS.textSecondaryInfo);
+    this.addText(text("vibrationDescription"), 45, 184, 390, 58, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
     const timeoutLabel = {
       0: text("timeoutSystemShort"),
@@ -54,9 +55,9 @@ Page({
       30000: text("timeout30Short"),
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
-    this.addText(text("screenTimeout"), 68, 240, 226, 72, 27, COLORS.textTitle, hmUI.align.LEFT);
-    this.addText(timeoutLabel, 282, 240, 82, 72, 21, COLORS.textSecondaryInfo, hmUI.align.RIGHT);
-    this.addText("›", 366, 238, 42, 72, 38, COLORS.textSecondaryInfo);
+    this.addText(text("screenTimeout"), 68, 240, 226, 72, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
+    this.addText(timeoutLabel, 282, 240, 82, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT);
+    this.addText("›", 366, 238, 42, 72, TYPOGRAPHY.title1, COLORS.textSecondaryInfo);
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 54,
@@ -75,7 +76,7 @@ Page({
       w: 296,
       h: 66,
       color: COLORS.textButton,
-      text_size: 27,
+      text_size: TYPOGRAPHY.subheadline,
       radius: 20,
       normal_color: COLORS.sysButtonBg,
       press_color: COLORS.sysButtonPressed,

@@ -2,6 +2,7 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
+import { TYPOGRAPHY } from "../../../utils/theme";
 
 const COLORS = {
   background: 0x000000,
@@ -37,10 +38,10 @@ function formatTime(timestamp) {
 
 function valueTextSize(value) {
   const digits = `${value}`.length;
-  if (digits <= 4) return 42;
-  if (digits <= 6) return 34;
-  if (digits <= 8) return 28;
-  return 24;
+  if (digits <= 4) return TYPOGRAPHY.largeTitle;
+  if (digits <= 6) return TYPOGRAPHY.title1;
+  if (digits <= 8) return TYPOGRAPHY.subheadline;
+  return TYPOGRAPHY.caption;
 }
 
 Page({
@@ -111,8 +112,8 @@ Page({
   renderHistory() {
     this.clearWidgets();
     pendingDeleteId = null;
-    this.addText(text("history"), 136, 25, 208, 58, 34);
-    this.addText(`${pageState.results.length}/${HISTORY_LIMIT}`, 298, 38, 82, 36, 18, COLORS.textSecondaryInfo);
+    this.addText(text("history"), 0, 14, 480, 50, TYPOGRAPHY.title);
+    this.addText(`${pageState.results.length} / ${HISTORY_LIMIT}`, 0, 58, 480, 32, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
     const list = this.addWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
@@ -131,7 +132,7 @@ Page({
         w: 400,
         h: 76,
         color: COLORS.textSecondaryInfo,
-        text_size: 28,
+        text_size: TYPOGRAPHY.subheadline,
         align_h: hmUI.align.CENTER_H,
         align_v: hmUI.align.CENTER_V,
       });
@@ -157,7 +158,7 @@ Page({
           w: 184,
           h: 38,
           color: COLORS.textTitle,
-          text_size: 24,
+          text_size: TYPOGRAPHY.caption,
           align_h: hmUI.align.LEFT,
           align_v: hmUI.align.CENTER_V,
         });
@@ -168,7 +169,7 @@ Page({
           w: 184,
           h: 32,
           color: COLORS.textSecondaryInfo,
-          text_size: 19,
+          text_size: TYPOGRAPHY.caption,
           align_h: hmUI.align.LEFT,
           align_v: hmUI.align.CENTER_V,
         });
@@ -179,7 +180,7 @@ Page({
           w: 68,
           h: 58,
           color: COLORS.textButton,
-          text_size: 32,
+          text_size: TYPOGRAPHY.body,
           radius: 17,
           normal_color: COLORS.sysWarning,
           press_color: COLORS.sysWarningPressed,
@@ -203,17 +204,17 @@ Page({
   renderDeleteConfirm(resultId) {
     pendingDeleteId = resultId;
     this.clearWidgets();
-    this.addText(text("deleteConfirmTitle"), 50, 108, 380, 62, 36);
-    this.addText(text("deleteConfirmDetail"), 55, 176, 370, 72, 23, COLORS.textSecondaryInfo);
+    this.addText(text("deleteConfirmTitle"), 50, 108, 380, 62, TYPOGRAPHY.title);
+    this.addText(text("deleteConfirmDetail"), 55, 176, 370, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
     this.addWidget(hmUI.widget.BUTTON, {
       text: text("cancel"), x: 68, y: 280, w: 154, h: 70,
-      color: COLORS.textButton, text_size: 26, radius: 20,
+      color: COLORS.textButton, text_size: TYPOGRAPHY.subheadline, radius: 20,
       normal_color: COLORS.sysButtonBg, press_color: COLORS.sysButtonPressed,
       click_func: () => this.renderHistory(),
     });
     this.addWidget(hmUI.widget.BUTTON, {
       text: text("confirm"), x: 258, y: 280, w: 154, h: 70,
-      color: COLORS.textButton, text_size: 26, radius: 20,
+      color: COLORS.textButton, text_size: TYPOGRAPHY.subheadline, radius: 20,
       normal_color: COLORS.sysWarning, press_color: COLORS.sysWarningPressed,
       click_func: () => this.confirmDelete(),
     });

@@ -4,6 +4,7 @@ import { back } from "@zos/router";
 import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
+import { TYPOGRAPHY } from "../../../utils/theme";
 
 const COLORS = {
   background: 0x000000,
@@ -29,8 +30,8 @@ Page({
   },
 
   build() {
-    this.addText(text("screenTimeout"), 74, 20, 332, 64, 34);
-    this.addText(text("screenOnlyAffects"), 62, 78, 356, 38, 20, COLORS.textSecondaryInfo);
+    this.addText(text("screenTimeout"), 74, 20, 332, 64, TYPOGRAPHY.title);
+    this.addText(text("screenOnlyAffects"), 62, 78, 356, 38, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
     const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
@@ -61,7 +62,7 @@ Page({
         w: 292,
         h: 68,
         color: COLORS.textTitle,
-        text_size: 27,
+        text_size: TYPOGRAPHY.subheadline,
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
