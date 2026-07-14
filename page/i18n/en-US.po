@@ -34,9 +34,6 @@ msgstr "Settings"
 msgid "vibration"
 msgstr "Vibration"
 
-msgid "vibrationDescription"
-msgstr "Light pulse for actions"
-
 msgid "screenTimeout"
 msgstr "Screen timeout"
 
@@ -113,13 +110,19 @@ msgid "tutorialTitle"
 msgstr "Quick start"
 
 msgid "tutorialCount"
-msgstr "Tap the center to count +1"
+msgstr "Tap center / Down key: +1"
 
 msgid "tutorialCounters"
-msgstr "1, 2, and 3 are independent counters"
+msgstr "1, 2, 3: separate counters"
 
 msgid "tutorialSave"
-msgstr "Save stores the current result in History"
+msgstr "Save current result to History"
 
 msgid "tutorialStart"
 msgstr "Start counting"
+
+msgid "tutorialDone"
+msgstr "Done"
+
+msgid "tutorial"
+msgstr "Tutorial"

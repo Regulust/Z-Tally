@@ -1,7 +1,7 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
-import { markTutorialSeen } from "../../../utils/state";
+import { hasSeenTutorial, markTutorialSeen } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 
 const COLORS = {
@@ -54,6 +54,7 @@ function addInstruction(number, value, y) {
 
 Page({
   build() {
+    const returningUser = hasSeenTutorial();
     addText(text("tutorialTitle"), 0, 24, 480, 52, TYPOGRAPHY.title);
     addText("Z-Tally", 0, 72, 480, 36, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
@@ -62,7 +63,7 @@ Page({
     addInstruction(3, text("tutorialSave"), 288);
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
-      text: text("tutorialStart"),
+      text: text(returningUser ? "tutorialDone" : "tutorialStart"),
       x: 130,
       y: 392,
       w: 220,

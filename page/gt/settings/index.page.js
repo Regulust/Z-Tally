@@ -6,10 +6,8 @@ import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 
 const COLORS = {
-  sysButtonBg: 0x383838,
-  sysButtonPressed: 0x282828,
+  background: 0x000000,
   textTitle: 0xffffff,
-  textButton: 0xffffff,
   textSecondaryInfo: 0x808080,
 };
 
@@ -33,10 +31,20 @@ Page({
 
   build() {
     this.addText(text("settings"), 130, 24, 220, 62, TYPOGRAPHY.title);
-    this.addText(text("vibration"), 68, 122, 225, 60, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
-    hmUI.createWidget(hmUI.widget.SLIDE_SWITCH, {
+
+    const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
+      x: 0,
+      y: 92,
+      w: 480,
+      h: 388,
+      scroll_enable: 1,
+      bounce: 0,
+    });
+
+    this.addText(text("vibration"), 68, 8, 225, 60, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    list.createWidget(hmUI.widget.SLIDE_SWITCH, {
       x: 320,
-      y: 128,
+      y: 14,
       w: 84,
       h: 48,
       select_bg: "image/switch_on.png",
@@ -47,41 +55,60 @@ Page({
       checked: pageState.vibrationEnabled,
       checked_change_func: (_widget, checked) => this.setVibrationEnabled(checked),
     });
-    this.addText(text("vibrationDescription"), 45, 184, 390, 48, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-
     const timeoutLabel = {
       0: text("timeoutSystemShort"),
       15000: text("timeout15Short"),
       30000: text("timeout30Short"),
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
-    this.addText(text("screenTimeout"), 68, 252, 226, 72, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT);
-    this.addText(timeoutLabel, 282, 252, 82, 72, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT);
-    this.addText("›", 366, 250, 42, 72, TYPOGRAPHY.title1, COLORS.textSecondaryInfo);
-    hmUI.createWidget(hmUI.widget.BUTTON, {
+    this.addText(text("screenTimeout"), 68, 92, 226, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(timeoutLabel, 282, 92, 82, 68, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT, list);
+    this.addText("›", 366, 90, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
+    list.createWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 54,
-      y: 252,
+      y: 92,
       w: 372,
-      h: 72,
+      h: 68,
       normal_src: "image/settings_row_normal.png",
       press_src: "image/settings_row_pressed.png",
       click_func: () => push({ url: "page/gt/screen-timeout/index.page" }),
     });
 
-    hmUI.createWidget(hmUI.widget.BUTTON, {
-      text: `${text("about")}  ›`,
-      x: 92,
-      y: 344,
-      w: 296,
-      h: 66,
-      color: COLORS.textButton,
-      text_size: TYPOGRAPHY.subheadline,
-      radius: 20,
-      normal_color: COLORS.sysButtonBg,
-      press_color: COLORS.sysButtonPressed,
+    this.addText(text("tutorial"), 68, 168, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText("›", 366, 166, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
+    list.createWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x: 54,
+      y: 168,
+      w: 372,
+      h: 68,
+      normal_src: "image/settings_row_normal.png",
+      press_src: "image/settings_row_pressed.png",
+      click_func: () => push({ url: "page/gt/tutorial/index.page" }),
+    });
+
+    this.addText(text("about"), 68, 244, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText("›", 366, 242, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
+    list.createWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x: 54,
+      y: 244,
+      w: 372,
+      h: 68,
+      normal_src: "image/settings_row_normal.png",
+      press_src: "image/settings_row_pressed.png",
       click_func: () => push({ url: "page/gt/about/index.page" }),
     });
+
+    list.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 320,
+      w: 480,
+      h: 116,
+      color: COLORS.background,
+    });
+    hmUI.createWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
   },
 
   onDestroy() {
@@ -91,11 +118,14 @@ Page({
     } catch (_error) {}
   },
 
-  addText(value, x, y, w, h, size, color = COLORS.textTitle, align = hmUI.align.CENTER_H) {
-    return hmUI.createWidget(hmUI.widget.TEXT, {
+  addText(value, x, y, w, h, size, color = COLORS.textTitle, align = hmUI.align.CENTER_H, parent = null) {
+    const options = {
       text: value, x, y, w, h, color, text_size: size,
       align_h: align, align_v: hmUI.align.CENTER_V, text_style: hmUI.text_style.NONE,
-    });
+    };
+    return parent
+      ? parent.createWidget(hmUI.widget.TEXT, options)
+      : hmUI.createWidget(hmUI.widget.TEXT, options);
   },
 
   setVibrationEnabled(enabled) {

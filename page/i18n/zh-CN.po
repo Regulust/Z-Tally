@@ -34,9 +34,6 @@ msgstr "设置"
 msgid "vibration"
 msgstr "振动"
 
-msgid "vibrationDescription"
-msgstr "成功操作时轻震一次"
-
 msgid "screenTimeout"
 msgstr "亮屏时间"
 
@@ -113,13 +110,19 @@ msgid "tutorialTitle"
 msgstr "快速入门"
 
 msgid "tutorialCount"
-msgstr "点击中央计数区域，每次 +1"
+msgstr "点中央 / 下键：+1"
 
 msgid "tutorialCounters"
-msgstr "顶部 1、2、3 是三组独立计数器"
+msgstr "1、2、3：独立计数器"
 
 msgid "tutorialSave"
-msgstr "点击保存，将当前结果存入历史"
+msgstr "保存：当前结果存入历史"
 
 msgid "tutorialStart"
 msgstr "开始使用"
+
+msgid "tutorialDone"
+msgstr "完成"
+
+msgid "tutorial"
+msgstr "使用教程"
