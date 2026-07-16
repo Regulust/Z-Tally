@@ -74,10 +74,10 @@ msgid "aboutFeatures"
 msgstr "Fast counting • Local history\nOffline and private"
 
 msgid "version"
-msgstr "Version 1.0.0"
+msgstr "Version 1.1.0"
 
 msgid "targetDevice"
-msgstr "For Amazfit Balance"
+msgstr "Round & square Amazfit"
 
 msgid "developer"
 msgstr "Developer: Regulus"
@@ -126,3 +126,9 @@ msgstr "Done"
 
 msgid "tutorial"
 msgstr "Tutorial"
+
+msgid "tapToCount"
+msgstr "Tap to count"
+
+msgid "openApp"
+msgstr "Open app"

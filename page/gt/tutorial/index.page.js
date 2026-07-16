@@ -1,8 +1,11 @@
-import * as hmUI from "@zos/ui";
+import * as rawUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
 import { hasSeenTutorial, markTutorialSeen } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { createAdaptiveUI } from "../../../utils/adaptive-ui";
+
+const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   sysKey: 0x0986d4,

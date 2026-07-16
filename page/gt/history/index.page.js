@@ -1,9 +1,12 @@
-import * as hmUI from "@zos/ui";
+import * as rawUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { MODAL_CONFIRM, createModal } from "@zos/interaction";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { createAdaptiveUI } from "../../../utils/adaptive-ui";
+
+const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   background: 0x000000,
@@ -109,23 +112,44 @@ Page({
 
   renderHistory() {
     this.clearWidgets();
-    this.addText(text("history"), 0, 14, 480, 50, TYPOGRAPHY.title);
-    this.addText(`${pageState.results.length} / ${HISTORY_LIMIT}`, 0, 58, 480, 32, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-
     const list = this.addWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
-      y: 92,
+      y: 0,
       w: 480,
-      h: 388,
+      h: 480,
       scroll_enable: 1,
       bounce: 0,
+    });
+    list.createWidget(hmUI.widget.TEXT, {
+      text: text("history"),
+      x: 0,
+      y: 14,
+      w: 480,
+      h: 50,
+      color: COLORS.textTitle,
+      text_size: TYPOGRAPHY.title,
+      align_h: hmUI.align.CENTER_H,
+      align_v: hmUI.align.CENTER_V,
+      text_style: hmUI.text_style.NONE,
+    });
+    list.createWidget(hmUI.widget.TEXT, {
+      text: `${pageState.results.length} / ${HISTORY_LIMIT}`,
+      x: 0,
+      y: 58,
+      w: 480,
+      h: 32,
+      color: COLORS.textSecondaryInfo,
+      text_size: TYPOGRAPHY.caption,
+      align_h: hmUI.align.CENTER_H,
+      align_v: hmUI.align.CENTER_V,
+      text_style: hmUI.text_style.NONE,
     });
 
     if (pageState.results.length === 0) {
       list.createWidget(hmUI.widget.TEXT, {
         text: text("noSavedResults"),
         x: 40,
-        y: 94,
+        y: 150,
         w: 400,
         h: 76,
         color: COLORS.textSecondaryInfo,
@@ -135,7 +159,7 @@ Page({
       });
     } else {
       pageState.results.forEach((item, index) => {
-        const y = 6 + index * 104;
+        const y = 98 + index * 104;
         list.createWidget(hmUI.widget.TEXT, {
           text: `${item.value}`,
           x: 34,
@@ -186,7 +210,7 @@ Page({
       });
       list.createWidget(hmUI.widget.FILL_RECT, {
         x: 0,
-        y: pageState.results.length * 104 + 12,
+        y: 98 + pageState.results.length * 104 + 12,
         w: 480,
         h: 72,
         color: COLORS.background,

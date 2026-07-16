@@ -74,10 +74,10 @@ msgid "aboutFeatures"
 msgstr "快速计数 • 本地历史\n离线使用，保护隐私"
 
 msgid "version"
-msgstr "版本 1.0.0"
+msgstr "版本 1.1.0"
 
 msgid "targetDevice"
-msgstr "适用于 Amazfit Balance"
+msgstr "圆屏与方屏 Amazfit"
 
 msgid "developer"
 msgstr "开发者：Regulus"
@@ -110,7 +110,7 @@ msgid "tutorialTitle"
 msgstr "快速入门"
 
 msgid "tutorialCount"
-msgstr "点中央 / 下按钮：+1"
+msgstr "点按中心区域/下键：+1"
 
 msgid "tutorialCounters"
 msgstr "1、2、3：独立计数器"
@@ -126,3 +126,9 @@ msgstr "完成"
 
 msgid "tutorial"
 msgstr "使用教程"
+
+msgid "tapToCount"
+msgstr "点击计数"
+
+msgid "openApp"
+msgstr "打开应用"

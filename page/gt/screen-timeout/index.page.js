@@ -1,10 +1,13 @@
-import * as hmUI from "@zos/ui";
+import * as rawUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
 import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { createAdaptiveUI } from "../../../utils/adaptive-ui";
+
+const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   background: 0x000000,
@@ -30,17 +33,16 @@ Page({
   },
 
   build() {
-    this.addText(text("screenTimeout"), 74, 20, 332, 64, TYPOGRAPHY.title);
-    this.addText(text("screenOnlyAffects"), 62, 78, 356, 38, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-
     const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
-      y: 116,
+      y: 0,
       w: 480,
-      h: 316,
+      h: 480,
       scroll_enable: 1,
       bounce: 0,
     });
+    this.addText(text("screenTimeout"), 74, 20, 332, 64, TYPOGRAPHY.title, COLORS.textTitle, list);
+    this.addText(text("screenOnlyAffects"), 62, 78, 356, 38, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, list);
 
     [
       { label: text("timeoutSystemDefault"), value: 0 },
@@ -49,7 +51,7 @@ Page({
       { label: text("timeout1m"), value: 60000 },
     ].forEach((option, index) => {
       const active = pageState.screenBrightTime === option.value;
-      const y = 4 + index * 90;
+      const y = 120 + index * 90;
       list.createWidget(hmUI.widget.IMG, {
         x: 46,
         y: y + 9,
@@ -80,7 +82,7 @@ Page({
     });
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
-      y: 366,
+      y: 486,
       w: 480,
       h: 100,
       color: COLORS.background,
@@ -88,12 +90,15 @@ Page({
     hmUI.createWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
   },
 
-  addText(value, x, y, w, h, size, color = COLORS.textTitle) {
-    return hmUI.createWidget(hmUI.widget.TEXT, {
+  addText(value, x, y, w, h, size, color = COLORS.textTitle, parent = null) {
+    const options = {
       text: value, x, y, w, h, color, text_size: size,
       align_h: hmUI.align.CENTER_H, align_v: hmUI.align.CENTER_V,
       text_style: hmUI.text_style.NONE,
-    });
+    };
+    return parent
+      ? parent.createWidget(hmUI.widget.TEXT, options)
+      : hmUI.createWidget(hmUI.widget.TEXT, options);
   },
 
   select(duration) {

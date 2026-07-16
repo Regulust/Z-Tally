@@ -5,12 +5,12 @@
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
-      "code": 1,
-      "name": "1.0.0"
+      "code": 2,
+      "name": "1.1.0"
     },
     "icon": "icon.png",
     "vender": "Regulus",
-    "description": "A simple multi-counter tally app for Amazfit Balance series"
+    "description": "A multi-counter tally app for round and square Amazfit watches"
   },
   "permissions": [
     "device:os.local_storage"
@@ -35,6 +35,27 @@
             "page/gt/screen-timeout/index.page",
             "page/gt/about/index.page"
           ]
+        },
+        "secondary-widget": {
+          "widgets": [
+            {
+              "path": "secondary-widget/index",
+              "icon": "icon.png",
+              "preview": "widget-preview.png",
+              "name": "Z-Tally",
+              "runtime": {
+                "type": "js"
+              },
+              "i18n": {
+                "en-US": {
+                  "name": "Z-Tally"
+                },
+                "zh-CN": {
+                  "name": "Z-Tally 计数"
+                }
+              }
+            }
+          ]
         }
       },
       "platforms": [
@@ -43,6 +64,48 @@
         }
       ],
       "designWidth": 480
+    },
+    "square": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/gt/home/index.page",
+            "page/gt/tutorial/index.page",
+            "page/gt/history/index.page",
+            "page/gt/settings/index.page",
+            "page/gt/screen-timeout/index.page",
+            "page/gt/about/index.page"
+          ]
+        },
+        "secondary-widget": {
+          "widgets": [
+            {
+              "path": "secondary-widget/index",
+              "icon": "icon.png",
+              "preview": "widget-preview.png",
+              "name": "Z-Tally",
+              "runtime": {
+                "type": "js"
+              },
+              "i18n": {
+                "en-US": {
+                  "name": "Z-Tally"
+                },
+                "zh-CN": {
+                  "name": "Z-Tally 计数"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "platforms": [
+        {
+          "st": "s",
+          "sr": "w390"
+        }
+      ],
+      "designWidth": 390
     }
   },
   "i18n": {

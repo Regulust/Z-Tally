@@ -1,7 +1,7 @@
 {
   "name": "z-tally",
-  "version": "1.0.0",
-  "description": "A multi-counter tally app for Amazfit Balance running Zepp OS 4.0+",
+  "version": "1.1.0",
+  "description": "A multi-counter tally app for round and square Amazfit watches",
   "private": true,
   "license": "ISC",
   "devDependencies": {

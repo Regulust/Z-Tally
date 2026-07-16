@@ -1,4 +1,4 @@
-import * as hmUI from "@zos/ui";
+import * as rawUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
@@ -16,6 +16,9 @@ import {
 import { log as Logger } from "@zos/utils";
 import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { createAdaptiveUI } from "../../../utils/adaptive-ui";
+
+const hmUI = createAdaptiveUI(rawUI);
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
