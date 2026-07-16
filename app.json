@@ -24,16 +24,16 @@
   },
   "debug": false,
   "targets": {
-    "gt": {
+    "round": {
       "module": {
         "page": {
           "pages": [
-            "page/gt/home/index.page",
-            "page/gt/tutorial/index.page",
-            "page/gt/history/index.page",
-            "page/gt/settings/index.page",
-            "page/gt/screen-timeout/index.page",
-            "page/gt/about/index.page"
+            "page/round/home/index.page",
+            "page/round/tutorial/index.page",
+            "page/round/history/index.page",
+            "page/round/settings/index.page",
+            "page/round/screen-timeout/index.page",
+            "page/round/about/index.page"
           ]
         },
         "secondary-widget": {
@@ -69,12 +69,12 @@
       "module": {
         "page": {
           "pages": [
-            "page/gt/home/index.page",
-            "page/gt/tutorial/index.page",
-            "page/gt/history/index.page",
-            "page/gt/settings/index.page",
-            "page/gt/screen-timeout/index.page",
-            "page/gt/about/index.page"
+            "page/square/home/index.page",
+            "page/square/tutorial/index.page",
+            "page/square/history/index.page",
+            "page/square/settings/index.page",
+            "page/square/screen-timeout/index.page",
+            "page/square/about/index.page"
           ]
         },
         "secondary-widget": {

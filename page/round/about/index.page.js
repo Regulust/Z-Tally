@@ -1,9 +1,6 @@
-import * as rawUI from "@zos/ui";
+import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { createAdaptiveUI } from "../../../utils/adaptive-ui";
-
-const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   textTitle: 0xffffff,

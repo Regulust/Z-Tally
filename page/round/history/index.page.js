@@ -1,12 +1,9 @@
-import * as rawUI from "@zos/ui";
+import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { MODAL_CONFIRM, createModal } from "@zos/interaction";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { createAdaptiveUI } from "../../../utils/adaptive-ui";
-
-const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   background: 0x000000,

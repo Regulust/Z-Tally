@@ -68,7 +68,7 @@ Z-Tally 的页面结构、系统返回、基础按钮层级、开关、文本控
 | 页面指示器 | 使用系统控件（必选） | 当前没有分页页面；长列表使用系统 `PAGE_SCROLLBAR`，不属于分页指示器。 | — | 无需处理。 |
 | 按钮 | 根据交互层级选择按钮样式（必选） | 普通按钮为灰色，当前计数器和关键选择为蓝色，Save 为绿色，Reset/删除为警示色。 | ✅ | 真机检查按下态、禁用态和文字对比度。 |
 | 按钮 | 文案准确简练（必选） | Save、Reset、History、确认、取消及教程文案均保持短句，中英文含义一致。 | ✅ | 后续新增文案继续优先使用短文本。 |
-| 按钮 | 圆屏/方屏调用相应组件库（必选） | 当前仅支持圆屏；使用原生 `BUTTON`，但坐标、圆角和图片资源由项目自行定义。 | ⚠️ | 继续对照圆屏组件库检查尺寸；方屏支持必须建立独立布局。 |
+| 按钮 | 圆屏/方屏调用相应组件库（必选） | 圆屏与方屏均使用原生 `BUTTON`；方屏已建立独立 390×450 坐标、独立触摸行资源和 64px 系统状态栏布局。 | ⚠️ | 在方屏模拟器逐页复查按钮尺寸、按压态、标题和安全区。 |
 | 开关 | 开关统一位于页面右侧（必选） | Vibration 使用原生 `SLIDE_SWITCH`，位于页面右侧。 | ✅ | 真机复验滑块对齐、开关状态与触控区域。 |
 | 选择与状态标示 | 控件统一位于页面右侧（必选） | Screen timeout 单选圆点位于左侧，符合此前参考的系统单选列表截图，但不完全符合自查表字面要求。 | ⚠️ | 发布前决定保留官方单选列表样式，或按自查表调整到右侧，并在文档记录选择依据。 |
 | 滑块 | 使用系统控件（必选） | 当前没有数值滑块。 | — | 无需处理。 |
@@ -94,8 +94,8 @@ Z-Tally 的页面结构、系统返回、基础按钮层级、开关、文本控
 | 文件 | 尺寸 | 四角 | 最外侧 1px 最大 Alpha | 最外侧 2px 最大 Alpha | 结论 |
 |---|---:|---|---:|---:|---|
 | `release/icon-240.png` | 240×240 | 透明 | 0 | 0 | 2px 全透明安全区通过 |
-| `assets/gt.r/icon.png` | 248×248 | 透明 | 0 | 0 | 2px 全透明安全区通过 |
-| `assets/gt.s/icon.png` | 248×248 | 透明 | 0 | 0 | 2px 全透明安全区通过 |
+| `assets/round.r/icon.png` | 248×248 | 透明 | 0 | 0 | 2px 全透明安全区通过 |
+| `assets/square.w390-s/icon.png` | 248×248 | 透明 | 0 | 0 | 2px 全透明安全区通过 |
 
 检查方式：读取 PNG Alpha 通道，统计画布最外侧 1px 和 2px 边框区域内的最大透明度。当前结果均为 `0`，表示整个 2px 边框完全透明。
 
@@ -138,21 +138,21 @@ Z-Tally 的页面结构、系统返回、基础按钮层级、开关、文本控
 
 ### P2：后续兼容工作
 
-- [ ] 方屏支持已进入 1.1.0 开发，采用 390×450 设计基准；完成后重新执行完整自查表。
-- [ ] 副屏应用已进入 1.1.0 开发；完成后针对交互限制、字号、控件和预览资源单独执行自查。
+- [ ] 方屏已建立独立 `page/square/` 页面并采用 390×450 设计基准；等待模拟器重新执行完整自查表。
+- [x] 副屏应用交互、字号、点击区域、预览资源和主副屏同步已由用户确认通过；无副屏设备兼容项暂记 SKIPPED。
 
 ## 6. 相关源码位置
 
 - 字阶：`utils/theme.js`
 - 状态与首次教程标记：`utils/state.js`
-- 主页面及 Reset 确认：`page/gt/home/index.page.js`
-- 历史列表及删除确认：`page/gt/history/index.page.js`
-- 设置页面：`page/gt/settings/index.page.js`
-- Screen timeout：`page/gt/screen-timeout/index.page.js`
-- 首次教程：`page/gt/tutorial/index.page.js`
+- 圆屏页面：`page/round/`
+- 方屏页面：`page/square/`
+- 主页面及 Reset 确认：`page/round/home/index.page.js`、`page/square/home/index.page.js`
+- 历史列表及删除确认：`page/round/history/index.page.js`、`page/square/history/index.page.js`
+- Settings、Screen timeout、Tutorial 和 About：对应屏幕目录下的同名页面
 - 中英文资源：`page/i18n/en-US.po`、`page/i18n/zh-CN.po`
 - 发布图标：`release/icon-240.png`
-- 工程图标：`assets/gt.r/icon.png`、`assets/gt.s/icon.png`
+- 工程图标：`assets/round.r/icon.png`、`assets/square.w390-s/icon.png`
 
 ## 7. 复查记录模板
 

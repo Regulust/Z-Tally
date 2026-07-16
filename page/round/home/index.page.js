@@ -1,4 +1,4 @@
-import * as rawUI from "@zos/ui";
+import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
@@ -16,9 +16,6 @@ import {
 import { log as Logger } from "@zos/utils";
 import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { createAdaptiveUI } from "../../../utils/adaptive-ui";
-
-const hmUI = createAdaptiveUI(rawUI);
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
@@ -121,7 +118,7 @@ Page({
       this.renderMain();
       if (!tutorialOpened && !hasSeenTutorial()) {
         tutorialOpened = true;
-        setTimeout(() => push({ url: "page/gt/tutorial/index.page" }), 0);
+        setTimeout(() => push({ url: "page/round/tutorial/index.page" }), 0);
       }
     } catch (error) {
       logger.error(`page render failed: ${error}`);
@@ -369,7 +366,7 @@ Page({
         radius: 18,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
-        click_func: () => push({ url: "page/gt/history/index.page" }),
+        click_func: () => push({ url: "page/round/history/index.page" }),
       });
     }
     showToast({ content: text("saved") });
@@ -435,7 +432,7 @@ Page({
     saveButtonWidget = this.addButton({ text: text("save"), x: 188, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
     this.addButton({ text: text("reset"), x: 314, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
-    historyButtonWidget = this.addButton({ text: `${text("history")}  ${pageState.results.length}`, x: 120, y: 398, w: 180, h: 52, size: TYPOGRAPHY.caption, onClick: () => push({ url: "page/gt/history/index.page" }) });
+    historyButtonWidget = this.addButton({ text: `${text("history")}  ${pageState.results.length}`, x: 120, y: 398, w: 180, h: 52, size: TYPOGRAPHY.caption, onClick: () => push({ url: "page/round/history/index.page" }) });
     this.addWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 308,
@@ -444,7 +441,7 @@ Page({
       h: 52,
       normal_src: "image/settings_normal.png",
       press_src: "image/settings_pressed.png",
-      click_func: () => push({ url: "page/gt/settings/index.page" }),
+      click_func: () => push({ url: "page/round/settings/index.page" }),
     });
   },
 
@@ -454,7 +451,7 @@ Page({
     this.addText(text("historyFullTitle"), 55, 105, 370, 58, TYPOGRAPHY.title);
     this.addText(text("historyFullDetail"), 60, 166, 360, 105, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
     this.addButton({ text: text("back"), x: 70, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, onClick: () => this.renderMain() });
-    this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/gt/history/index.page" }) });
+    this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/round/history/index.page" }) });
   },
 
 });

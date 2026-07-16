@@ -1,6 +1,7 @@
 import * as rawUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
+import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
 import { COUNTER_IDS, loadState, saveState } from "../utils/state";
 import { createAdaptiveUI } from "../utils/adaptive-ui";
 
@@ -38,6 +39,16 @@ function valueSize(value) {
   if (digits <= 6) return 76;
   if (digits <= 8) return 58;
   return 44;
+}
+
+function mainPageUrl() {
+  try {
+    const info = getDeviceInfo();
+    if (info && (info.screenShape === SCREEN_SHAPE_SQUARE || info.width === 390)) {
+      return "page/square/home/index.page";
+    }
+  } catch (_error) {}
+  return "page/round/home/index.page";
 }
 
 SecondaryWidget({
@@ -115,7 +126,7 @@ SecondaryWidget({
       radius: 15,
       normal_color: COLORS.key,
       press_color: COLORS.keyPressed,
-      click_func: () => push({ url: "page/gt/home/index.page" }),
+      click_func: () => push({ url: mainPageUrl() }),
     });
   },
 

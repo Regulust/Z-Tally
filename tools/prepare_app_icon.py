@@ -21,13 +21,12 @@ def main() -> None:
     with Image.open(SOURCE_ICON) as image:
         source = image.convert("RGBA")
         save_resized(source, PROJECT_DIR / "release" / "icon-240.png", 240)
-        save_resized(source, PROJECT_DIR / "assets" / "gt.r" / "icon.png", 248)
-        save_resized(source, PROJECT_DIR / "assets" / "gt.s" / "icon.png", 248)
+        save_resized(source, PROJECT_DIR / "assets" / "round.r" / "icon.png", 248)
         save_resized(source, PROJECT_DIR / "assets" / "square.w390-s" / "icon.png", 248)
 
     print(f"Source: {SOURCE_ICON}")
     print(f"Wrote {PROJECT_DIR / 'release' / 'icon-240.png'}")
-    print("Updated gt.r, gt.s and square.w390-s app icons")
+    print("Updated round.r and square.w390-s app icons")
 
 
 if __name__ == "__main__":

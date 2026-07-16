@@ -77,7 +77,7 @@ def render(width: int, height: int, output: Path, locale: str) -> None:
 
 def main() -> None:
     targets = [
-        (480, 480, PROJECT_DIR / "assets" / "gt.r"),
+        (480, 480, PROJECT_DIR / "assets" / "round.r"),
         (390, 450, PROJECT_DIR / "assets" / "square.w390-s"),
     ]
     for width, height, directory in targets:

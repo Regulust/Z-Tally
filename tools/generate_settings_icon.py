@@ -114,7 +114,11 @@ def make_touch_row(width, height, pressed, output):
 
 
 root = Path(__file__).resolve().parents[1]
-for asset_dir in (root / "assets" / "gt.r" / "image", root / "assets" / "gt.s" / "image"):
+asset_targets = (
+    (root / "assets" / "round.r" / "image", 356, 68, 404, 64),
+    (root / "assets" / "square.w390-s" / "image", 356, 60, 358, 60),
+)
+for asset_dir, settings_width, settings_height, option_width, option_height in asset_targets:
     make_button(COLOR_SYS_BUTTON_BG, asset_dir / "settings_normal.png")
     make_button(COLOR_SYS_BUTTON_PRESSED, asset_dir / "settings_pressed.png")
     make_switch_background(COLOR_SYS_KEY, asset_dir / "switch_on.png")
@@ -122,7 +126,7 @@ for asset_dir in (root / "assets" / "gt.r" / "image", root / "assets" / "gt.s" /
     make_switch_thumb(asset_dir / "switch_thumb.png")
     make_radio(False, asset_dir / "radio_off.png")
     make_radio(True, asset_dir / "radio_on.png")
-    make_touch_row(356, 68, False, asset_dir / "settings_row_normal.png")
-    make_touch_row(356, 68, True, asset_dir / "settings_row_pressed.png")
-    make_touch_row(404, 64, False, asset_dir / "option_row_normal.png")
-    make_touch_row(404, 64, True, asset_dir / "option_row_pressed.png")
+    make_touch_row(settings_width, settings_height, False, asset_dir / "settings_row_normal.png")
+    make_touch_row(settings_width, settings_height, True, asset_dir / "settings_row_pressed.png")
+    make_touch_row(option_width, option_height, False, asset_dir / "option_row_normal.png")
+    make_touch_row(option_width, option_height, True, asset_dir / "option_row_pressed.png")

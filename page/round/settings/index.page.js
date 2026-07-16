@@ -1,12 +1,9 @@
-import * as rawUI from "@zos/ui";
+import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { createAdaptiveUI } from "../../../utils/adaptive-ui";
-
-const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   background: 0x000000,
@@ -74,7 +71,7 @@ Page({
       h: 68,
       normal_src: "image/settings_row_normal.png",
       press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/gt/screen-timeout/index.page" }),
+      click_func: () => push({ url: "page/round/screen-timeout/index.page" }),
     });
 
     this.addText(text("tutorial"), 68, 260, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
@@ -87,7 +84,7 @@ Page({
       h: 68,
       normal_src: "image/settings_row_normal.png",
       press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/gt/tutorial/index.page" }),
+      click_func: () => push({ url: "page/round/tutorial/index.page" }),
     });
 
     this.addText(text("about"), 68, 336, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
@@ -100,7 +97,7 @@ Page({
       h: 68,
       normal_src: "image/settings_row_normal.png",
       press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/gt/about/index.page" }),
+      click_func: () => push({ url: "page/round/about/index.page" }),
     });
 
     list.createWidget(hmUI.widget.FILL_RECT, {

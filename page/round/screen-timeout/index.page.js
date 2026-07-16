@@ -1,13 +1,10 @@
-import * as rawUI from "@zos/ui";
+import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
 import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { createAdaptiveUI } from "../../../utils/adaptive-ui";
-
-const hmUI = createAdaptiveUI(rawUI);
 
 const COLORS = {
   background: 0x000000,
