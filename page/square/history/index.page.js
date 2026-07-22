@@ -2,8 +2,10 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { MODAL_CONFIRM, createModal } from "@zos/interaction";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
+import { DATE_FORMAT_DMY, DATE_FORMAT_MDY, getDateFormat } from "@zos/settings";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   background: 0x000000,
@@ -28,10 +30,21 @@ function localizedCounterName(counterId) {
   return text(index >= 0 ? `counter${index + 1}` : "counter");
 }
 
-function formatTime(timestamp) {
+function systemDateFormat() {
+  try {
+    return getDateFormat();
+  } catch (_error) {
+    return DATE_FORMAT_MDY;
+  }
+}
+
+function formatTime(timestamp, dateFormat) {
   const date = new Date(timestamp);
   const pad = (value) => `${value}`.padStart(2, "0");
-  return `${date.getMonth() + 1}/${date.getDate()}  ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const shortDate = dateFormat === DATE_FORMAT_DMY ? `${day}/${month}` : `${month}/${day}`;
+  return `${shortDate}  ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function valueTextSize(value) {
@@ -54,11 +67,13 @@ Page({
   },
 
   build() {
+    applyStoredScreenBrightTime();
     this.renderHistory();
   },
 
   onResume() {
     hmUI.updateStatusBarTitle(text("history"));
+    applyStoredScreenBrightTime();
   },
 
   onDestroy() {
@@ -114,6 +129,7 @@ Page({
 
   renderHistory() {
     this.clearWidgets();
+    const dateFormat = systemDateFormat();
     hmUI.updateStatusBarTitle(text("history"));
     this.addWidget(hmUI.widget.FILL_RECT, {
       x: 0,
@@ -182,7 +198,7 @@ Page({
           align_v: hmUI.align.CENTER_V,
         });
         list.createWidget(hmUI.widget.TEXT, {
-          text: formatTime(item.savedAt),
+          text: formatTime(item.savedAt, dateFormat),
           x: 104,
           y: y + 36,
           w: 174,

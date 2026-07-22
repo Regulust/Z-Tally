@@ -1,9 +1,9 @@
 {
   "name": "z-tally",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A multi-counter tally app for round and square Amazfit watches",
   "private": true,
-  "license": "ISC",
+  "license": "CC-BY-SA-4.0",
   "devDependencies": {
     "@zeppos/device-types": "^3.0.0"
   }

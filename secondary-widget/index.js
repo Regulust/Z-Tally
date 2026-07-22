@@ -4,6 +4,7 @@ import { push } from "@zos/router";
 import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
 import { COUNTER_IDS, loadState, saveState } from "../utils/state";
 import { createAdaptiveUI } from "../utils/adaptive-ui";
+import { fitTextSize } from "../utils/text-layout";
 
 const hmUI = createAdaptiveUI(rawUI);
 const COLORS = {
@@ -89,6 +90,8 @@ SecondaryWidget({
     });
 
     const counter = activeCounter();
+    const counterLabel = `${counterName(counter.id)}  •  ${text("tapToCount")}`;
+    const openAppLabel = text("openApp");
     valueWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
       text: `${counter.value}`,
       x: 64,
@@ -104,25 +107,25 @@ SecondaryWidget({
     });
 
     counterNameWidget = hmUI.createWidget(hmUI.widget.TEXT, {
-      text: `${counterName(counter.id)}  •  ${text("tapToCount")}`,
+      text: counterLabel,
       x: 60,
       y: 374,
       w: 360,
       h: 42,
       color: COLORS.secondary,
-      text_size: 24,
+      text_size: fitTextSize(counterLabel, 360, 24, 17),
       align_h: hmUI.align.CENTER_H,
       align_v: hmUI.align.CENTER_V,
     });
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
-      text: text("openApp"),
+      text: openAppLabel,
       x: 170,
       y: 420,
       w: 140,
       h: 44,
       color: COLORS.text,
-      text_size: 22,
+      text_size: fitTextSize(openAppLabel, 140, 22, 16),
       radius: 15,
       normal_color: COLORS.key,
       press_color: COLORS.keyPressed,
@@ -182,14 +185,15 @@ SecondaryWidget({
       });
     }
     if (counterNameWidget) {
+      const counterLabel = `${counterName(counter.id)}  •  ${text("tapToCount")}`;
       counterNameWidget.setProperty(hmUI.prop.MORE, {
-        text: `${counterName(counter.id)}  •  ${text("tapToCount")}`,
+        text: counterLabel,
         x: 60,
         y: 374,
         w: 360,
         h: 42,
         color: COLORS.secondary,
-        text_size: 24,
+        text_size: fitTextSize(counterLabel, 360, 24, 17),
         align_h: hmUI.align.CENTER_H,
         align_v: hmUI.align.CENTER_V,
       });

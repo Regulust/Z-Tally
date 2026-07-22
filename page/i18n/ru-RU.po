@@ -1,0 +1,134 @@
+msgid "appName"
+msgstr "Z-Tally"
+
+msgid "save"
+msgstr "Сохранить"
+
+msgid "reset"
+msgstr "Сброс"
+
+msgid "history"
+msgstr "История"
+
+msgid "saved"
+msgstr "Сохранено"
+
+msgid "noSavedResults"
+msgstr "Нет сохранённых результатов"
+
+msgid "counter"
+msgstr "Счётчик"
+
+msgid "counter1"
+msgstr "Счётчик 1"
+
+msgid "counter2"
+msgstr "Счётчик 2"
+
+msgid "counter3"
+msgstr "Счётчик 3"
+
+msgid "settings"
+msgstr "Настройки"
+
+msgid "vibration"
+msgstr "Вибрация"
+
+msgid "screenTimeout"
+msgstr "Подсветка"
+
+msgid "timeoutSystemShort"
+msgstr "Система"
+
+msgid "timeout15Short"
+msgstr "15 с"
+
+msgid "timeout30Short"
+msgstr "30 с"
+
+msgid "timeout1mShort"
+msgstr "1 мин"
+
+msgid "timeoutSystemDefault"
+msgstr "Системный"
+
+msgid "timeout15"
+msgstr "15 секунд"
+
+msgid "timeout30"
+msgstr "30 секунд"
+
+msgid "timeout1m"
+msgstr "1 минута"
+
+msgid "screenOnlyAffects"
+msgstr "Только для Z-Tally"
+
+msgid "about"
+msgstr "О приложении"
+
+msgid "aboutDescription"
+msgstr "Простой тройной счётчик"
+
+msgid "aboutFeatures"
+msgstr "Быстрый счёт • Локальная история"
+
+msgid "version"
+msgstr "Версия 1.1.1"
+
+msgid "targetDevice"
+msgstr "For Amazfit"
+
+msgid "developer"
+msgstr "Разработчик: Regulus"
+
+msgid "historyFullTitle"
+msgstr "История заполнена"
+
+msgid "historyFullDetail"
+msgstr "Сохранено 30 результатов.\nУдалите часть перед сохранением."
+
+msgid "back"
+msgstr "Назад"
+
+msgid "resetConfirmTitle"
+msgstr "Сбросить счётчик?"
+
+msgid "resetConfirmDetail"
+msgstr "{counter} будет сброшен до 0."
+
+msgid "deleteConfirmTitle"
+msgstr "Удалить результат?"
+
+msgid "deleteConfirmDetail"
+msgstr "Это действие нельзя отменить."
+
+msgid "errorTitle"
+msgstr "Ошибка Z-Tally"
+
+msgid "tutorialTitle"
+msgstr "Быстрый старт"
+
+msgid "tutorialCount"
+msgstr "Центр / нижняя кнопка: +1"
+
+msgid "tutorialCounters"
+msgstr "1, 2, 3: отдельные счётчики"
+
+msgid "tutorialSave"
+msgstr "Сохранить результат в Историю"
+
+msgid "tutorialStart"
+msgstr "Начать"
+
+msgid "tutorialDone"
+msgstr "Готово"
+
+msgid "tutorial"
+msgstr "Обучение"
+
+msgid "tapToCount"
+msgstr "Нажмите для счёта"
+
+msgid "openApp"
+msgstr "Открыть"

@@ -1,7 +1,6 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
-import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { push } from "@zos/router";
 import {
   onKey,
@@ -16,6 +15,8 @@ import {
 import { log as Logger } from "@zos/utils";
 import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyScreenBrightTime } from "../../../utils/screen-bright";
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
@@ -160,6 +161,10 @@ Page({
     incrementFromPhysicalKey = null;
   },
 
+  onResume() {
+    this.applyScreenBrightTime();
+  },
+
   persistNow() {
     try {
       if (persistTimer) {
@@ -269,14 +274,8 @@ Page({
   },
 
   applyScreenBrightTime() {
-    try {
-      const result = pageState.screenBrightTime > 0
-        ? setPageBrightTime({ brightTime: pageState.screenBrightTime })
-        : resetPageBrightTime();
-      if (result !== 0) logger.warn(`screen bright time update failed: ${result}`);
-    } catch (error) {
-      logger.warn(`screen bright time update failed: ${error}`);
-    }
+    const result = applyScreenBrightTime(pageState.screenBrightTime);
+    if (result !== 0) logger.warn(`screen bright time update failed: ${result}`);
   },
 
   changeValue(delta) {
@@ -322,14 +321,15 @@ Page({
       if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
     }
     if (saveButtonWidget) {
+      const saveLabel = text("save");
       saveButtonWidget.setProperty(hmUI.prop.MORE, {
-        text: text("save"),
+        text: saveLabel,
         x: 188,
         y: 318,
         w: 104,
         h: 58,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
-        text_size: TYPOGRAPHY.caption,
+        text_size: fitTextSize(saveLabel, 104, TYPOGRAPHY.caption, 15),
         radius: 18,
         normal_color: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03,
         press_color: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed,
@@ -355,14 +355,15 @@ Page({
     this.persistNow();
     this.pulse();
     if (historyButtonWidget) {
+      const historyLabel = `${text("history")}  ${pageState.results.length}`;
       historyButtonWidget.setProperty(hmUI.prop.MORE, {
-        text: `${text("history")}  ${pageState.results.length}`,
+        text: historyLabel,
         x: 120,
         y: 398,
         w: 180,
         h: 52,
         color: COLORS.textButton,
-        text_size: TYPOGRAPHY.caption,
+        text_size: fitTextSize(historyLabel, 180, TYPOGRAPHY.caption, 18),
         radius: 18,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
@@ -396,6 +397,9 @@ Page({
     currentView = "main";
     this.clearWidgets();
     const counter = this.activeCounter();
+    const saveLabel = text("save");
+    const resetLabel = text("reset");
+    const historyLabel = `${text("history")}  ${pageState.results.length}`;
 
     this.addText(text("appName"), 0, 18, 480, 48, TYPOGRAPHY.title);
 
@@ -429,10 +433,10 @@ Page({
     });
     minusButtonWidget = this.addButton({ text: "−1", x: 62, y: 318, w: 104, h: 58, size: TYPOGRAPHY.subheadline, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
-    saveButtonWidget = this.addButton({ text: text("save"), x: 188, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    saveButtonWidget = this.addButton({ text: saveLabel, x: 188, y: 318, w: 104, h: 58, size: fitTextSize(saveLabel, 104, TYPOGRAPHY.caption, 15), onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
-    this.addButton({ text: text("reset"), x: 314, y: 318, w: 104, h: 58, size: TYPOGRAPHY.caption, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
-    historyButtonWidget = this.addButton({ text: `${text("history")}  ${pageState.results.length}`, x: 120, y: 398, w: 180, h: 52, size: TYPOGRAPHY.caption, onClick: () => push({ url: "page/round/history/index.page" }) });
+    this.addButton({ text: resetLabel, x: 314, y: 318, w: 104, h: 58, size: fitTextSize(resetLabel, 104, TYPOGRAPHY.caption, 15), onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
+    historyButtonWidget = this.addButton({ text: historyLabel, x: 120, y: 398, w: 180, h: 52, size: fitTextSize(historyLabel, 180, TYPOGRAPHY.caption, 18), onClick: () => push({ url: "page/round/history/index.page" }) });
     this.addWidget(hmUI.widget.BUTTON, {
       text: "",
       x: 308,
@@ -448,10 +452,14 @@ Page({
   renderStorageFull() {
     currentView = "storage-full";
     this.clearWidgets();
-    this.addText(text("historyFullTitle"), 55, 105, 370, 58, TYPOGRAPHY.title);
-    this.addText(text("historyFullDetail"), 60, 166, 360, 105, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
-    this.addButton({ text: text("back"), x: 70, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, onClick: () => this.renderMain() });
-    this.addButton({ text: text("history"), x: 260, y: 292, w: 150, h: 68, size: TYPOGRAPHY.caption, normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/round/history/index.page" }) });
+    const fullTitle = text("historyFullTitle");
+    const fullDetail = text("historyFullDetail");
+    const backLabel = text("back");
+    const historyLabel = text("history");
+    this.addText(fullTitle, 55, 105, 370, 58, fitTextSize(fullTitle, 370, TYPOGRAPHY.title, 24));
+    this.addText(fullDetail, 60, 166, 360, 105, fitTextSize(fullDetail, 360, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo);
+    this.addButton({ text: backLabel, x: 70, y: 292, w: 150, h: 68, size: fitTextSize(backLabel, 150, TYPOGRAPHY.caption, 18), onClick: () => this.renderMain() });
+    this.addButton({ text: historyLabel, x: 260, y: 292, w: 150, h: 68, size: fitTextSize(historyLabel, 150, TYPOGRAPHY.caption, 18), normal: COLORS.sysKey, pressed: COLORS.sysKeyPressed, onClick: () => push({ url: "page/round/history/index.page" }) });
   },
 
 });

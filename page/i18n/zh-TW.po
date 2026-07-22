@@ -2,43 +2,43 @@ msgid "appName"
 msgstr "Z-Tally"
 
 msgid "save"
-msgstr "保存"
+msgstr "儲存"
 
 msgid "reset"
-msgstr "清零"
+msgstr "歸零"
 
 msgid "history"
-msgstr "历史"
+msgstr "歷史"
 
 msgid "saved"
-msgstr "已保存"
+msgstr "已儲存"
 
 msgid "noSavedResults"
-msgstr "暂无历史记录"
+msgstr "尚無歷史記錄"
 
 msgid "counter"
-msgstr "计数器"
+msgstr "計數器"
 
 msgid "counter1"
-msgstr "计数器 1"
+msgstr "計數器 1"
 
 msgid "counter2"
-msgstr "计数器 2"
+msgstr "計數器 2"
 
 msgid "counter3"
-msgstr "计数器 3"
+msgstr "計數器 3"
 
 msgid "settings"
-msgstr "设置"
+msgstr "設定"
 
 msgid "vibration"
-msgstr "振动"
+msgstr "震動"
 
 msgid "screenTimeout"
-msgstr "亮屏时间"
+msgstr "亮屏時間"
 
 msgid "timeoutSystemShort"
-msgstr "系统"
+msgstr "系統"
 
 msgid "timeout15Short"
 msgstr "15 秒"
@@ -47,10 +47,10 @@ msgid "timeout30Short"
 msgstr "30 秒"
 
 msgid "timeout1mShort"
-msgstr "1 分钟"
+msgstr "1 分鐘"
 
 msgid "timeoutSystemDefault"
-msgstr "跟随系统"
+msgstr "跟隨系統"
 
 msgid "timeout15"
 msgstr "15 秒"
@@ -59,19 +59,19 @@ msgid "timeout30"
 msgstr "30 秒"
 
 msgid "timeout1m"
-msgstr "1 分钟"
+msgstr "1 分鐘"
 
 msgid "screenOnlyAffects"
-msgstr "仅影响 Z-Tally"
+msgstr "僅影響 Z-Tally"
 
 msgid "about"
-msgstr "关于"
+msgstr "關於"
 
 msgid "aboutDescription"
-msgstr "简洁的三组计数器"
+msgstr "簡潔的三組計數器"
 
 msgid "aboutFeatures"
-msgstr "快速计数 • 本地历史"
+msgstr "快速計數 • 本機歷史"
 
 msgid "version"
 msgstr "版本 1.1.1"
@@ -80,55 +80,55 @@ msgid "targetDevice"
 msgstr "For Amazfit"
 
 msgid "developer"
-msgstr "开发者：Regulus"
+msgstr "開發者：Regulus"
 
 msgid "historyFullTitle"
-msgstr "历史记录已满"
+msgstr "歷史記錄已滿"
 
 msgid "historyFullDetail"
-msgstr "已保存 30 条记录。\n请删除部分历史后再保存。"
+msgstr "已儲存 30 筆記錄。\n請先刪除部分歷史記錄。"
 
 msgid "back"
 msgstr "返回"
 
 msgid "resetConfirmTitle"
-msgstr "清零计数器？"
+msgstr "歸零計數器？"
 
 msgid "resetConfirmDetail"
-msgstr "{counter} 将归零。"
+msgstr "{counter} 將歸零。"
 
 msgid "deleteConfirmTitle"
-msgstr "删除记录？"
+msgstr "刪除記錄？"
 
 msgid "deleteConfirmDetail"
-msgstr "此操作无法撤销。"
+msgstr "此操作無法復原。"
 
 msgid "errorTitle"
-msgstr "Z-Tally 错误"
+msgstr "Z-Tally 錯誤"
 
 msgid "tutorialTitle"
-msgstr "快速入门"
+msgstr "快速入門"
 
 msgid "tutorialCount"
-msgstr "点按中心区域/下键：+1"
+msgstr "點按中央區域／下鍵：+1"
 
 msgid "tutorialCounters"
-msgstr "1、2、3：独立计数器"
+msgstr "1、2、3：獨立計數器"
 
 msgid "tutorialSave"
-msgstr "保存：当前结果存入历史"
+msgstr "儲存目前結果至歷史"
 
 msgid "tutorialStart"
-msgstr "开始使用"
+msgstr "開始使用"
 
 msgid "tutorialDone"
 msgstr "完成"
 
 msgid "tutorial"
-msgstr "使用教程"
+msgstr "使用教學"
 
 msgid "tapToCount"
-msgstr "点击计数"
+msgstr "點按計數"
 
 msgid "openApp"
-msgstr "打开应用"
+msgstr "開啟應用"

@@ -3,6 +3,8 @@ import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
 import { hasSeenTutorial, markTutorialSeen } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   sysKey: 0x0986d4,
@@ -54,8 +56,11 @@ function addInstruction(number, value, y) {
 
 Page({
   build() {
+    applyStoredScreenBrightTime();
     const returningUser = hasSeenTutorial();
-    addText(text("tutorialTitle"), 0, 24, 480, 52, TYPOGRAPHY.title);
+    const title = text("tutorialTitle");
+    const action = text(returningUser ? "tutorialDone" : "tutorialStart");
+    addText(title, 0, 24, 480, 52, fitTextSize(title, 480, TYPOGRAPHY.title, 24));
     addText("Z-Tally", 0, 72, 480, 36, TYPOGRAPHY.caption, COLORS.textSecondaryInfo);
 
     addInstruction(1, text("tutorialCount"), 116);
@@ -63,13 +68,13 @@ Page({
     addInstruction(3, text("tutorialSave"), 288);
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
-      text: text(returningUser ? "tutorialDone" : "tutorialStart"),
+      text: action,
       x: 130,
       y: 392,
       w: 220,
       h: 58,
       color: COLORS.textButton,
-      text_size: TYPOGRAPHY.subheadline,
+      text_size: fitTextSize(action, 220, TYPOGRAPHY.subheadline, 18),
       radius: 20,
       normal_color: COLORS.sysKey,
       press_color: COLORS.sysKeyPressed,
@@ -78,5 +83,9 @@ Page({
         back();
       },
     });
+  },
+
+  onResume() {
+    applyStoredScreenBrightTime();
   },
 });

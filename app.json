@@ -5,15 +5,16 @@
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
-      "code": 2,
-      "name": "1.1.0"
+      "code": 3,
+      "name": "1.1.1"
     },
     "icon": "icon.png",
     "vender": "Regulus",
     "description": "A multi-counter tally app for round and square Amazfit watches"
   },
   "permissions": [
-    "device:os.local_storage"
+    "device:os.local_storage",
+    "data:os.device.info"
   ],
   "runtime": {
     "apiVersion": {
@@ -52,6 +53,24 @@
                 },
                 "zh-CN": {
                   "name": "Z-Tally 计数"
+                },
+                "zh-TW": {
+                  "name": "Z-Tally 計數"
+                },
+                "es-ES": {
+                  "name": "Z-Tally Contador"
+                },
+                "pt-PT": {
+                  "name": "Z-Tally Contador"
+                },
+                "it-IT": {
+                  "name": "Z-Tally Contatore"
+                },
+                "de-DE": {
+                  "name": "Z-Tally Zähler"
+                },
+                "ru-RU": {
+                  "name": "Z-Tally Счётчик"
                 }
               }
             }
@@ -93,6 +112,24 @@
                 },
                 "zh-CN": {
                   "name": "Z-Tally 计数"
+                },
+                "zh-TW": {
+                  "name": "Z-Tally 計數"
+                },
+                "es-ES": {
+                  "name": "Z-Tally Contador"
+                },
+                "pt-PT": {
+                  "name": "Z-Tally Contador"
+                },
+                "it-IT": {
+                  "name": "Z-Tally Contatore"
+                },
+                "de-DE": {
+                  "name": "Z-Tally Zähler"
+                },
+                "ru-RU": {
+                  "name": "Z-Tally Счётчик"
                 }
               }
             }
@@ -113,6 +150,24 @@
       "appName": "Z-Tally"
     },
     "zh-CN": {
+      "appName": "Z-Tally"
+    },
+    "zh-TW": {
+      "appName": "Z-Tally"
+    },
+    "es-ES": {
+      "appName": "Z-Tally"
+    },
+    "pt-PT": {
+      "appName": "Z-Tally"
+    },
+    "it-IT": {
+      "appName": "Z-Tally"
+    },
+    "de-DE": {
+      "appName": "Z-Tally"
+    },
+    "ru-RU": {
       "appName": "Z-Tally"
     }
   },

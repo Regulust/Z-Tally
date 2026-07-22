@@ -1,10 +1,11 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
-import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyScreenBrightTime, applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   background: 0x000000,
@@ -30,7 +31,10 @@ Page({
   },
 
   build() {
-    hmUI.updateStatusBarTitle(text("screenTimeout"));
+    applyStoredScreenBrightTime();
+    const title = text("screenTimeout");
+    const scopeNote = text("screenOnlyAffects");
+    hmUI.updateStatusBarTitle(title);
     hmUI.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
       y: 64,
@@ -46,7 +50,7 @@ Page({
       scroll_enable: 1,
       bounce: 0,
     });
-    this.addText(text("screenOnlyAffects"), 20, 14, 350, 32, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, list);
+    this.addText(scopeNote, 20, 14, 350, 32, fitTextSize(scopeNote, 350, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo, list);
 
     [
       { label: text("timeoutSystemDefault"), value: 0 },
@@ -68,7 +72,7 @@ Page({
         w: 274,
         h: 60,
         color: COLORS.textTitle,
-        text_size: TYPOGRAPHY.subheadline,
+        text_size: fitTextSize(option.label, 274, TYPOGRAPHY.subheadline, 18),
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
@@ -96,6 +100,7 @@ Page({
 
   onResume() {
     hmUI.updateStatusBarTitle(text("screenTimeout"));
+    applyStoredScreenBrightTime();
   },
 
   addText(value, x, y, w, h, size, color = COLORS.textTitle, parent = null) {
@@ -113,10 +118,7 @@ Page({
     if (!SCREEN_BRIGHT_OPTIONS.includes(duration)) return;
     pageState.screenBrightTime = duration;
     saveState(pageState);
-    try {
-      if (duration > 0) setPageBrightTime({ brightTime: duration });
-      else resetPageBrightTime();
-    } catch (_error) {}
+    applyScreenBrightTime(duration);
     if (pageState.vibrationEnabled && vibrator) {
       try {
         vibrator.stop();

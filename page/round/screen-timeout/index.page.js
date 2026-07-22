@@ -1,10 +1,11 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
-import { setPageBrightTime, resetPageBrightTime } from "@zos/display";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyScreenBrightTime, applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   background: 0x000000,
@@ -30,6 +31,9 @@ Page({
   },
 
   build() {
+    applyStoredScreenBrightTime();
+    const title = text("screenTimeout");
+    const scopeNote = text("screenOnlyAffects");
     const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
       y: 0,
@@ -38,8 +42,8 @@ Page({
       scroll_enable: 1,
       bounce: 0,
     });
-    this.addText(text("screenTimeout"), 74, 20, 332, 64, TYPOGRAPHY.title, COLORS.textTitle, list);
-    this.addText(text("screenOnlyAffects"), 62, 78, 356, 38, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, list);
+    this.addText(title, 74, 20, 332, 64, fitTextSize(title, 332, TYPOGRAPHY.title, 22), COLORS.textTitle, list);
+    this.addText(scopeNote, 62, 78, 356, 38, fitTextSize(scopeNote, 356, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo, list);
 
     [
       { label: text("timeoutSystemDefault"), value: 0 },
@@ -61,7 +65,7 @@ Page({
         w: 292,
         h: 68,
         color: COLORS.textTitle,
-        text_size: TYPOGRAPHY.subheadline,
+        text_size: fitTextSize(option.label, 292, TYPOGRAPHY.subheadline, 18),
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
@@ -87,6 +91,10 @@ Page({
     hmUI.createWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
   },
 
+  onResume() {
+    applyStoredScreenBrightTime();
+  },
+
   addText(value, x, y, w, h, size, color = COLORS.textTitle, parent = null) {
     const options = {
       text: value, x, y, w, h, color, text_size: size,
@@ -102,10 +110,7 @@ Page({
     if (!SCREEN_BRIGHT_OPTIONS.includes(duration)) return;
     pageState.screenBrightTime = duration;
     saveState(pageState);
-    try {
-      if (duration > 0) setPageBrightTime({ brightTime: duration });
-      else resetPageBrightTime();
-    } catch (_error) {}
+    applyScreenBrightTime(duration);
     if (pageState.vibrationEnabled && vibrator) {
       try {
         vibrator.stop();

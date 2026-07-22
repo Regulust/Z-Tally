@@ -1,0 +1,134 @@
+msgid "appName"
+msgstr "Z-Tally"
+
+msgid "save"
+msgstr "Salva"
+
+msgid "reset"
+msgstr "Azzera"
+
+msgid "history"
+msgstr "Cronologia"
+
+msgid "saved"
+msgstr "Salvato"
+
+msgid "noSavedResults"
+msgstr "Nessun risultato salvato"
+
+msgid "counter"
+msgstr "Contatore"
+
+msgid "counter1"
+msgstr "Contatore 1"
+
+msgid "counter2"
+msgstr "Contatore 2"
+
+msgid "counter3"
+msgstr "Contatore 3"
+
+msgid "settings"
+msgstr "Impostazioni"
+
+msgid "vibration"
+msgstr "Vibrazione"
+
+msgid "screenTimeout"
+msgstr "Schermo attivo"
+
+msgid "timeoutSystemShort"
+msgstr "Sistema"
+
+msgid "timeout15Short"
+msgstr "15 s"
+
+msgid "timeout30Short"
+msgstr "30 s"
+
+msgid "timeout1mShort"
+msgstr "1 min"
+
+msgid "timeoutSystemDefault"
+msgstr "Predefinito"
+
+msgid "timeout15"
+msgstr "15 secondi"
+
+msgid "timeout30"
+msgstr "30 secondi"
+
+msgid "timeout1m"
+msgstr "1 minuto"
+
+msgid "screenOnlyAffects"
+msgstr "Solo per Z-Tally"
+
+msgid "about"
+msgstr "Info"
+
+msgid "aboutDescription"
+msgstr "Contatore triplo semplice"
+
+msgid "aboutFeatures"
+msgstr "Conteggio rapido • Cronologia locale"
+
+msgid "version"
+msgstr "Versione 1.1.1"
+
+msgid "targetDevice"
+msgstr "For Amazfit"
+
+msgid "developer"
+msgstr "Sviluppatore: Regulus"
+
+msgid "historyFullTitle"
+msgstr "Cronologia piena"
+
+msgid "historyFullDetail"
+msgstr "30 risultati salvati.\nEliminane alcuni prima di salvare."
+
+msgid "back"
+msgstr "Indietro"
+
+msgid "resetConfirmTitle"
+msgstr "Azzerare il contatore?"
+
+msgid "resetConfirmDetail"
+msgstr "{counter} tornerà a 0."
+
+msgid "deleteConfirmTitle"
+msgstr "Eliminare il risultato?"
+
+msgid "deleteConfirmDetail"
+msgstr "Questa azione è definitiva."
+
+msgid "errorTitle"
+msgstr "Errore Z-Tally"
+
+msgid "tutorialTitle"
+msgstr "Guida rapida"
+
+msgid "tutorialCount"
+msgstr "Tocca il centro / Tasto inferiore: +1"
+
+msgid "tutorialCounters"
+msgstr "1, 2, 3: contatori separati"
+
+msgid "tutorialSave"
+msgstr "Salva il risultato in Cronologia"
+
+msgid "tutorialStart"
+msgstr "Inizia"
+
+msgid "tutorialDone"
+msgstr "Fine"
+
+msgid "tutorial"
+msgstr "Tutorial"
+
+msgid "tapToCount"
+msgstr "Tocca per contare"
+
+msgid "openApp"
+msgstr "Apri app"

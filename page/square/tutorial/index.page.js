@@ -3,6 +3,8 @@ import { getText } from "@zos/i18n";
 import { back } from "@zos/router";
 import { hasSeenTutorial, markTutorialSeen } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   sysKey: 0x0986d4,
@@ -54,8 +56,11 @@ function addInstruction(number, value, y) {
 
 Page({
   build() {
+    applyStoredScreenBrightTime();
     const returningUser = hasSeenTutorial();
-    hmUI.updateStatusBarTitle(text("tutorialTitle"));
+    const title = text("tutorialTitle");
+    const action = text(returningUser ? "tutorialDone" : "tutorialStart");
+    hmUI.updateStatusBarTitle(title);
     hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 64, w: 390, h: 386, color: 0x000000 });
 
     addInstruction(1, text("tutorialCount"), 88);
@@ -63,13 +68,13 @@ Page({
     addInstruction(3, text("tutorialSave"), 256);
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
-      text: text(returningUser ? "tutorialDone" : "tutorialStart"),
+      text: action,
       x: 95,
       y: 356,
       w: 200,
       h: 54,
       color: COLORS.textButton,
-      text_size: TYPOGRAPHY.subheadline,
+      text_size: fitTextSize(action, 200, TYPOGRAPHY.subheadline, 18),
       radius: 20,
       normal_color: COLORS.sysKey,
       press_color: COLORS.sysKeyPressed,
@@ -82,5 +87,6 @@ Page({
 
   onResume() {
     hmUI.updateStatusBarTitle(text("tutorialTitle"));
+    applyStoredScreenBrightTime();
   },
 });

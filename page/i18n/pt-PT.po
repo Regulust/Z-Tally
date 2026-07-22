@@ -1,0 +1,134 @@
+msgid "appName"
+msgstr "Z-Tally"
+
+msgid "save"
+msgstr "Guardar"
+
+msgid "reset"
+msgstr "Repor"
+
+msgid "history"
+msgstr "Histórico"
+
+msgid "saved"
+msgstr "Guardado"
+
+msgid "noSavedResults"
+msgstr "Sem resultados guardados"
+
+msgid "counter"
+msgstr "Contador"
+
+msgid "counter1"
+msgstr "Contador 1"
+
+msgid "counter2"
+msgstr "Contador 2"
+
+msgid "counter3"
+msgstr "Contador 3"
+
+msgid "settings"
+msgstr "Definições"
+
+msgid "vibration"
+msgstr "Vibração"
+
+msgid "screenTimeout"
+msgstr "Ecrã ativo"
+
+msgid "timeoutSystemShort"
+msgstr "Sistema"
+
+msgid "timeout15Short"
+msgstr "15 s"
+
+msgid "timeout30Short"
+msgstr "30 s"
+
+msgid "timeout1mShort"
+msgstr "1 min"
+
+msgid "timeoutSystemDefault"
+msgstr "Predefinição"
+
+msgid "timeout15"
+msgstr "15 segundos"
+
+msgid "timeout30"
+msgstr "30 segundos"
+
+msgid "timeout1m"
+msgstr "1 minuto"
+
+msgid "screenOnlyAffects"
+msgstr "Só afeta o Z-Tally"
+
+msgid "about"
+msgstr "Sobre"
+
+msgid "aboutDescription"
+msgstr "Contador triplo simples"
+
+msgid "aboutFeatures"
+msgstr "Contagem rápida • Histórico local"
+
+msgid "version"
+msgstr "Versão 1.1.1"
+
+msgid "targetDevice"
+msgstr "For Amazfit"
+
+msgid "developer"
+msgstr "Programador: Regulus"
+
+msgid "historyFullTitle"
+msgstr "Histórico cheio"
+
+msgid "historyFullDetail"
+msgstr "30 resultados guardados.\nElimine alguns antes de guardar."
+
+msgid "back"
+msgstr "Voltar"
+
+msgid "resetConfirmTitle"
+msgstr "Repor contador?"
+
+msgid "resetConfirmDetail"
+msgstr "{counter} voltará a 0."
+
+msgid "deleteConfirmTitle"
+msgstr "Eliminar resultado?"
+
+msgid "deleteConfirmDetail"
+msgstr "Não é possível anular."
+
+msgid "errorTitle"
+msgstr "Erro do Z-Tally"
+
+msgid "tutorialTitle"
+msgstr "Início rápido"
+
+msgid "tutorialCount"
+msgstr "Toque no centro / Botão inferior: +1"
+
+msgid "tutorialCounters"
+msgstr "1, 2, 3: contadores separados"
+
+msgid "tutorialSave"
+msgstr "Guarde o resultado no Histórico"
+
+msgid "tutorialStart"
+msgstr "Começar"
+
+msgid "tutorialDone"
+msgstr "Concluído"
+
+msgid "tutorial"
+msgstr "Tutorial"
+
+msgid "tapToCount"
+msgstr "Toque para contar"
+
+msgid "openApp"
+msgstr "Abrir app"

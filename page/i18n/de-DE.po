@@ -2,76 +2,76 @@ msgid "appName"
 msgstr "Z-Tally"
 
 msgid "save"
-msgstr "Save"
+msgstr "Speichern"
 
 msgid "reset"
-msgstr "Reset"
+msgstr "Nullen"
 
 msgid "history"
-msgstr "History"
+msgstr "Verlauf"
 
 msgid "saved"
-msgstr "Saved"
+msgstr "Gespeichert"
 
 msgid "noSavedResults"
-msgstr "No saved results"
+msgstr "Keine Ergebnisse"
 
 msgid "counter"
-msgstr "Counter"
+msgstr "Zähler"
 
 msgid "counter1"
-msgstr "Counter 1"
+msgstr "Zähler 1"
 
 msgid "counter2"
-msgstr "Counter 2"
+msgstr "Zähler 2"
 
 msgid "counter3"
-msgstr "Counter 3"
+msgstr "Zähler 3"
 
 msgid "settings"
-msgstr "Settings"
+msgstr "Einstellungen"
 
 msgid "vibration"
 msgstr "Vibration"
 
 msgid "screenTimeout"
-msgstr "Screen timeout"
+msgstr "Displayzeit"
 
 msgid "timeoutSystemShort"
 msgstr "System"
 
 msgid "timeout15Short"
-msgstr "15 sec"
+msgstr "15 Sek."
 
 msgid "timeout30Short"
-msgstr "30 sec"
+msgstr "30 Sek."
 
 msgid "timeout1mShort"
-msgstr "1 min"
+msgstr "1 Min."
 
 msgid "timeoutSystemDefault"
-msgstr "System default"
+msgstr "Systemstandard"
 
 msgid "timeout15"
-msgstr "15 seconds"
+msgstr "15 Sekunden"
 
 msgid "timeout30"
-msgstr "30 seconds"
+msgstr "30 Sekunden"
 
 msgid "timeout1m"
-msgstr "1 minute"
+msgstr "1 Minute"
 
 msgid "screenOnlyAffects"
-msgstr "Only affects Z-Tally"
+msgstr "Nur in Z-Tally"
 
 msgid "about"
-msgstr "About"
+msgstr "Info"
 
 msgid "aboutDescription"
-msgstr "A simple three-counter tally app"
+msgstr "Einfacher 3-fach-Zähler"
 
 msgid "aboutFeatures"
-msgstr "Fast counting • Local history"
+msgstr "Schnell zählen • Lokaler Verlauf"
 
 msgid "version"
 msgstr "Version 1.1.1"
@@ -80,55 +80,55 @@ msgid "targetDevice"
 msgstr "For Amazfit"
 
 msgid "developer"
-msgstr "Developer: Regulus"
+msgstr "Entwickler: Regulus"
 
 msgid "historyFullTitle"
-msgstr "History is full"
+msgstr "Verlauf voll"
 
 msgid "historyFullDetail"
-msgstr "30 results saved.\nDelete some history before saving again."
+msgstr "30 Ergebnisse gespeichert.\nVor dem Speichern einige löschen."
 
 msgid "back"
-msgstr "Back"
+msgstr "Zurück"
 
 msgid "resetConfirmTitle"
-msgstr "Reset counter?"
+msgstr "Zähler nullen?"
 
 msgid "resetConfirmDetail"
-msgstr "{counter} will return to 0."
+msgstr "{counter} wird auf 0 gesetzt."
 
 msgid "deleteConfirmTitle"
-msgstr "Delete result?"
+msgstr "Ergebnis löschen?"
 
 msgid "deleteConfirmDetail"
-msgstr "This cannot be undone."
+msgstr "Dies kann nicht rückgängig gemacht werden."
 
 msgid "errorTitle"
-msgstr "Z-Tally error"
+msgstr "Z-Tally-Fehler"
 
 msgid "tutorialTitle"
-msgstr "Quick start"
+msgstr "Schnellstart"
 
 msgid "tutorialCount"
-msgstr "Tap center / Lower Button: +1"
+msgstr "Mitte / untere Taste drücken: +1"
 
 msgid "tutorialCounters"
-msgstr "1, 2, 3: separate counters"
+msgstr "1, 2, 3: getrennte Zähler"
 
 msgid "tutorialSave"
-msgstr "Save current result to History"
+msgstr "Ergebnis im Verlauf speichern"
 
 msgid "tutorialStart"
-msgstr "Start counting"
+msgstr "Loszählen"
 
 msgid "tutorialDone"
-msgstr "Done"
+msgstr "Fertig"
 
 msgid "tutorial"
-msgstr "Tutorial"
+msgstr "Anleitung"
 
 msgid "tapToCount"
-msgstr "Tap to count"
+msgstr "Zum Zählen tippen"
 
 msgid "openApp"
-msgstr "Open app"
+msgstr "App öffnen"

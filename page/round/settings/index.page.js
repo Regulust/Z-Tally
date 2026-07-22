@@ -4,6 +4,8 @@ import { push } from "@zos/router";
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
+import { fitTextSize } from "../../../utils/text-layout";
+import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
 
 const COLORS = {
   background: 0x000000,
@@ -30,6 +32,7 @@ Page({
   },
 
   build() {
+    applyStoredScreenBrightTime();
     const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
       y: 0,
@@ -38,9 +41,14 @@ Page({
       scroll_enable: 1,
       bounce: 0,
     });
-    this.addText(text("settings"), 130, 24, 220, 62, TYPOGRAPHY.title, COLORS.textTitle, hmUI.align.CENTER_H, list);
+    const settingsLabel = text("settings");
+    const vibrationLabel = text("vibration");
+    const timeoutTitle = text("screenTimeout");
+    const tutorialLabel = text("tutorial");
+    const aboutLabel = text("about");
+    this.addText(settingsLabel, 130, 24, 220, 62, fitTextSize(settingsLabel, 220, TYPOGRAPHY.title, 22), COLORS.textTitle, hmUI.align.CENTER_H, list);
 
-    this.addText(text("vibration"), 68, 100, 225, 60, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(vibrationLabel, 68, 100, 225, 60, fitTextSize(vibrationLabel, 225, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, list);
     list.createWidget(hmUI.widget.SLIDE_SWITCH, {
       x: 320,
       y: 106,
@@ -60,8 +68,8 @@ Page({
       30000: text("timeout30Short"),
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
-    this.addText(text("screenTimeout"), 68, 184, 226, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
-    this.addText(timeoutLabel, 282, 184, 82, 68, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT, list);
+    this.addText(timeoutTitle, 68, 184, 226, 68, fitTextSize(timeoutTitle, 226, TYPOGRAPHY.subheadline, 18), COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(timeoutLabel, 282, 184, 82, 68, fitTextSize(timeoutLabel, 82, TYPOGRAPHY.caption, 15, 6), COLORS.textSecondaryInfo, hmUI.align.RIGHT, list);
     this.addText("›", 366, 182, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
     list.createWidget(hmUI.widget.BUTTON, {
       text: "",
@@ -74,7 +82,7 @@ Page({
       click_func: () => push({ url: "page/round/screen-timeout/index.page" }),
     });
 
-    this.addText(text("tutorial"), 68, 260, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(tutorialLabel, 68, 260, 296, 68, fitTextSize(tutorialLabel, 296, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, list);
     this.addText("›", 366, 258, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
     list.createWidget(hmUI.widget.BUTTON, {
       text: "",
@@ -87,7 +95,7 @@ Page({
       click_func: () => push({ url: "page/round/tutorial/index.page" }),
     });
 
-    this.addText(text("about"), 68, 336, 296, 68, TYPOGRAPHY.subheadline, COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(aboutLabel, 68, 336, 296, 68, fitTextSize(aboutLabel, 296, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, list);
     this.addText("›", 366, 334, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
     list.createWidget(hmUI.widget.BUTTON, {
       text: "",
@@ -108,6 +116,10 @@ Page({
       color: COLORS.background,
     });
     hmUI.createWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
+  },
+
+  onResume() {
+    applyStoredScreenBrightTime();
   },
 
   onDestroy() {
