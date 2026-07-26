@@ -96,29 +96,12 @@ def make_radio(selected, output):
     image.save(output, "PNG")
 
 
-def make_touch_row(width, height, pressed, output):
-    image = Image.new("RGBA", (width * SCALE, height * SCALE), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(image)
-    if pressed:
-        draw.rounded_rectangle(
-            (0, 0, width * SCALE - 1, height * SCALE - 1),
-            radius=scaled(16),
-            fill=COLOR_SYS_BUTTON_PRESSED[:3] + (190,),
-        )
-    else:
-        # Keep a non-empty PNG while leaving the row visually transparent.
-        draw.point((0, 0), fill=(0, 0, 0, 1))
-    image = image.resize((width, height), Image.Resampling.LANCZOS)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    image.save(output, "PNG")
-
-
 root = Path(__file__).resolve().parents[1]
 asset_targets = (
-    (root / "assets" / "round.r" / "image", 356, 68, 404, 64),
-    (root / "assets" / "square.w390-s" / "image", 356, 60, 358, 60),
+    root / "assets" / "round.r" / "image",
+    root / "assets" / "square.w390-s" / "image",
 )
-for asset_dir, settings_width, settings_height, option_width, option_height in asset_targets:
+for asset_dir in asset_targets:
     make_button(COLOR_SYS_BUTTON_BG, asset_dir / "settings_normal.png")
     make_button(COLOR_SYS_BUTTON_PRESSED, asset_dir / "settings_pressed.png")
     make_switch_background(COLOR_SYS_KEY, asset_dir / "switch_on.png")
@@ -126,7 +109,3 @@ for asset_dir, settings_width, settings_height, option_width, option_height in a
     make_switch_thumb(asset_dir / "switch_thumb.png")
     make_radio(False, asset_dir / "radio_off.png")
     make_radio(True, asset_dir / "radio_on.png")
-    make_touch_row(settings_width, settings_height, False, asset_dir / "settings_row_normal.png")
-    make_touch_row(settings_width, settings_height, True, asset_dir / "settings_row_pressed.png")
-    make_touch_row(option_width, option_height, False, asset_dir / "option_row_normal.png")
-    make_touch_row(option_width, option_height, True, asset_dir / "option_row_pressed.png")

@@ -6,6 +6,7 @@ import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { createInteractiveRow } from "../../../utils/interactive-row";
 
 const COLORS = {
   background: 0x000000,
@@ -74,45 +75,33 @@ Page({
       30000: text("timeout30Short"),
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
-    this.addText(timeoutTitle, 20, 92, 205, 60, fitTextSize(timeoutTitle, 205, TYPOGRAPHY.subheadline, 18), COLORS.textTitle, hmUI.align.LEFT, list);
-    this.addText(timeoutLabel, 224, 92, 102, 60, fitTextSize(timeoutLabel, 102, TYPOGRAPHY.caption, 16, 6), COLORS.textSecondaryInfo, hmUI.align.RIGHT, list);
-    this.addText("›", 334, 90, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
-    list.createWidget(hmUI.widget.BUTTON, {
-      text: "",
+    const timeoutRow = createInteractiveRow(list, {
       x: 17,
-      y: 92,
+      y: 90,
       w: 356,
-      h: 60,
-      normal_src: "image/settings_row_normal.png",
-      press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/square/screen-timeout/index.page" }),
-    });
+      h: 62,
+    }, () => push({ url: "page/square/screen-timeout/index.page" }));
+    this.addText(timeoutTitle, 3, 2, 205, 60, fitTextSize(timeoutTitle, 205, TYPOGRAPHY.subheadline, 18), COLORS.textTitle, hmUI.align.LEFT, timeoutRow);
+    this.addText(timeoutLabel, 207, 2, 102, 60, fitTextSize(timeoutLabel, 102, TYPOGRAPHY.caption, 16, 6), COLORS.textSecondaryInfo, hmUI.align.RIGHT, timeoutRow);
+    this.addText("›", 317, 0, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, timeoutRow);
 
-    this.addText(tutorialLabel, 20, 162, 300, 60, fitTextSize(tutorialLabel, 300, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, list);
-    this.addText("›", 334, 160, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
-    list.createWidget(hmUI.widget.BUTTON, {
-      text: "",
+    const tutorialRow = createInteractiveRow(list, {
       x: 17,
-      y: 162,
+      y: 160,
       w: 356,
-      h: 60,
-      normal_src: "image/settings_row_normal.png",
-      press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/square/tutorial/index.page" }),
-    });
+      h: 62,
+    }, () => push({ url: "page/square/tutorial/index.page" }));
+    this.addText(tutorialLabel, 3, 2, 300, 60, fitTextSize(tutorialLabel, 300, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, tutorialRow);
+    this.addText("›", 317, 0, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, tutorialRow);
 
-    this.addText(aboutLabel, 20, 232, 300, 60, fitTextSize(aboutLabel, 300, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, list);
-    this.addText("›", 334, 230, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, list);
-    list.createWidget(hmUI.widget.BUTTON, {
-      text: "",
+    const aboutRow = createInteractiveRow(list, {
       x: 17,
-      y: 232,
+      y: 230,
       w: 356,
-      h: 60,
-      normal_src: "image/settings_row_normal.png",
-      press_src: "image/settings_row_pressed.png",
-      click_func: () => push({ url: "page/square/about/index.page" }),
-    });
+      h: 62,
+    }, () => push({ url: "page/square/about/index.page" }));
+    this.addText(aboutLabel, 3, 2, 300, 60, fitTextSize(aboutLabel, 300, TYPOGRAPHY.subheadline, 20), COLORS.textTitle, hmUI.align.LEFT, aboutRow);
+    this.addText("›", 317, 0, 36, 60, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, aboutRow);
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,

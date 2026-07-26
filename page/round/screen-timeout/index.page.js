@@ -6,6 +6,7 @@ import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/stat
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyScreenBrightTime, applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { createInteractiveRow } from "../../../utils/interactive-row";
 
 const COLORS = {
   background: 0x000000,
@@ -53,15 +54,21 @@ Page({
     ].forEach((option, index) => {
       const active = pageState.screenBrightTime === option.value;
       const y = 120 + index * 90;
-      list.createWidget(hmUI.widget.IMG, {
-        x: 46,
-        y: y + 9,
+      const row = createInteractiveRow(list, {
+        x: 34,
+        y,
+        w: 410,
+        h: 68,
+      }, () => this.select(option.value));
+      row.createWidget(hmUI.widget.IMG, {
+        x: 12,
+        y: 9,
         src: active ? "image/radio_on.png" : "image/radio_off.png",
       });
-      list.createWidget(hmUI.widget.TEXT, {
+      row.createWidget(hmUI.widget.TEXT, {
         text: option.label,
-        x: 120,
-        y,
+        x: 86,
+        y: 0,
         w: 292,
         h: 68,
         color: COLORS.textTitle,
@@ -69,16 +76,6 @@ Page({
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
-      });
-      list.createWidget(hmUI.widget.BUTTON, {
-        text: "",
-        x: 34,
-        y,
-        w: 410,
-        h: 68,
-        normal_src: "image/option_row_normal.png",
-        press_src: "image/option_row_pressed.png",
-        click_func: () => this.select(option.value),
       });
     });
     list.createWidget(hmUI.widget.FILL_RECT, {
