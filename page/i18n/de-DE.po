@@ -74,7 +74,7 @@ msgid "aboutFeatures"
 msgstr "Schnell zählen • Lokaler Verlauf"
 
 msgid "version"
-msgstr "Version 1.1.1"
+msgstr "Version 1.1.2"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

@@ -74,7 +74,7 @@ msgid "aboutFeatures"
 msgstr "Conteo rápido • Historial local"
 
 msgid "version"
-msgstr "Versión 1.1.1"
+msgstr "Versión 1.1.2"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
