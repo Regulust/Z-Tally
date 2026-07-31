@@ -1,12 +1,13 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
-import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
+import { Vibrator } from "@zos/sensor";
 import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyStoredScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 import { createInteractiveRow } from "../../../utils/interactive-row";
+import { HAPTIC_CONFIRM, playHaptic, stopHaptic } from "../../../utils/haptics";
 
 const COLORS = {
   background: 0x000000,
@@ -16,7 +17,6 @@ const COLORS = {
 
 let pageState = null;
 let vibrator = null;
-let vibrationStopTimer = null;
 
 function text(key) {
   return getText(key) || key;
@@ -119,10 +119,7 @@ Page({
   },
 
   onDestroy() {
-    if (vibrationStopTimer) clearTimeout(vibrationStopTimer);
-    try {
-      if (vibrator) vibrator.stop();
-    } catch (_error) {}
+    stopHaptic(vibrator);
   },
 
   addText(value, x, y, w, h, size, color = COLORS.textTitle, align = hmUI.align.CENTER_H, parent = null) {
@@ -139,15 +136,6 @@ Page({
     pageState.vibrationEnabled = Boolean(enabled);
     saveState(pageState);
     if (!pageState.vibrationEnabled || !vibrator) return;
-    try {
-      vibrator.stop();
-      vibrator.start({ mode: VIBRATOR_SCENE_SHORT_LIGHT });
-      vibrationStopTimer = setTimeout(() => {
-        vibrationStopTimer = null;
-        try {
-          vibrator.stop();
-        } catch (_error) {}
-      }, 30);
-    } catch (_error) {}
+    playHaptic(vibrator, HAPTIC_CONFIRM);
   },
 });

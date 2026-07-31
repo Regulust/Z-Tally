@@ -1,7 +1,6 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { MODAL_CONFIRM, createModal } from "@zos/interaction";
-import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { DATE_FORMAT_DMY, DATE_FORMAT_MDY, getDateFormat } from "@zos/settings";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
@@ -18,8 +17,6 @@ const COLORS = {
 
 let pageState = null;
 let widgets = [];
-let vibrator = null;
-let vibrationStopTimer = null;
 
 function text(key) {
   return getText(key) || key;
@@ -59,11 +56,6 @@ function valueTextSize(value) {
 Page({
   onInit() {
     pageState = loadState();
-    try {
-      vibrator = new Vibrator();
-    } catch (_error) {
-      vibrator = null;
-    }
   },
 
   build() {
@@ -74,13 +66,6 @@ Page({
   onResume() {
     hmUI.updateStatusBarTitle(text("history"));
     applyStoredScreenBrightTime();
-  },
-
-  onDestroy() {
-    if (vibrationStopTimer) clearTimeout(vibrationStopTimer);
-    try {
-      if (vibrator) vibrator.stop();
-    } catch (_error) {}
   },
 
   addWidget(type, options) {
@@ -111,20 +96,6 @@ Page({
       align_v: hmUI.align.CENTER_V,
       text_style: hmUI.text_style.NONE,
     });
-  },
-
-  pulse() {
-    if (!pageState.vibrationEnabled || !vibrator) return;
-    try {
-      vibrator.stop();
-      vibrator.start({ mode: VIBRATOR_SCENE_SHORT_LIGHT });
-      vibrationStopTimer = setTimeout(() => {
-        vibrationStopTimer = null;
-        try {
-          vibrator.stop();
-        } catch (_error) {}
-      }, 30);
-    } catch (_error) {}
   },
 
   renderHistory() {
@@ -243,7 +214,6 @@ Page({
         if (type !== MODAL_CONFIRM) return;
         pageState.results = pageState.results.filter((item) => item.id !== resultId);
         saveState(pageState);
-        this.pulse();
         this.renderHistory();
       }),
     });

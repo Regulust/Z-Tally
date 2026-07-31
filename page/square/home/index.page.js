@@ -1,6 +1,6 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
-import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
+import { Vibrator } from "@zos/sensor";
 import { push } from "@zos/router";
 import {
   onKey,
@@ -17,19 +17,20 @@ import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } fro
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
+import { HAPTIC_CONFIRM, HAPTIC_COUNT, playHaptic, stopHaptic } from "../../../utils/haptics";
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
 
 let pageState = null;
 let pageWidgets = [];
+let counterSelectorWidgets = [];
 let currentView = "main";
 let counterValueWidget = null;
 let minusButtonWidget = null;
 let saveButtonWidget = null;
 let historyButtonWidget = null;
 let persistTimer = null;
-let vibrationStopTimer = null;
 let incrementFromPhysicalKey = null;
 let keyListenerRegistered = false;
 let tutorialOpened = false;
@@ -88,6 +89,7 @@ Page({
     }
     pageState = loadState();
     pageWidgets = [];
+    counterSelectorWidgets = [];
     tutorialOpened = false;
   },
 
@@ -148,15 +150,7 @@ Page({
 
   onDestroy() {
     this.persistNow();
-    if (vibrationStopTimer) {
-      clearTimeout(vibrationStopTimer);
-      vibrationStopTimer = null;
-    }
-    try {
-      if (vibrator) vibrator.stop();
-    } catch (error) {
-      logger.warn(`vibration cleanup failed: ${error}`);
-    }
+    stopHaptic(vibrator);
     if (keyListenerRegistered) {
       try {
         offKey();
@@ -188,26 +182,9 @@ Page({
     }, 300);
   },
 
-  pulse() {
-    try {
-      if (!vibrator || !pageState || !pageState.vibrationEnabled) return;
-      if (vibrationStopTimer) {
-        clearTimeout(vibrationStopTimer);
-        vibrationStopTimer = null;
-      }
-      vibrator.stop();
-      vibrator.start({ mode: VIBRATOR_SCENE_SHORT_LIGHT });
-      vibrationStopTimer = setTimeout(() => {
-        vibrationStopTimer = null;
-        try {
-          vibrator.stop();
-        } catch (error) {
-          logger.warn(`vibration stop failed: ${error}`);
-        }
-      }, 30);
-    } catch (error) {
-      logger.warn(`vibration failed: ${error}`);
-    }
+  pulse(mode = HAPTIC_COUNT) {
+    if (!pageState || !pageState.vibrationEnabled) return;
+    if (!playHaptic(vibrator, mode)) logger.warn("vibration failed");
   },
 
   activeCounter() {
@@ -227,6 +204,7 @@ Page({
       }
     });
     pageWidgets = [];
+    counterSelectorWidgets = [];
     counterValueWidget = null;
     minusButtonWidget = null;
     saveButtonWidget = null;
@@ -284,9 +262,12 @@ Page({
   },
 
   selectCounter(counterId) {
+    if (pageState.activeCounterId === counterId) return;
+    const previousCounterId = pageState.activeCounterId;
     pageState.activeCounterId = counterId;
-    this.persistNow();
-    this.renderMain();
+    this.schedulePersist();
+    this.updateCounterSelectors(previousCounterId);
+    this.updateCounterControls();
   },
 
   applyScreenBrightTime() {
@@ -301,6 +282,28 @@ Page({
     this.schedulePersist();
     this.pulse();
     this.updateCounterControls();
+  },
+
+  updateCounterSelectors(previousCounterId) {
+    counterSelectorWidgets.forEach((widget, index) => {
+      const item = pageState.counters[index];
+      if (!widget || !item) return;
+      if (item.id !== previousCounterId && item.id !== pageState.activeCounterId) return;
+      const active = item.id === pageState.activeCounterId;
+      widget.setProperty(hmUI.prop.MORE, {
+        text: `${index + 1}`,
+        x: 59 + index * 58,
+        y: 84,
+        w: 40,
+        h: 40,
+        color: COLORS.textButton,
+        text_size: TYPOGRAPHY.caption,
+        radius: 20,
+        normal_color: active ? COLORS.sysKey : COLORS.sysButtonBg,
+        press_color: active ? COLORS.sysKeyPressed : COLORS.sysButtonPressed,
+        click_func: withScreenBrightRefresh(() => this.selectCounter(item.id)),
+      });
+    });
   },
 
   updateCounterControls() {
@@ -369,7 +372,7 @@ Page({
       savedAt: Date.now(),
     });
     this.persistNow();
-    this.pulse();
+    this.pulse(HAPTIC_CONFIRM);
     if (historyButtonWidget) {
       const historyLabel = `${text("history")}  ${pageState.results.length}`;
       historyButtonWidget.setProperty(hmUI.prop.MORE, {
@@ -403,7 +406,7 @@ Page({
         if (!target) return;
         target.value = 0;
         this.persistNow();
-        this.pulse();
+        this.pulse(HAPTIC_CONFIRM);
         this.updateCounterControls();
       }),
     });
@@ -429,7 +432,7 @@ Page({
         h: 52,
         onClick: onSelect,
       });
-      this.addButton({
+      counterSelectorWidgets.push(this.addButton({
         text: `${index + 1}`,
         x: 59 + index * 58,
         y: 84,
@@ -440,7 +443,7 @@ Page({
         normal: active ? COLORS.sysKey : COLORS.sysButtonBg,
         pressed: active ? COLORS.sysKeyPressed : COLORS.sysButtonPressed,
         onClick: onSelect,
-      });
+      }));
     });
 
     counterValueWidget = this.addButton({

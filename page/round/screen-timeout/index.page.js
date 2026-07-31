@@ -1,7 +1,5 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
-import { back } from "@zos/router";
-import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { SCREEN_BRIGHT_OPTIONS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
@@ -15,7 +13,7 @@ const COLORS = {
 };
 
 let pageState = null;
-let vibrator = null;
+let radioWidgets = [];
 
 function text(key) {
   return getText(key) || key;
@@ -24,11 +22,7 @@ function text(key) {
 Page({
   onInit() {
     pageState = loadState();
-    try {
-      vibrator = new Vibrator();
-    } catch (_error) {
-      vibrator = null;
-    }
+    radioWidgets = [];
   },
 
   build() {
@@ -60,19 +54,22 @@ Page({
         w: 410,
         h: 68,
       }, () => this.select(option.value));
-      row.createWidget(hmUI.widget.IMG, {
-        x: 12,
-        y: 9,
-        src: active ? "image/radio_on.png" : "image/radio_off.png",
+      radioWidgets.push({
+        value: option.value,
+        widget: row.createWidget(hmUI.widget.IMG, {
+          x: 346,
+          y: 8,
+          src: active ? "image/radio_on.png" : "image/radio_off.png",
+        }),
       });
       row.createWidget(hmUI.widget.TEXT, {
         text: option.label,
-        x: 86,
+        x: 24,
         y: 0,
-        w: 292,
+        w: 300,
         h: 68,
         color: COLORS.textTitle,
-        text_size: fitTextSize(option.label, 292, TYPOGRAPHY.subheadline, 18),
+        text_size: fitTextSize(option.label, 300, TYPOGRAPHY.subheadline, 18),
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
@@ -105,20 +102,14 @@ Page({
 
   select(duration) {
     if (!SCREEN_BRIGHT_OPTIONS.includes(duration)) return;
+    if (pageState.screenBrightTime === duration) return;
     pageState.screenBrightTime = duration;
+    radioWidgets.forEach((item) => {
+      item.widget.setProperty(hmUI.prop.MORE, {
+        src: item.value === duration ? "image/radio_on.png" : "image/radio_off.png",
+      });
+    });
     saveState(pageState);
     applyScreenBrightTime(duration);
-    if (pageState.vibrationEnabled && vibrator) {
-      try {
-        vibrator.stop();
-        vibrator.start({ mode: VIBRATOR_SCENE_SHORT_LIGHT });
-        setTimeout(() => {
-          try {
-            vibrator.stop();
-          } catch (_error) {}
-        }, 30);
-      } catch (_error) {}
-    }
-    back();
   },
 });
