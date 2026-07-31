@@ -80,7 +80,7 @@ msgid "aboutFeatures"
 msgstr "Contagem rápida • Histórico local"
 
 msgid "version"
-msgstr "Versão 1.1.3"
+msgstr "Versão 1.1.3 (código 5)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
