@@ -74,15 +74,25 @@ SecondaryWidget({
     });
 
     state.counters.forEach((counter, index) => {
+      hmUI.createWidget(hmUI.widget.BUTTON, {
+        text: "",
+        x: 80 + index * 64,
+        y: 72,
+        w: 64,
+        h: 64,
+        normal_color: 0x000000,
+        press_color: 0x000000,
+        click_func: () => this.selectCounter(counter.id),
+      });
       selectorWidgets.push(hmUI.createWidget(hmUI.widget.BUTTON, {
         text: `${index + 1}`,
-        x: 104 + index * 92,
-        y: 78,
-        w: 72,
-        h: 44,
+        x: 92 + index * 64,
+        y: 84,
+        w: 40,
+        h: 40,
         color: COLORS.text,
         text_size: 24,
-        radius: 16,
+        radius: 20,
         normal_color: counter.id === state.activeCounterId ? COLORS.key : COLORS.item,
         press_color: counter.id === state.activeCounterId ? COLORS.keyPressed : COLORS.itemPressed,
         click_func: () => this.selectCounter(counter.id),
@@ -95,9 +105,9 @@ SecondaryWidget({
     valueWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
       text: `${counter.value}`,
       x: 64,
-      y: 148,
+      y: 140,
       w: 352,
-      h: 212,
+      h: 220,
       color: COLORS.text,
       text_size: valueSize(counter.value),
       radius: 42,
@@ -157,13 +167,13 @@ SecondaryWidget({
       const active = state.counters[index].id === counter.id;
       widget.setProperty(hmUI.prop.MORE, {
         text: `${index + 1}`,
-        x: 104 + index * 92,
-        y: 78,
-        w: 72,
-        h: 44,
+        x: 92 + index * 64,
+        y: 84,
+        w: 40,
+        h: 40,
         color: COLORS.text,
         text_size: 24,
-        radius: 16,
+        radius: 20,
         normal_color: active ? COLORS.key : COLORS.item,
         press_color: active ? COLORS.keyPressed : COLORS.itemPressed,
         click_func: () => this.selectCounter(state.counters[index].id),
@@ -173,9 +183,9 @@ SecondaryWidget({
       valueWidget.setProperty(hmUI.prop.MORE, {
         text: `${counter.value}`,
         x: 64,
-        y: 148,
+        y: 140,
         w: 352,
-        h: 212,
+        h: 220,
         color: COLORS.text,
         text_size: valueSize(counter.value),
         radius: 42,

@@ -28,6 +28,12 @@ msgstr "Contador 2"
 msgid "counter3"
 msgstr "Contador 3"
 
+msgid "counter4"
+msgstr "Contador 4"
+
+msgid "counter5"
+msgstr "Contador 5"
+
 msgid "settings"
 msgstr "Ajustes"
 
@@ -68,13 +74,13 @@ msgid "about"
 msgstr "Acerca de"
 
 msgid "aboutDescription"
-msgstr "Contador triple sencillo"
+msgstr "Contador quíntuple sencillo"
 
 msgid "aboutFeatures"
 msgstr "Conteo rápido • Historial local"
 
 msgid "version"
-msgstr "Versión 1.1.2"
+msgstr "Versión 1.1.3"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -113,7 +119,7 @@ msgid "tutorialCount"
 msgstr "Toca el centro / Botón inferior: +1"
 
 msgid "tutorialCounters"
-msgstr "1, 2, 3: contadores separados"
+msgstr "1–5: contadores separados"
 
 msgid "tutorialSave"
 msgstr "Guarda el resultado en Historial"

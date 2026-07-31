@@ -1,4 +1,5 @@
 import { event, widget } from "@zos/ui";
+import { withScreenBrightRefresh } from "./screen-bright";
 
 const NORMAL_ALPHA = 255;
 const PRESSED_ALPHA = 153;
@@ -11,7 +12,7 @@ export function createInteractiveRow(parent, frame, clickFunc) {
     text: "",
     normal_color: BACKGROUND_COLOR,
     press_color: BACKGROUND_COLOR,
-    click_func: clickFunc,
+    click_func: withScreenBrightRefresh(clickFunc),
   });
   const group = parent.createWidget(widget.GROUP, frame);
   group.setEnable(false);

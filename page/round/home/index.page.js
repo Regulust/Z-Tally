@@ -16,7 +16,7 @@ import { log as Logger } from "@zos/utils";
 import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
-import { applyScreenBrightTime } from "../../../utils/screen-bright";
+import { applyScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
@@ -35,6 +35,7 @@ let keyListenerRegistered = false;
 let tutorialOpened = false;
 
 const COLORS = {
+  background: 0x000000,
   sysItemBg: 0x303030,
   sysItemPressed: 0x222222,
   sysButtonBg: 0x383838,
@@ -101,7 +102,7 @@ Page({
       }
       if (!pageState) pageState = loadState();
       if (!Array.isArray(pageWidgets)) pageWidgets = [];
-      incrementFromPhysicalKey = () => this.changeValue(1);
+      incrementFromPhysicalKey = withScreenBrightRefresh(() => this.changeValue(1));
       if (!keyListenerRegistered) {
         onKey({
           callback: (key, keyEvent) => {
@@ -263,7 +264,20 @@ Page({
       radius,
       normal_color: normal,
       press_color: pressed,
-      click_func: onClick,
+      click_func: withScreenBrightRefresh(onClick),
+    });
+  },
+
+  addTouchTarget({ x, y, w, h, onClick }) {
+    return this.addWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x,
+      y,
+      w,
+      h,
+      normal_color: COLORS.background,
+      press_color: COLORS.background,
+      click_func: withScreenBrightRefresh(onClick),
     });
   },
 
@@ -292,31 +306,31 @@ Page({
     if (counterValueWidget) {
       counterValueWidget.setProperty(hmUI.prop.MORE, {
         text: `${counter.value}`,
-        x: 56,
-        y: 126,
-        w: 368,
-        h: 170,
+        x: 52,
+        y: 124,
+        w: 376,
+        h: 196,
         color: COLORS.textTitle,
         text_size: counterTextSize(counter.value),
-        radius: 42,
+        radius: 44,
         normal_color: COLORS.sysItemBg,
         press_color: COLORS.sysItemPressed,
-        click_func: () => this.changeValue(1),
+        click_func: withScreenBrightRefresh(() => this.changeValue(1)),
       });
     }
     if (minusButtonWidget) {
       minusButtonWidget.setProperty(hmUI.prop.MORE, {
         text: "−1",
-        x: 62,
-        y: 318,
-        w: 104,
-        h: 58,
+        x: 72,
+        y: 328,
+        w: 96,
+        h: 48,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
         text_size: TYPOGRAPHY.subheadline,
-        radius: 18,
+        radius: 16,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
-        click_func: () => this.changeValue(-1),
+        click_func: withScreenBrightRefresh(() => this.changeValue(-1)),
       });
       if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
     }
@@ -324,16 +338,16 @@ Page({
       const saveLabel = text("save");
       saveButtonWidget.setProperty(hmUI.prop.MORE, {
         text: saveLabel,
-        x: 188,
-        y: 318,
-        w: 104,
-        h: 58,
+        x: 192,
+        y: 328,
+        w: 96,
+        h: 48,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
-        text_size: fitTextSize(saveLabel, 104, TYPOGRAPHY.caption, 15),
-        radius: 18,
+        text_size: fitTextSize(saveLabel, 96, TYPOGRAPHY.caption, 15),
+        radius: 16,
         normal_color: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03,
         press_color: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed,
-        click_func: () => this.saveResult(),
+        click_func: withScreenBrightRefresh(() => this.saveResult()),
       });
       if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
     }
@@ -358,16 +372,16 @@ Page({
       const historyLabel = `${text("history")}  ${pageState.results.length}`;
       historyButtonWidget.setProperty(hmUI.prop.MORE, {
         text: historyLabel,
-        x: 120,
-        y: 398,
-        w: 180,
-        h: 52,
+        x: 130,
+        y: 394,
+        w: 172,
+        h: 46,
         color: COLORS.textButton,
-        text_size: fitTextSize(historyLabel, 180, TYPOGRAPHY.caption, 18),
-        radius: 18,
+        text_size: fitTextSize(historyLabel, 172, TYPOGRAPHY.caption, 18),
+        radius: 15,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
-        click_func: () => push({ url: "page/round/history/index.page" }),
+        click_func: withScreenBrightRefresh(() => push({ url: "page/round/history/index.page" })),
       });
     }
     showToast({ content: text("saved") });
@@ -380,7 +394,7 @@ Page({
     currentView = "modal";
     createModal({
       content: `${text("resetConfirmTitle")}\n${formatText("resetConfirmDetail", { counter: localizedCounterName(counterId) })}`,
-      onClick: ({ type }) => {
+      onClick: withScreenBrightRefresh(({ type }) => {
         currentView = "main";
         if (type !== MODAL_CONFIRM) return;
         const target = pageState.counters.find((item) => item.id === counterId);
@@ -389,7 +403,7 @@ Page({
         this.persistNow();
         this.pulse();
         this.updateCounterControls();
-      },
+      }),
     });
   },
 
@@ -405,47 +419,60 @@ Page({
 
     pageState.counters.forEach((item, index) => {
       const active = item.id === counter.id;
+      const onSelect = () => this.selectCounter(item.id);
+      this.addTouchTarget({
+        x: 86 + index * 64,
+        y: 68,
+        w: 52,
+        h: 52,
+        onClick: onSelect,
+      });
       this.addButton({
         text: `${index + 1}`,
-        x: 104 + index * 92,
-        y: 67,
-        w: 72,
-        h: 44,
+        x: 92 + index * 64,
+        y: 74,
+        w: 40,
+        h: 40,
         size: TYPOGRAPHY.caption,
-        radius: 16,
+        radius: 20,
         normal: active ? COLORS.sysKey : COLORS.sysButtonBg,
         pressed: active ? COLORS.sysKeyPressed : COLORS.sysButtonPressed,
-        onClick: () => this.selectCounter(item.id),
+        onClick: onSelect,
       });
     });
 
     counterValueWidget = this.addButton({
       text: `${counter.value}`,
-      x: 56,
-      y: 126,
-      w: 368,
-      h: 170,
+      x: 52,
+      y: 124,
+      w: 376,
+      h: 196,
       size: counterTextSize(counter.value),
-      radius: 42,
+      radius: 44,
       normal: COLORS.sysItemBg,
       pressed: COLORS.sysItemPressed,
       onClick: () => this.changeValue(1),
     });
-    minusButtonWidget = this.addButton({ text: "−1", x: 62, y: 318, w: 104, h: 58, size: TYPOGRAPHY.subheadline, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    this.addTouchTarget({ x: 70, y: 326, w: 100, h: 52, onClick: () => this.changeValue(-1) });
+    minusButtonWidget = this.addButton({ text: "−1", x: 72, y: 328, w: 96, h: 48, size: TYPOGRAPHY.subheadline, radius: 16, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
-    saveButtonWidget = this.addButton({ text: saveLabel, x: 188, y: 318, w: 104, h: 58, size: fitTextSize(saveLabel, 104, TYPOGRAPHY.caption, 15), onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    this.addTouchTarget({ x: 190, y: 326, w: 100, h: 52, onClick: () => this.saveResult() });
+    saveButtonWidget = this.addButton({ text: saveLabel, x: 192, y: 328, w: 96, h: 48, size: fitTextSize(saveLabel, 96, TYPOGRAPHY.caption, 15), radius: 16, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
-    this.addButton({ text: resetLabel, x: 314, y: 318, w: 104, h: 58, size: fitTextSize(resetLabel, 104, TYPOGRAPHY.caption, 15), onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
-    historyButtonWidget = this.addButton({ text: historyLabel, x: 120, y: 398, w: 180, h: 52, size: fitTextSize(historyLabel, 180, TYPOGRAPHY.caption, 18), onClick: () => push({ url: "page/round/history/index.page" }) });
+    this.addTouchTarget({ x: 310, y: 326, w: 100, h: 52, onClick: () => this.requestReset() });
+    this.addButton({ text: resetLabel, x: 312, y: 328, w: 96, h: 48, size: fitTextSize(resetLabel, 96, TYPOGRAPHY.caption, 15), radius: 16, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
+    this.addTouchTarget({ x: 127, y: 391, w: 178, h: 52, onClick: () => push({ url: "page/round/history/index.page" }) });
+    historyButtonWidget = this.addButton({ text: historyLabel, x: 130, y: 394, w: 172, h: 46, size: fitTextSize(historyLabel, 172, TYPOGRAPHY.caption, 18), radius: 15, onClick: () => push({ url: "page/round/history/index.page" }) });
+    this.addTouchTarget({ x: 307, y: 391, w: 52, h: 52, onClick: () => push({ url: "page/round/settings/index.page" }) });
     this.addWidget(hmUI.widget.BUTTON, {
       text: "",
-      x: 308,
-      y: 398,
-      w: 52,
-      h: 52,
+      x: 310,
+      y: 394,
+      w: 46,
+      h: 46,
       normal_src: "image/settings_normal.png",
       press_src: "image/settings_pressed.png",
-      click_func: () => push({ url: "page/round/settings/index.page" }),
+      click_func: withScreenBrightRefresh(() => push({ url: "page/round/settings/index.page" })),
     });
   },
 

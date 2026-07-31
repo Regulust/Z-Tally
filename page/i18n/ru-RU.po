@@ -28,6 +28,12 @@ msgstr "Счётчик 2"
 msgid "counter3"
 msgstr "Счётчик 3"
 
+msgid "counter4"
+msgstr "Счётчик 4"
+
+msgid "counter5"
+msgstr "Счётчик 5"
+
 msgid "settings"
 msgstr "Настройки"
 
@@ -68,13 +74,13 @@ msgid "about"
 msgstr "О приложении"
 
 msgid "aboutDescription"
-msgstr "Простой тройной счётчик"
+msgstr "Простой счётчик на пять значений"
 
 msgid "aboutFeatures"
 msgstr "Быстрый счёт • Локальная история"
 
 msgid "version"
-msgstr "Версия 1.1.2"
+msgstr "Версия 1.1.3"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -113,7 +119,7 @@ msgid "tutorialCount"
 msgstr "Центр / нижняя кнопка: +1"
 
 msgid "tutorialCounters"
-msgstr "1, 2, 3: отдельные счётчики"
+msgstr "1–5: отдельные счётчики"
 
 msgid "tutorialSave"
 msgstr "Сохранить результат в Историю"

@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 
 
 SCALE = 8
-SIZE = 52
+SIZE = 46
 COLOR_SYS_BUTTON_BG = (56, 56, 56, 255)
 COLOR_SYS_BUTTON_PRESSED = (40, 40, 40, 255)
 COLOR_SYS_KEY = (9, 134, 212, 255)

@@ -5,7 +5,7 @@ import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
-import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { applyStoredScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 import { createInteractiveRow } from "../../../utils/interactive-row";
 
 const COLORS = {
@@ -61,7 +61,7 @@ Page({
       slide_select_x: 43,
       slide_un_select_x: 7,
       checked: pageState.vibrationEnabled,
-      checked_change_func: (_widget, checked) => this.setVibrationEnabled(checked),
+      checked_change_func: withScreenBrightRefresh((_widget, checked) => this.setVibrationEnabled(checked)),
     });
     const timeoutLabel = {
       0: text("timeoutSystemShort"),

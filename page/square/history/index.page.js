@@ -5,7 +5,7 @@ import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT } from "@zos/sensor";
 import { DATE_FORMAT_DMY, DATE_FORMAT_MDY, getDateFormat } from "@zos/settings";
 import { COUNTER_IDS, HISTORY_LIMIT, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
-import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { applyStoredScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 
 const COLORS = {
   background: 0x000000,
@@ -219,7 +219,7 @@ Page({
           radius: 17,
           normal_color: COLORS.sysWarning,
           press_color: COLORS.sysWarningPressed,
-          click_func: () => this.requestDelete(item.id),
+          click_func: withScreenBrightRefresh(() => this.requestDelete(item.id)),
         });
       });
       list.createWidget(hmUI.widget.FILL_RECT, {
@@ -239,13 +239,13 @@ Page({
   requestDelete(resultId) {
     createModal({
       content: `${text("deleteConfirmTitle")}\n${text("deleteConfirmDetail")}`,
-      onClick: ({ type }) => {
+      onClick: withScreenBrightRefresh(({ type }) => {
         if (type !== MODAL_CONFIRM) return;
         pageState.results = pageState.results.filter((item) => item.id !== resultId);
         saveState(pageState);
         this.pulse();
         this.renderHistory();
-      },
+      }),
     });
   },
 });

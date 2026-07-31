@@ -4,7 +4,7 @@ import { back } from "@zos/router";
 import { hasSeenTutorial, markTutorialSeen } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
-import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { applyStoredScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 
 const COLORS = {
   sysKey: 0x0986d4,
@@ -78,10 +78,10 @@ Page({
       radius: 20,
       normal_color: COLORS.sysKey,
       press_color: COLORS.sysKeyPressed,
-      click_func: () => {
+      click_func: withScreenBrightRefresh(() => {
         markTutorialSeen();
         back();
-      },
+      }),
     });
   },
 

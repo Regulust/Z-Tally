@@ -4,11 +4,11 @@ export const STORAGE_KEY = "z-tally-state";
 export const TUTORIAL_SEEN_KEY = "z-tally-tutorial-seen";
 export const HISTORY_LIMIT = 30;
 export const SCREEN_BRIGHT_OPTIONS = [0, 15000, 30000, 60000];
-export const COUNTER_IDS = ["counter-1", "counter-2", "counter-3"];
+export const COUNTER_IDS = ["counter-1", "counter-2", "counter-3", "counter-4", "counter-5"];
 
 export function createDefaultState() {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     activeCounterId: COUNTER_IDS[0],
     vibrationEnabled: true,
     screenBrightTime: 0,
@@ -26,11 +26,13 @@ function legacyCounterId(item) {
 
 export function normalizeState(candidate) {
   const fallback = createDefaultState();
-  if (!candidate || candidate.schemaVersion !== 1) return fallback;
-  if (!Array.isArray(candidate.counters) || candidate.counters.length !== 3) return fallback;
+  if (!candidate || ![1, 2].includes(candidate.schemaVersion)) return fallback;
+  if (!Array.isArray(candidate.counters) || candidate.counters.length < 3) return fallback;
 
   const counters = fallback.counters.map((counter, index) => {
-    const source = candidate.counters[index] || {};
+    const source = candidate.counters.find((item) => item && item.id === counter.id)
+      || candidate.counters[index]
+      || {};
     return {
       id: counter.id,
       value: Number.isFinite(source.value) && source.value >= 0 ? Math.floor(source.value) : 0,
@@ -50,7 +52,7 @@ export function normalizeState(candidate) {
     : [];
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     activeCounterId: activeExists ? candidate.activeCounterId : counters[0].id,
     vibrationEnabled: candidate.vibrationEnabled !== false,
     screenBrightTime: SCREEN_BRIGHT_OPTIONS.includes(candidate.screenBrightTime)

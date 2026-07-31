@@ -19,3 +19,10 @@ export function applyStoredScreenBrightTime() {
     return applyScreenBrightTime(0);
   }
 }
+
+export function withScreenBrightRefresh(callback) {
+  return (...args) => {
+    applyStoredScreenBrightTime();
+    return callback(...args);
+  };
+}

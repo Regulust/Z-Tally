@@ -16,7 +16,7 @@ import { log as Logger } from "@zos/utils";
 import { COUNTER_IDS, HISTORY_LIMIT, hasSeenTutorial, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
-import { applyScreenBrightTime } from "../../../utils/screen-bright";
+import { applyScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
 
 const logger = Logger.getLogger("z-tally");
 let vibrator = null;
@@ -103,7 +103,7 @@ Page({
       }
       if (!pageState) pageState = loadState();
       if (!Array.isArray(pageWidgets)) pageWidgets = [];
-      incrementFromPhysicalKey = () => this.changeValue(1);
+      incrementFromPhysicalKey = withScreenBrightRefresh(() => this.changeValue(1));
       if (!keyListenerRegistered) {
         onKey({
           callback: (key, keyEvent) => {
@@ -266,7 +266,20 @@ Page({
       radius,
       normal_color: normal,
       press_color: pressed,
-      click_func: onClick,
+      click_func: withScreenBrightRefresh(onClick),
+    });
+  },
+
+  addTouchTarget({ x, y, w, h, onClick }) {
+    return this.addWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x,
+      y,
+      w,
+      h,
+      normal_color: COLORS.background,
+      press_color: COLORS.background,
+      click_func: withScreenBrightRefresh(onClick),
     });
   },
 
@@ -295,31 +308,31 @@ Page({
     if (counterValueWidget) {
       counterValueWidget.setProperty(hmUI.prop.MORE, {
         text: `${counter.value}`,
-        x: 20,
-        y: 138,
-        w: 350,
-        h: 136,
+        x: 16,
+        y: 134,
+        w: 358,
+        h: 158,
         color: COLORS.textTitle,
         text_size: counterTextSize(counter.value),
-        radius: 32,
+        radius: 36,
         normal_color: COLORS.sysItemBg,
         press_color: COLORS.sysItemPressed,
-        click_func: () => this.changeValue(1),
+        click_func: withScreenBrightRefresh(() => this.changeValue(1)),
       });
     }
     if (minusButtonWidget) {
       minusButtonWidget.setProperty(hmUI.prop.MORE, {
         text: "−1",
-        x: 20,
-        y: 290,
-        w: 112,
-        h: 52,
+        x: 34,
+        y: 302,
+        w: 100,
+        h: 46,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
         text_size: TYPOGRAPHY.subheadline,
-        radius: 18,
+        radius: 15,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
-        click_func: () => this.changeValue(-1),
+        click_func: withScreenBrightRefresh(() => this.changeValue(-1)),
       });
       if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
     }
@@ -327,16 +340,16 @@ Page({
       const saveLabel = text("save");
       saveButtonWidget.setProperty(hmUI.prop.MORE, {
         text: saveLabel,
-        x: 139,
-        y: 290,
-        w: 112,
-        h: 52,
+        x: 145,
+        y: 302,
+        w: 100,
+        h: 46,
         color: counter.value === 0 ? COLORS.disabled : COLORS.textButton,
-        text_size: fitTextSize(saveLabel, 112, TYPOGRAPHY.caption, 16),
-        radius: 18,
+        text_size: fitTextSize(saveLabel, 100, TYPOGRAPHY.caption, 16),
+        radius: 15,
         normal_color: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03,
         press_color: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed,
-        click_func: () => this.saveResult(),
+        click_func: withScreenBrightRefresh(() => this.saveResult()),
       });
       if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
     }
@@ -361,16 +374,16 @@ Page({
       const historyLabel = `${text("history")}  ${pageState.results.length}`;
       historyButtonWidget.setProperty(hmUI.prop.MORE, {
         text: historyLabel,
-        x: 58,
-        y: 362,
-        w: 220,
-        h: 52,
+        x: 68,
+        y: 364,
+        w: 204,
+        h: 46,
         color: COLORS.textButton,
-        text_size: fitTextSize(historyLabel, 220, TYPOGRAPHY.caption, 18),
-        radius: 18,
+        text_size: fitTextSize(historyLabel, 204, TYPOGRAPHY.caption, 18),
+        radius: 15,
         normal_color: COLORS.sysButtonBg,
         press_color: COLORS.sysButtonPressed,
-        click_func: () => push({ url: "page/square/history/index.page" }),
+        click_func: withScreenBrightRefresh(() => push({ url: "page/square/history/index.page" })),
       });
     }
     showToast({ content: text("saved") });
@@ -383,7 +396,7 @@ Page({
     currentView = "modal";
     createModal({
       content: `${text("resetConfirmTitle")}\n${formatText("resetConfirmDetail", { counter: localizedCounterName(counterId) })}`,
-      onClick: ({ type }) => {
+      onClick: withScreenBrightRefresh(({ type }) => {
         currentView = "main";
         if (type !== MODAL_CONFIRM) return;
         const target = pageState.counters.find((item) => item.id === counterId);
@@ -392,7 +405,7 @@ Page({
         this.persistNow();
         this.pulse();
         this.updateCounterControls();
-      },
+      }),
     });
   },
 
@@ -408,47 +421,60 @@ Page({
 
     pageState.counters.forEach((item, index) => {
       const active = item.id === counter.id;
+      const onSelect = () => this.selectCounter(item.id);
+      this.addTouchTarget({
+        x: 53 + index * 58,
+        y: 78,
+        w: 52,
+        h: 52,
+        onClick: onSelect,
+      });
       this.addButton({
         text: `${index + 1}`,
-        x: 69 + index * 90,
-        y: 86,
-        w: 72,
-        h: 42,
+        x: 59 + index * 58,
+        y: 84,
+        w: 40,
+        h: 40,
         size: TYPOGRAPHY.caption,
-        radius: 16,
+        radius: 20,
         normal: active ? COLORS.sysKey : COLORS.sysButtonBg,
         pressed: active ? COLORS.sysKeyPressed : COLORS.sysButtonPressed,
-        onClick: () => this.selectCounter(item.id),
+        onClick: onSelect,
       });
     });
 
     counterValueWidget = this.addButton({
       text: `${counter.value}`,
-      x: 20,
-      y: 138,
-      w: 350,
-      h: 136,
+      x: 16,
+      y: 134,
+      w: 358,
+      h: 158,
       size: counterTextSize(counter.value),
-      radius: 32,
+      radius: 36,
       normal: COLORS.sysItemBg,
       pressed: COLORS.sysItemPressed,
       onClick: () => this.changeValue(1),
     });
-    minusButtonWidget = this.addButton({ text: "−1", x: 20, y: 290, w: 112, h: 52, size: TYPOGRAPHY.subheadline, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    this.addTouchTarget({ x: 31, y: 299, w: 106, h: 52, onClick: () => this.changeValue(-1) });
+    minusButtonWidget = this.addButton({ text: "−1", x: 34, y: 302, w: 100, h: 46, size: TYPOGRAPHY.subheadline, radius: 15, onClick: () => this.changeValue(-1), color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (minusButtonWidget.setEnable) minusButtonWidget.setEnable(counter.value > 0);
-    saveButtonWidget = this.addButton({ text: saveLabel, x: 139, y: 290, w: 112, h: 52, size: fitTextSize(saveLabel, 112, TYPOGRAPHY.caption, 16), onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
+    this.addTouchTarget({ x: 142, y: 299, w: 106, h: 52, onClick: () => this.saveResult() });
+    saveButtonWidget = this.addButton({ text: saveLabel, x: 145, y: 302, w: 100, h: 46, size: fitTextSize(saveLabel, 100, TYPOGRAPHY.caption, 16), radius: 15, onClick: () => this.saveResult(), normal: counter.value === 0 ? COLORS.sysButtonBg : COLORS.aux03, pressed: counter.value === 0 ? COLORS.sysButtonPressed : COLORS.aux03Pressed, color: counter.value === 0 ? COLORS.disabled : COLORS.textButton });
     if (saveButtonWidget.setEnable) saveButtonWidget.setEnable(counter.value > 0);
-    this.addButton({ text: resetLabel, x: 258, y: 290, w: 112, h: 52, size: fitTextSize(resetLabel, 112, TYPOGRAPHY.caption, 16), onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
-    historyButtonWidget = this.addButton({ text: historyLabel, x: 58, y: 362, w: 220, h: 50, size: fitTextSize(historyLabel, 220, TYPOGRAPHY.caption, 18), onClick: () => push({ url: "page/square/history/index.page" }) });
+    this.addTouchTarget({ x: 253, y: 299, w: 106, h: 52, onClick: () => this.requestReset() });
+    this.addButton({ text: resetLabel, x: 256, y: 302, w: 100, h: 46, size: fitTextSize(resetLabel, 100, TYPOGRAPHY.caption, 16), radius: 15, onClick: () => this.requestReset(), normal: COLORS.sysWarning, pressed: COLORS.sysWarningPressed });
+    this.addTouchTarget({ x: 65, y: 361, w: 210, h: 52, onClick: () => push({ url: "page/square/history/index.page" }) });
+    historyButtonWidget = this.addButton({ text: historyLabel, x: 68, y: 364, w: 204, h: 46, size: fitTextSize(historyLabel, 204, TYPOGRAPHY.caption, 18), radius: 15, onClick: () => push({ url: "page/square/history/index.page" }) });
+    this.addTouchTarget({ x: 297, y: 361, w: 52, h: 52, onClick: () => push({ url: "page/square/settings/index.page" }) });
     this.addWidget(hmUI.widget.BUTTON, {
       text: "",
-      x: 294,
-      y: 362,
-      w: 52,
-      h: 52,
+      x: 300,
+      y: 364,
+      w: 46,
+      h: 46,
       normal_src: "image/settings_normal.png",
       press_src: "image/settings_pressed.png",
-      click_func: () => push({ url: "page/square/settings/index.page" }),
+      click_func: withScreenBrightRefresh(() => push({ url: "page/square/settings/index.page" })),
     });
   },
 

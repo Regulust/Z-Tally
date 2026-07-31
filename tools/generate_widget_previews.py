@@ -79,13 +79,13 @@ def render(
 
     centered(draw, scaled_box((0, 20, 480, 68), sx, sy), "Z-Tally", font(round(36 * uniform), True, locale), "#ffffff")
 
-    for index in range(3):
-        box = scaled_box((104 + index * 92, 78, 176 + index * 92, 122), sx, sy)
+    for index in range(5):
+        box = scaled_box((92 + index * 64, 84, 132 + index * 64, 124), sx, sy)
         fill = "#0986d4" if index == 0 else "#303030"
-        draw.rounded_rectangle(box, radius=round(16 * uniform), fill=fill)
+        draw.ellipse(box, fill=fill)
         centered(draw, box, str(index + 1), font(round(24 * uniform), True, locale), "#ffffff")
 
-    value_box = scaled_box((64, 148, 416, 360), sx, sy)
+    value_box = scaled_box((64, 140, 416, 360), sx, sy)
     draw.rounded_rectangle(value_box, radius=round(42 * uniform), fill="#303030")
     centered(draw, value_box, "0", font(round(96 * uniform), True, locale), "#ffffff")
 
