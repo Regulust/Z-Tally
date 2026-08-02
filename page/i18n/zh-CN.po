@@ -74,13 +74,13 @@ msgid "about"
 msgstr "关于"
 
 msgid "aboutDescription"
-msgstr "简洁的五组计数器"
+msgstr "简洁实用的腕上计数器"
 
 msgid "aboutFeatures"
 msgstr "快速计数 • 本地历史"
 
 msgid "version"
-msgstr "版本 1.1.5（code 10）"
+msgstr "版本 1.1.5（code 17）"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -140,4 +140,7 @@ msgid "openApp"
 msgstr "打开应用"
 
 msgid "quickCardCounter"
-msgstr "快捷卡片计数器"
+msgstr "快捷卡片"
+
+msgid "quickCardCounterDescription"
+msgstr "选择快捷卡片使用的计数器"

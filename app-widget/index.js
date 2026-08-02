@@ -10,10 +10,12 @@ const COLORS = {
   itemPressed: 0x222222,
   key: 0x0986d4,
   keyPressed: 0x066097,
+  minusKey: 0x505050,
+  minusKeyPressed: 0x383838,
   text: 0xffffff,
-  secondary: 0xa0a0a0,
-  disabledItem: 0x252525,
-  disabledText: 0x606060,
+  secondary: 0xb3b3b3,
+  disabledItem: 0x383838,
+  disabledText: 0x707070,
 };
 
 let state = null;
@@ -52,7 +54,7 @@ function detectDevice() {
 
 function prepareMetrics() {
   const device = detectDevice();
-  const desiredHeight = Math.max(120, Math.round((device.height || 480) * 0.4));
+  const desiredHeight = 170;
   try {
     hmUI.setAppWidgetSize({ h: desiredHeight });
   } catch (_error) {}
@@ -61,32 +63,34 @@ function prepareMetrics() {
   try {
     size = hmUI.getAppWidgetSize() || {};
   } catch (_error) {}
-  const w = size.w || Math.max(300, (device.width || 480) - 32);
-  const h = size.h || desiredHeight;
+  const w = size.w || Math.min(400, Math.max(300, (device.width || 480) - 32));
+  const h = desiredHeight;
   const screenWidth = device.width || w;
   const originX = Number.isFinite(size.margin)
     ? size.margin
     : Math.max(0, Math.round((screenWidth - w) / 2));
   const padding = 16;
-  const actionHeight = Math.min(isSquare ? 60 : 64, h - padding * 2);
-  const plusWidth = actionHeight;
-  const minusWidth = Math.round(actionHeight * 0.72);
-  const actionGap = 10;
-  const columnGap = isSquare ? 10 : 12;
+  const actionHeight = 72;
+  const plusWidth = 72;
+  const minusWidth = 72;
+  const actionGap = 8;
+  const columnGap = 10;
   const contentX = originX + padding;
   const plusX = originX + w - padding - plusWidth;
   const minusX = plusX - actionGap - minusWidth;
-  const actionY = Math.round((h - actionHeight) / 2);
+  const actionY = h - padding - actionHeight;
   const leftWidth = minusX - columnGap - contentX;
-  const labelY = padding;
-  const labelHeight = Math.max(28, Math.round(h * 0.18));
-  const valueY = labelY + labelHeight + 2;
+  const valueInset = 14;
+  const labelY = 24;
+  const labelHeight = 35;
+  const valueY = actionY + Math.round((actionHeight - 48) / 2);
   return {
     w,
     h,
     originX,
     contentX,
     padding,
+    cardRadius: 36,
     actionHeight,
     actionGap,
     columnGap,
@@ -96,20 +100,22 @@ function prepareMetrics() {
     minusX,
     actionY,
     leftWidth,
+    valueX: contentX + valueInset,
+    valueWidth: Math.max(1, leftWidth - valueInset),
     labelY,
     labelHeight,
     valueY,
-    valueHeight: h - valueY - padding,
+    valueHeight: 48,
   };
 }
 
 function valueTextSize(value) {
   const digits = `${value}`.length;
-  const base = Math.min(isSquare ? 70 : 78, Math.round(metrics.valueHeight * 0.72));
+  const base = 48;
   if (digits <= 4) return base;
-  if (digits <= 6) return Math.round(base * 0.78);
-  if (digits <= 8) return Math.round(base * 0.62);
-  return Math.max(30, Math.round(base * 0.5));
+  if (digits <= 6) return 42;
+  if (digits <= 8) return 36;
+  return 30;
 }
 
 function mainPageUrl() {
@@ -128,6 +134,20 @@ AppWidget({
     const counter = boundCounter();
     const label = counterName(counter.id);
 
+    hmUI.createWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x: metrics.originX,
+      y: 0,
+      w: metrics.w,
+      h: metrics.h,
+      color: COLORS.item,
+      text_size: 1,
+      radius: metrics.cardRadius,
+      normal_color: COLORS.item,
+      press_color: COLORS.itemPressed,
+      click_func: () => this.openApp(),
+    });
+
     labelWidget = hmUI.createWidget(hmUI.widget.TEXT, {
       text: label,
       x: metrics.contentX,
@@ -135,18 +155,18 @@ AppWidget({
       w: metrics.leftWidth,
       h: metrics.labelHeight,
       color: COLORS.secondary,
-      text_size: fitTextSize(label, metrics.leftWidth, isSquare ? 19 : 21, 16, 8),
+      text_size: fitTextSize(label, metrics.leftWidth, 28, 18, 0),
       align_h: hmUI.align.LEFT,
       align_v: hmUI.align.CENTER_V,
       text_style: hmUI.text_style.NONE,
     });
-    labelWidget.addEventListener(hmUI.event.CLICK_DOWN, () => this.openApp());
+    if (labelWidget.setEnable) labelWidget.setEnable(false);
 
     valueWidget = hmUI.createWidget(hmUI.widget.TEXT, {
       text: `${counter.value}`,
-      x: metrics.contentX,
+      x: metrics.valueX,
       y: metrics.valueY,
-      w: metrics.leftWidth,
+      w: metrics.valueWidth,
       h: metrics.valueHeight,
       color: COLORS.text,
       text_size: valueTextSize(counter.value),
@@ -154,7 +174,7 @@ AppWidget({
       align_v: hmUI.align.CENTER_V,
       text_style: hmUI.text_style.NONE,
     });
-    valueWidget.addEventListener(hmUI.event.CLICK_DOWN, () => this.openApp());
+    if (valueWidget.setEnable) valueWidget.setEnable(false);
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "+",
@@ -163,7 +183,7 @@ AppWidget({
       w: metrics.plusWidth,
       h: metrics.actionHeight,
       color: COLORS.text,
-      text_size: isSquare ? 34 : 38,
+      text_size: 40,
       radius: 18,
       normal_color: COLORS.key,
       press_color: COLORS.keyPressed,
@@ -177,10 +197,10 @@ AppWidget({
       w: metrics.minusWidth,
       h: metrics.actionHeight,
       color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
-      text_size: isSquare ? 34 : 38,
+      text_size: 36,
       radius: 18,
-      normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
-      press_color: COLORS.itemPressed,
+      normal_color: counter.value > 0 ? COLORS.minusKey : COLORS.disabledItem,
+      press_color: COLORS.minusKeyPressed,
       click_func: () => this.changeValue(-1),
     });
     if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
@@ -217,7 +237,7 @@ AppWidget({
         w: metrics.leftWidth,
         h: metrics.labelHeight,
         color: COLORS.secondary,
-        text_size: fitTextSize(label, metrics.leftWidth, isSquare ? 19 : 21, 16, 8),
+        text_size: fitTextSize(label, metrics.leftWidth, 28, 18, 0),
         align_h: hmUI.align.LEFT,
         align_v: hmUI.align.CENTER_V,
         text_style: hmUI.text_style.NONE,
@@ -226,9 +246,9 @@ AppWidget({
     if (valueWidget) {
       valueWidget.setProperty(hmUI.prop.MORE, {
         text: `${counter.value}`,
-        x: metrics.contentX,
+        x: metrics.valueX,
         y: metrics.valueY,
-        w: metrics.leftWidth,
+        w: metrics.valueWidth,
         h: metrics.valueHeight,
         color: COLORS.text,
         text_size: valueTextSize(counter.value),
@@ -245,10 +265,10 @@ AppWidget({
         w: metrics.minusWidth,
         h: metrics.actionHeight,
         color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
-        text_size: isSquare ? 34 : 38,
+        text_size: 36,
         radius: 18,
-        normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
-        press_color: COLORS.itemPressed,
+        normal_color: counter.value > 0 ? COLORS.minusKey : COLORS.disabledItem,
+        press_color: COLORS.minusKeyPressed,
         click_func: () => this.changeValue(-1),
       });
       if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);

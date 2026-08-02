@@ -9,6 +9,7 @@ import { createInteractiveRow } from "../../../utils/interactive-row";
 const COLORS = {
   background: 0x000000,
   textTitle: 0xffffff,
+  textSecondaryInfo: 0x808080,
 };
 
 let pageState = null;
@@ -27,6 +28,7 @@ Page({
   build() {
     applyStoredScreenBrightTime();
     const title = text("quickCardCounter");
+    const scopeNote = text("quickCardCounterDescription");
     const list = hmUI.createWidget(hmUI.widget.VIEW_CONTAINER, {
       x: 0,
       y: 0,
@@ -49,12 +51,25 @@ Page({
       text_style: hmUI.text_style.NONE,
     });
 
+    list.createWidget(hmUI.widget.TEXT, {
+      text: scopeNote,
+      x: 62,
+      y: 78,
+      w: 356,
+      h: 38,
+      color: COLORS.textSecondaryInfo,
+      text_size: TYPOGRAPHY.caption,
+      align_h: hmUI.align.CENTER_H,
+      align_v: hmUI.align.CENTER_V,
+      text_style: hmUI.text_style.NONE,
+    });
+
     COUNTER_IDS.forEach((counterId, index) => {
       const label = text(`counter${index + 1}`);
       const active = pageState.quickCardCounterId === counterId;
       const row = createInteractiveRow(list, {
         x: 34,
-        y: 92 + index * 72,
+        y: 120 + index * 72,
         w: 410,
         h: 64,
       }, () => this.select(counterId));
@@ -82,7 +97,7 @@ Page({
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
-      y: 458,
+      y: 486,
       w: 480,
       h: 80,
       color: COLORS.background,

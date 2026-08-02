@@ -74,13 +74,13 @@ msgid "about"
 msgstr "Info"
 
 msgid "aboutDescription"
-msgstr "Contatore quintuplo semplice"
+msgstr "Un pratico contatore da polso"
 
 msgid "aboutFeatures"
 msgstr "Conteggio rapido • Cronologia locale"
 
 msgid "version"
-msgstr "Versione 1.1.5 (codice 10)"
+msgstr "Versione 1.1.5 (codice 17)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -140,4 +140,7 @@ msgid "openApp"
 msgstr "Apri app"
 
 msgid "quickCardCounter"
-msgstr "Contatore scheda rapida"
+msgstr "Scheda rapida"
+
+msgid "quickCardCounterDescription"
+msgstr "Scegli il contatore della scheda rapida"

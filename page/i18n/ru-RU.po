@@ -74,13 +74,13 @@ msgid "about"
 msgstr "О приложении"
 
 msgid "aboutDescription"
-msgstr "Простой счётчик на пять значений"
+msgstr "Удобный счётчик на запястье"
 
 msgid "aboutFeatures"
 msgstr "Быстрый счёт • Локальная история"
 
 msgid "version"
-msgstr "Версия 1.1.5 (код 10)"
+msgstr "Версия 1.1.5 (код 17)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -140,4 +140,7 @@ msgid "openApp"
 msgstr "Открыть"
 
 msgid "quickCardCounter"
-msgstr "Счётчик быстрой карточки"
+msgstr "Быстрая карточка"
+
+msgid "quickCardCounterDescription"
+msgstr "Выберите счётчик для быстрой карточки"

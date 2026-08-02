@@ -74,13 +74,13 @@ msgid "about"
 msgstr "Info"
 
 msgid "aboutDescription"
-msgstr "Einfacher 5-fach-Zähler"
+msgstr "Praktischer Zähler fürs Handgelenk"
 
 msgid "aboutFeatures"
 msgstr "Schnell zählen • Lokaler Verlauf"
 
 msgid "version"
-msgstr "Version 1.1.5 (Code 10)"
+msgstr "Version 1.1.5 (Code 17)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -140,4 +140,7 @@ msgid "openApp"
 msgstr "App öffnen"
 
 msgid "quickCardCounter"
-msgstr "Zähler der Schnellkarte"
+msgstr "Schnellkarte"
+
+msgid "quickCardCounterDescription"
+msgstr "Zähler für die Schnellkarte auswählen"

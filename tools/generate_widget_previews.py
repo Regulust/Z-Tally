@@ -123,29 +123,32 @@ def render_app_widget(width: int, height: int, output: Path, locale: str) -> Non
     image = Image.new("RGB", (width, height), "#303030")
     draw = ImageDraw.Draw(image)
     padding = 16
-    action_height = min(60 if square else 64, height - padding * 2)
-    plus_width = action_height
-    minus_width = round(action_height * 0.72)
-    column_gap = 10 if square else 12
-    action_gap = 10
+    action_height = 72
+    plus_width = 72
+    minus_width = 72
+    column_gap = 10
+    action_gap = 8
     plus_x = width - padding - plus_width
     minus_x = plus_x - action_gap - minus_width
-    action_y = round((height - action_height) / 2)
-    left_width = minus_x - column_gap - padding
-    label_height = max(28, round(height * 0.18))
-    value_y = padding + label_height + 2
+    action_y = height - padding - action_height
+    content_x = padding
+    left_width = minus_x - column_gap - content_x
+    value_inset = 14
+    label_height = 35
+    label_y = 24
+    value_y = action_y + round((action_height - 48) / 2)
 
-    label_box = (padding, padding, padding + left_width, padding + label_height)
-    value_box = (padding, value_y, padding + left_width, height - padding)
+    label_box = (content_x, label_y, content_x + left_width, label_y + label_height)
+    value_box = (content_x + value_inset, value_y, content_x + left_width, value_y + 48)
     plus_box = (plus_x, action_y, plus_x + plus_width, action_y + action_height)
     minus_box = (minus_x, action_y, minus_x + minus_width, action_y + action_height)
     draw.rounded_rectangle(plus_box, radius=18, fill="#0986d4")
-    draw.rounded_rectangle(minus_box, radius=18, fill="#252525")
+    draw.rounded_rectangle(minus_box, radius=18, fill="#505050")
     label = "计数器 1" if locale == "zh-CN" else "Counter 1"
-    left_centered(draw, label_box, label, font(19 if square else 21, locale=locale), "#a0a0a0")
-    left_centered(draw, value_box, "0", font(70 if square else 78, True, locale), "#ffffff")
-    centered(draw, plus_box, "+", font(34 if square else 38, True, locale), "#ffffff")
-    centered(draw, minus_box, "−", font(34 if square else 38, True, locale), "#606060")
+    left_centered(draw, label_box, label, font(28, locale=locale), "#b3b3b3")
+    left_centered(draw, value_box, "0", font(48, True, locale), "#ffffff")
+    centered(draw, plus_box, "+", font(40, True, locale), "#ffffff")
+    centered(draw, minus_box, "−", font(36, True, locale), "#ffffff")
     save_indexed(image, output)
 
 
@@ -219,8 +222,8 @@ def main() -> None:
         render(width, height, PICTURES_DIR / f"secondary-widget-preview-{shape}_en-US.png", "en-US", corner_radius)
         render(width, height, asset_directory / "widget-preview_en-US.png", "en-US", corner_radius)
         render(width, height, asset_directory / "widget-preview_zh-CN.png", "zh-CN", corner_radius)
-        card_width = width - 32
-        card_height = round(height * 0.4)
+        card_width = min(400, width - 32)
+        card_height = 170
         render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_en-US.png", "en-US")
         render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_zh-CN.png", "zh-CN")
         render_home(width, height, PICTURES_DIR / f"home-preview-{shape}_en-US.png", shape, "en-US")

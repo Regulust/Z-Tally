@@ -74,13 +74,13 @@ msgid "about"
 msgstr "About"
 
 msgid "aboutDescription"
-msgstr "A simple five-counter tally app"
+msgstr "A simple, practical wrist counter"
 
 msgid "aboutFeatures"
 msgstr "Fast counting • Local history"
 
 msgid "version"
-msgstr "Version 1.1.5 (code 10)"
+msgstr "Version 1.1.5 (code 17)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -140,4 +140,7 @@ msgid "openApp"
 msgstr "Open app"
 
 msgid "quickCardCounter"
-msgstr "Shortcut card counter"
+msgstr "Shortcut card"
+
+msgid "quickCardCounterDescription"
+msgstr "Choose the counter used by the shortcut card"
