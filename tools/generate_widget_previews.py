@@ -32,6 +32,18 @@ def centered(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int], value: s
     )
 
 
+def left_centered(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int], value: str, text_font, fill) -> None:
+    left, top, _right, bottom = box
+    bounds = draw.textbbox((0, 0), value, font=text_font)
+    height = bounds[3] - bounds[1]
+    draw.text(
+        (left, top + (bottom - top - height) / 2 - bounds[1]),
+        value,
+        font=text_font,
+        fill=fill,
+    )
+
+
 def scaled_box(box: tuple[int, int, int, int], sx: float, sy: float) -> tuple[int, int, int, int]:
     x1, y1, x2, y2 = box
     return tuple(round(value * factor) for value, factor in zip(box, (sx, sy, sx, sy)))
@@ -71,43 +83,128 @@ def render(
     locale: str,
     corner_radius: int | None = None,
 ) -> None:
-    sx = width / 480
-    sy = height / 480
-    uniform = min(sx, sy)
+    square = width == 390
+    uniform = 0.8125 if square else 1
     image = Image.new("RGB", (width, height), "#000000")
     draw = ImageDraw.Draw(image)
 
-    centered(draw, scaled_box((0, 20, 480, 68), sx, sy), "Z-Tally", font(round(36 * uniform), True, locale), "#ffffff")
+    title_box = (0, 18, 390, 60) if square else (0, 20, 480, 68)
+    centered(draw, title_box, "Z-Tally", font(30 if square else 36, True, locale), "#ffffff")
 
     for index in range(5):
-        box = scaled_box((92 + index * 64, 84, 132 + index * 64, 124), sx, sy)
+        box = (65 + index * 56, 78, 101 + index * 56, 114) if square else (92 + index * 64, 84, 132 + index * 64, 124)
         fill = "#0986d4" if index == 0 else "#303030"
         draw.ellipse(box, fill=fill)
-        centered(draw, box, str(index + 1), font(round(24 * uniform), True, locale), "#ffffff")
+        centered(draw, box, str(index + 1), font(22 if square else 24, True, locale), "#ffffff")
 
-    value_box = scaled_box((64, 140, 416, 360), sx, sy)
-    draw.rounded_rectangle(value_box, radius=round(42 * uniform), fill="#303030")
-    centered(draw, value_box, "0", font(round(96 * uniform), True, locale), "#ffffff")
+    value_box = (32, 130, 358, 340) if square else (64, 140, 416, 360)
+    draw.rounded_rectangle(value_box, radius=36 if square else 42, fill="#303030")
+    centered(draw, value_box, "0", font(82 if square else 96, True, locale), "#ffffff")
 
-    centered(
-        draw,
-        scaled_box((60, 374, 420, 416), sx, sy),
-        "计数器 1  •  点击计数" if locale == "zh-CN" else "Counter 1  •  Tap to count",
-        font(round(24 * uniform), locale=locale),
-        "#808080",
-    )
+    decrement_box = (93, 378, 153, 426) if square else (128, 400, 200, 448)
+    draw.rounded_rectangle(decrement_box, radius=15 if square else 16, fill="#1d1d1d")
+    centered(draw, decrement_box, "−1", font(21 if square else 22, True, locale), "#5d5d5d")
 
-    open_box = scaled_box((170, 420, 310, 464), sx, sy)
-    draw.rounded_rectangle(open_box, radius=round(15 * uniform), fill="#0986d4")
+    open_box = (165, 378, 297, 426) if square else (212, 400, 352, 448)
+    draw.rounded_rectangle(open_box, radius=15 if square else 16, fill="#0986d4")
     centered(
         draw,
         open_box,
         "打开应用" if locale == "zh-CN" else "Open app",
-        font(round(22 * uniform), True, locale),
+        font(20 if square else 22, True, locale),
         "#ffffff",
     )
 
     save_indexed(image, output, corner_radius)
+
+
+def render_app_widget(width: int, height: int, output: Path, locale: str) -> None:
+    square = width < 400
+    image = Image.new("RGB", (width, height), "#303030")
+    draw = ImageDraw.Draw(image)
+    padding = 16
+    action_height = min(60 if square else 64, height - padding * 2)
+    plus_width = action_height
+    minus_width = round(action_height * 0.72)
+    column_gap = 10 if square else 12
+    action_gap = 10
+    plus_x = width - padding - plus_width
+    minus_x = plus_x - action_gap - minus_width
+    action_y = round((height - action_height) / 2)
+    left_width = minus_x - column_gap - padding
+    label_height = max(28, round(height * 0.18))
+    value_y = padding + label_height + 2
+
+    label_box = (padding, padding, padding + left_width, padding + label_height)
+    value_box = (padding, value_y, padding + left_width, height - padding)
+    plus_box = (plus_x, action_y, plus_x + plus_width, action_y + action_height)
+    minus_box = (minus_x, action_y, minus_x + minus_width, action_y + action_height)
+    draw.rounded_rectangle(plus_box, radius=18, fill="#0986d4")
+    draw.rounded_rectangle(minus_box, radius=18, fill="#252525")
+    label = "计数器 1" if locale == "zh-CN" else "Counter 1"
+    left_centered(draw, label_box, label, font(19 if square else 21, locale=locale), "#a0a0a0")
+    left_centered(draw, value_box, "0", font(70 if square else 78, True, locale), "#ffffff")
+    centered(draw, plus_box, "+", font(34 if square else 38, True, locale), "#ffffff")
+    centered(draw, minus_box, "−", font(34 if square else 38, True, locale), "#606060")
+    save_indexed(image, output)
+
+
+def render_home(width: int, height: int, output: Path, shape: str, locale: str) -> None:
+    square = shape == "square"
+    image = Image.new("RGB", (width, height), "#000000")
+    draw = ImageDraw.Draw(image)
+
+    if square:
+        centered(draw, (0, 0, 390, 64), "Z-Tally", font(28, True, locale), "#ffffff")
+        selector_x, selector_y, selector_step, selector_size = 59, 84, 58, 40
+        value_box = (16, 134, 374, 292)
+        value_radius = 36
+        value_font = 76
+        buttons = [
+            ((34, 302, 134, 348), "−1", "#383838", "#808080", 28),
+            ((145, 302, 245, 348), "Save", "#383838", "#808080", 24),
+            ((256, 302, 356, 348), "Reset", "#ad3c23", "#ffffff", 24),
+            ((68, 364, 272, 410), "History  0", "#383838", "#ffffff", 24),
+        ]
+        settings_xy = (300, 364)
+        settings_path = PROJECT_DIR / "assets" / "square.w390-s" / "image" / "settings_normal.png"
+    else:
+        centered(draw, (0, 18, 480, 66), "Z-Tally", font(36, True, locale), "#ffffff")
+        selector_x, selector_y, selector_step, selector_size = 92, 74, 64, 40
+        value_box = (52, 124, 428, 322)
+        value_radius = 44
+        value_font = 82
+        buttons = [
+            ((72, 336, 168, 384), "−1", "#383838", "#808080", 28),
+            ((192, 336, 288, 384), "Save", "#383838", "#808080", 24),
+            ((312, 336, 408, 384), "Reset", "#ad3c23", "#ffffff", 24),
+            ((140, 398, 296, 444), "History  0", "#383838", "#ffffff", 24),
+        ]
+        settings_xy = (308, 398)
+        settings_path = PROJECT_DIR / "assets" / "round.r" / "image" / "settings_normal.png"
+
+    for index in range(5):
+        box = (
+            selector_x + index * selector_step,
+            selector_y,
+            selector_x + index * selector_step + selector_size,
+            selector_y + selector_size,
+        )
+        draw.ellipse(box, fill="#0986d4" if index == 0 else "#383838")
+        centered(draw, box, str(index + 1), font(24, True, locale), "#ffffff")
+
+    draw.rounded_rectangle(value_box, radius=value_radius, fill="#303030")
+    centered(draw, value_box, "0", font(value_font, True, locale), "#ffffff")
+
+    for box, label, background, foreground, text_size in buttons:
+        draw.rounded_rectangle(box, radius=15 if square else 16, fill=background)
+        centered(draw, box, label, font(text_size, True, locale), foreground)
+
+    settings_icon = Image.open(settings_path).convert("RGBA")
+    if settings_icon.size != (46, 46):
+        settings_icon = settings_icon.resize((46, 46), Image.Resampling.LANCZOS)
+    image.paste(settings_icon, settings_xy, settings_icon)
+    save_indexed(image, output)
 
 
 def main() -> None:
@@ -119,8 +216,14 @@ def main() -> None:
         render(width, height, PICTURES_DIR / f"widget-preview-{shape}.png", "en-US", corner_radius)
         render(width, height, PICTURES_DIR / f"widget-preview-{shape}_en-US.png", "en-US", corner_radius)
         render(width, height, PICTURES_DIR / f"widget-preview-{shape}_zh-CN.png", "zh-CN", corner_radius)
+        render(width, height, PICTURES_DIR / f"secondary-widget-preview-{shape}_en-US.png", "en-US", corner_radius)
         render(width, height, asset_directory / "widget-preview_en-US.png", "en-US", corner_radius)
         render(width, height, asset_directory / "widget-preview_zh-CN.png", "zh-CN", corner_radius)
+        card_width = width - 32
+        card_height = round(height * 0.4)
+        render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_en-US.png", "en-US")
+        render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_zh-CN.png", "zh-CN")
+        render_home(width, height, PICTURES_DIR / f"home-preview-{shape}_en-US.png", shape, "en-US")
 
 
 if __name__ == "__main__":

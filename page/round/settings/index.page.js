@@ -2,7 +2,7 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { Vibrator } from "@zos/sensor";
-import { loadState, saveState } from "../../../utils/state";
+import { COUNTER_IDS, loadState, saveState } from "../../../utils/state";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyStoredScreenBrightTime, withScreenBrightRefresh } from "../../../utils/screen-bright";
@@ -17,9 +17,15 @@ const COLORS = {
 
 let pageState = null;
 let vibrator = null;
+let quickCardValueWidget = null;
 
 function text(key) {
   return getText(key) || key;
+}
+
+function counterName(counterId) {
+  const index = COUNTER_IDS.indexOf(counterId);
+  return text(index >= 0 ? `counter${index + 1}` : "counter1");
 }
 
 Page({
@@ -45,6 +51,7 @@ Page({
     const settingsLabel = text("settings");
     const vibrationLabel = text("vibration");
     const timeoutTitle = text("screenTimeout");
+    const quickCardLabel = text("quickCardCounter");
     const tutorialLabel = text("tutorial");
     const aboutLabel = text("about");
     this.addText(settingsLabel, 130, 24, 220, 62, fitTextSize(settingsLabel, 220, TYPOGRAPHY.title, 22), COLORS.textTitle, hmUI.align.CENTER_H, list);
@@ -79,9 +86,19 @@ Page({
     this.addText(timeoutLabel, 228, 2, 82, 68, fitTextSize(timeoutLabel, 82, TYPOGRAPHY.caption, 15, 6), COLORS.textSecondaryInfo, hmUI.align.RIGHT, timeoutRow);
     this.addText("›", 312, 0, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, timeoutRow);
 
-    const tutorialRow = createInteractiveRow(list, {
+    const quickCardRow = createInteractiveRow(list, {
       x: 54,
       y: 258,
+      w: 372,
+      h: 70,
+    }, () => push({ url: "page/round/quick-card-counter/index.page" }));
+    this.addText(quickCardLabel, 14, 2, 188, 68, fitTextSize(quickCardLabel, 188, TYPOGRAPHY.subheadline, 18), COLORS.textTitle, hmUI.align.LEFT, quickCardRow);
+    quickCardValueWidget = this.addText(counterName(pageState.quickCardCounterId), 202, 2, 108, 68, TYPOGRAPHY.caption, COLORS.textSecondaryInfo, hmUI.align.RIGHT, quickCardRow);
+    this.addText("›", 312, 0, 42, 68, TYPOGRAPHY.title1, COLORS.textSecondaryInfo, hmUI.align.CENTER_H, quickCardRow);
+
+    const tutorialRow = createInteractiveRow(list, {
+      x: 54,
+      y: 334,
       w: 372,
       h: 70,
     }, () => push({ url: "page/round/tutorial/index.page" }));
@@ -90,7 +107,7 @@ Page({
 
     const aboutRow = createInteractiveRow(list, {
       x: 54,
-      y: 334,
+      y: 410,
       w: 372,
       h: 70,
     }, () => push({ url: "page/round/about/index.page" }));
@@ -99,7 +116,7 @@ Page({
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
-      y: 412,
+      y: 488,
       w: 480,
       h: 180,
       color: COLORS.background,
@@ -108,6 +125,12 @@ Page({
   },
 
   onResume() {
+    pageState = loadState();
+    if (quickCardValueWidget) {
+      quickCardValueWidget.setProperty(hmUI.prop.MORE, {
+        text: counterName(pageState.quickCardCounterId),
+      });
+    }
     applyStoredScreenBrightTime();
   },
 

@@ -1,0 +1,257 @@
+import * as hmUI from "@zos/ui";
+import { getText } from "@zos/i18n";
+import { push } from "@zos/router";
+import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
+import { COUNTER_IDS, loadState, saveState, updateCounterValue } from "../utils/state";
+import { fitTextSize } from "../utils/text-layout";
+
+const COLORS = {
+  item: 0x303030,
+  itemPressed: 0x222222,
+  key: 0x0986d4,
+  keyPressed: 0x066097,
+  text: 0xffffff,
+  secondary: 0xa0a0a0,
+  disabledItem: 0x252525,
+  disabledText: 0x606060,
+};
+
+let state = null;
+let metrics = null;
+let labelWidget = null;
+let valueWidget = null;
+let decrementWidget = null;
+let isSquare = false;
+
+function text(key) {
+  return getText(key) || key;
+}
+
+function counterName(counterId) {
+  const index = COUNTER_IDS.indexOf(counterId);
+  return text(index >= 0 ? `counter${index + 1}` : "counter1");
+}
+
+function boundCounter() {
+  const counterId = COUNTER_IDS.includes(state.quickCardCounterId)
+    ? state.quickCardCounterId
+    : COUNTER_IDS[0];
+  return state.counters.find((counter) => counter.id === counterId) || state.counters[0];
+}
+
+function detectDevice() {
+  try {
+    const info = getDeviceInfo();
+    isSquare = Boolean(info && (info.screenShape === SCREEN_SHAPE_SQUARE || info.width === 390));
+    return info || {};
+  } catch (_error) {
+    isSquare = false;
+    return {};
+  }
+}
+
+function prepareMetrics() {
+  const device = detectDevice();
+  const desiredHeight = Math.max(120, Math.round((device.height || 480) * 0.4));
+  try {
+    hmUI.setAppWidgetSize({ h: desiredHeight });
+  } catch (_error) {}
+
+  let size = {};
+  try {
+    size = hmUI.getAppWidgetSize() || {};
+  } catch (_error) {}
+  const w = size.w || Math.max(300, (device.width || 480) - 32);
+  const h = size.h || desiredHeight;
+  const screenWidth = device.width || w;
+  const originX = Number.isFinite(size.margin)
+    ? size.margin
+    : Math.max(0, Math.round((screenWidth - w) / 2));
+  const padding = 16;
+  const actionHeight = Math.min(isSquare ? 60 : 64, h - padding * 2);
+  const plusWidth = actionHeight;
+  const minusWidth = Math.round(actionHeight * 0.72);
+  const actionGap = 10;
+  const columnGap = isSquare ? 10 : 12;
+  const contentX = originX + padding;
+  const plusX = originX + w - padding - plusWidth;
+  const minusX = plusX - actionGap - minusWidth;
+  const actionY = Math.round((h - actionHeight) / 2);
+  const leftWidth = minusX - columnGap - contentX;
+  const labelY = padding;
+  const labelHeight = Math.max(28, Math.round(h * 0.18));
+  const valueY = labelY + labelHeight + 2;
+  return {
+    w,
+    h,
+    originX,
+    contentX,
+    padding,
+    actionHeight,
+    actionGap,
+    columnGap,
+    plusWidth,
+    minusWidth,
+    plusX,
+    minusX,
+    actionY,
+    leftWidth,
+    labelY,
+    labelHeight,
+    valueY,
+    valueHeight: h - valueY - padding,
+  };
+}
+
+function valueTextSize(value) {
+  const digits = `${value}`.length;
+  const base = Math.min(isSquare ? 70 : 78, Math.round(metrics.valueHeight * 0.72));
+  if (digits <= 4) return base;
+  if (digits <= 6) return Math.round(base * 0.78);
+  if (digits <= 8) return Math.round(base * 0.62);
+  return Math.max(30, Math.round(base * 0.5));
+}
+
+function mainPageUrl() {
+  return isSquare ? "page/square/home/index.page" : "page/round/home/index.page";
+}
+
+AppWidget({
+  onInit() {
+    state = loadState();
+    metrics = prepareMetrics();
+  },
+
+  build() {
+    state = state || loadState();
+    metrics = metrics || prepareMetrics();
+    const counter = boundCounter();
+    const label = counterName(counter.id);
+
+    labelWidget = hmUI.createWidget(hmUI.widget.TEXT, {
+      text: label,
+      x: metrics.contentX,
+      y: metrics.labelY,
+      w: metrics.leftWidth,
+      h: metrics.labelHeight,
+      color: COLORS.secondary,
+      text_size: fitTextSize(label, metrics.leftWidth, isSquare ? 19 : 21, 16, 8),
+      align_h: hmUI.align.LEFT,
+      align_v: hmUI.align.CENTER_V,
+      text_style: hmUI.text_style.NONE,
+    });
+    labelWidget.addEventListener(hmUI.event.CLICK_DOWN, () => this.openApp());
+
+    valueWidget = hmUI.createWidget(hmUI.widget.TEXT, {
+      text: `${counter.value}`,
+      x: metrics.contentX,
+      y: metrics.valueY,
+      w: metrics.leftWidth,
+      h: metrics.valueHeight,
+      color: COLORS.text,
+      text_size: valueTextSize(counter.value),
+      align_h: hmUI.align.LEFT,
+      align_v: hmUI.align.CENTER_V,
+      text_style: hmUI.text_style.NONE,
+    });
+    valueWidget.addEventListener(hmUI.event.CLICK_DOWN, () => this.openApp());
+
+    hmUI.createWidget(hmUI.widget.BUTTON, {
+      text: "+",
+      x: metrics.plusX,
+      y: metrics.actionY,
+      w: metrics.plusWidth,
+      h: metrics.actionHeight,
+      color: COLORS.text,
+      text_size: isSquare ? 34 : 38,
+      radius: 18,
+      normal_color: COLORS.key,
+      press_color: COLORS.keyPressed,
+      click_func: () => this.changeValue(1),
+    });
+
+    decrementWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
+      text: "−",
+      x: metrics.minusX,
+      y: metrics.actionY,
+      w: metrics.minusWidth,
+      h: metrics.actionHeight,
+      color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
+      text_size: isSquare ? 34 : 38,
+      radius: 18,
+      normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
+      press_color: COLORS.itemPressed,
+      click_func: () => this.changeValue(-1),
+    });
+    if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
+  },
+
+  onResume() {
+    state = loadState();
+    this.refresh();
+  },
+
+  openApp() {
+    state = loadState();
+    const counter = boundCounter();
+    state.activeCounterId = counter.id;
+    saveState(state);
+    push({ url: mainPageUrl() });
+  },
+
+  changeValue(delta) {
+    const counter = boundCounter();
+    if (delta < 0 && counter.value === 0) return;
+    state = updateCounterValue(counter.id, delta);
+    this.refresh();
+  },
+
+  refresh() {
+    const counter = boundCounter();
+    const label = counterName(counter.id);
+    if (labelWidget) {
+      labelWidget.setProperty(hmUI.prop.MORE, {
+        text: label,
+        x: metrics.contentX,
+        y: metrics.labelY,
+        w: metrics.leftWidth,
+        h: metrics.labelHeight,
+        color: COLORS.secondary,
+        text_size: fitTextSize(label, metrics.leftWidth, isSquare ? 19 : 21, 16, 8),
+        align_h: hmUI.align.LEFT,
+        align_v: hmUI.align.CENTER_V,
+        text_style: hmUI.text_style.NONE,
+      });
+    }
+    if (valueWidget) {
+      valueWidget.setProperty(hmUI.prop.MORE, {
+        text: `${counter.value}`,
+        x: metrics.contentX,
+        y: metrics.valueY,
+        w: metrics.leftWidth,
+        h: metrics.valueHeight,
+        color: COLORS.text,
+        text_size: valueTextSize(counter.value),
+        align_h: hmUI.align.LEFT,
+        align_v: hmUI.align.CENTER_V,
+        text_style: hmUI.text_style.NONE,
+      });
+    }
+    if (decrementWidget) {
+      decrementWidget.setProperty(hmUI.prop.MORE, {
+        text: "−",
+        x: metrics.minusX,
+        y: metrics.actionY,
+        w: metrics.minusWidth,
+        h: metrics.actionHeight,
+        color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
+        text_size: isSquare ? 34 : 38,
+        radius: 18,
+        normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
+        press_color: COLORS.itemPressed,
+        click_func: () => this.changeValue(-1),
+      });
+      if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
+    }
+  },
+});

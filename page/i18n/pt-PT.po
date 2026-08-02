@@ -80,7 +80,7 @@ msgid "aboutFeatures"
 msgstr "Contagem rápida • Histórico local"
 
 msgid "version"
-msgstr "Versão 1.1.4 (código 7)"
+msgstr "Versão 1.1.5 (código 10)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"
@@ -138,3 +138,6 @@ msgstr "Toque para contar"
 
 msgid "openApp"
 msgstr "Abrir app"
+
+msgid "quickCardCounter"
+msgstr "Contador do cartão rápido"

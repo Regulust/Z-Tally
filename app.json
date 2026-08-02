@@ -5,8 +5,8 @@
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
-      "code": 7,
-      "name": "1.1.4"
+      "code": 10,
+      "name": "1.1.5"
     },
     "icon": "icon.png",
     "vender": "Regulus",
@@ -33,8 +33,21 @@
             "page/round/tutorial/index.page",
             "page/round/history/index.page",
             "page/round/settings/index.page",
+            "page/round/quick-card-counter/index.page",
             "page/round/screen-timeout/index.page",
             "page/round/about/index.page"
+          ]
+        },
+        "app-widget": {
+          "widgets": [
+            {
+              "path": "app-widget/index",
+              "icon": "icon.png",
+              "name": "Z-Tally",
+              "runtime": {
+                "type": "js"
+              }
+            }
           ]
         },
         "secondary-widget": {
@@ -92,8 +105,21 @@
             "page/square/tutorial/index.page",
             "page/square/history/index.page",
             "page/square/settings/index.page",
+            "page/square/quick-card-counter/index.page",
             "page/square/screen-timeout/index.page",
             "page/square/about/index.page"
+          ]
+        },
+        "app-widget": {
+          "widgets": [
+            {
+              "path": "app-widget/index",
+              "icon": "icon.png",
+              "name": "Z-Tally",
+              "runtime": {
+                "type": "js"
+              }
+            }
           ]
         },
         "secondary-widget": {
