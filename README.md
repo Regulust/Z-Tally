@@ -16,4 +16,4 @@ Z-Tally 是一款面向 Zepp OS Amazfit 手表的离线按压计数器应用，�
 
 Powered by Codex GPT 5.6 Sol
 
-This project is open source under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](./LICENCE) license. / 本项目采用 [CC BY-SA 4.0](./LICENCE) 协议开源。
+This project is open source under the [GNU General Public License v3.0 (GPL-3.0)](./LICENCE). / 本项目采用 [GNU GPL v3.0](./LICENCE) 协议开源。
