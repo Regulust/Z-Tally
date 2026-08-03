@@ -80,7 +80,7 @@ msgid "aboutFeatures"
 msgstr "Быстрый счёт • Локальная история"
 
 msgid "version"
-msgstr "Версия 1.1.5 (код 17)"
+msgstr "Версия 1.1.5 (код 18)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

@@ -2,7 +2,7 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
-import { COUNTER_IDS, loadState, saveState, updateCounterValue } from "../utils/state";
+import { COUNTER_IDS, loadState, saveState } from "../utils/state";
 import { fitTextSize } from "../utils/text-layout";
 
 const COLORS = {
@@ -24,6 +24,12 @@ let labelWidget = null;
 let valueWidget = null;
 let decrementWidget = null;
 let isSquare = false;
+let persistTimer = null;
+let stateDirty = false;
+let renderedValueTextSize = null;
+let decrementEnabled = null;
+
+const PERSIST_DELAY = 150;
 
 function text(key) {
   return getText(key) || key;
@@ -162,6 +168,7 @@ AppWidget({
     });
     if (labelWidget.setEnable) labelWidget.setEnable(false);
 
+    renderedValueTextSize = valueTextSize(counter.value);
     valueWidget = hmUI.createWidget(hmUI.widget.TEXT, {
       text: `${counter.value}`,
       x: metrics.valueX,
@@ -169,7 +176,7 @@ AppWidget({
       w: metrics.valueWidth,
       h: metrics.valueHeight,
       color: COLORS.text,
-      text_size: valueTextSize(counter.value),
+      text_size: renderedValueTextSize,
       align_h: hmUI.align.LEFT,
       align_v: hmUI.align.CENTER_V,
       text_style: hmUI.text_style.NONE,
@@ -190,40 +197,115 @@ AppWidget({
       click_func: () => this.changeValue(1),
     });
 
+    decrementEnabled = counter.value > 0;
     decrementWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "−",
       x: metrics.minusX,
       y: metrics.actionY,
       w: metrics.minusWidth,
       h: metrics.actionHeight,
-      color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
+      color: decrementEnabled ? COLORS.text : COLORS.disabledText,
       text_size: 36,
       radius: 18,
-      normal_color: counter.value > 0 ? COLORS.minusKey : COLORS.disabledItem,
+      normal_color: decrementEnabled ? COLORS.minusKey : COLORS.disabledItem,
       press_color: COLORS.minusKeyPressed,
       click_func: () => this.changeValue(-1),
     });
-    if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
+    if (decrementWidget.setEnable) decrementWidget.setEnable(decrementEnabled);
   },
 
   onResume() {
+    this.persistNow();
     state = loadState();
     this.refresh();
   },
 
+  onPause() {
+    this.persistNow();
+  },
+
+  onDestroy() {
+    this.persistNow();
+  },
+
   openApp() {
-    state = loadState();
     const counter = boundCounter();
     state.activeCounterId = counter.id;
-    saveState(state);
+    stateDirty = true;
+    this.persistNow();
     push({ url: mainPageUrl() });
   },
 
   changeValue(delta) {
     const counter = boundCounter();
     if (delta < 0 && counter.value === 0) return;
-    state = updateCounterValue(counter.id, delta);
-    this.refresh();
+    counter.value = Math.max(0, counter.value + delta);
+    this.refreshValue(counter);
+    this.schedulePersist();
+  },
+
+  schedulePersist() {
+    stateDirty = true;
+    if (persistTimer) clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => {
+      persistTimer = null;
+      this.persistNow();
+    }, PERSIST_DELAY);
+  },
+
+  persistNow() {
+    if (!state) return;
+    if (persistTimer) {
+      clearTimeout(persistTimer);
+      persistTimer = null;
+    }
+    if (!stateDirty) return;
+    try {
+      saveState(state);
+      stateDirty = false;
+    } catch (_error) {}
+  },
+
+  refreshValue(counter, force = false) {
+    const nextTextSize = valueTextSize(counter.value);
+    if (valueWidget) {
+      if (!force && renderedValueTextSize === nextTextSize) {
+        valueWidget.setProperty(hmUI.prop.TEXT, `${counter.value}`);
+      } else {
+        valueWidget.setProperty(hmUI.prop.MORE, {
+          text: `${counter.value}`,
+          x: metrics.valueX,
+          y: metrics.valueY,
+          w: metrics.valueWidth,
+          h: metrics.valueHeight,
+          color: COLORS.text,
+          text_size: nextTextSize,
+          align_h: hmUI.align.LEFT,
+          align_v: hmUI.align.CENTER_V,
+          text_style: hmUI.text_style.NONE,
+        });
+      }
+      renderedValueTextSize = nextTextSize;
+    }
+
+    const nextDecrementEnabled = counter.value > 0;
+    if (decrementWidget && (force || decrementEnabled !== nextDecrementEnabled)) {
+      decrementWidget.setProperty(hmUI.prop.MORE, {
+        text: "−",
+        x: metrics.minusX,
+        y: metrics.actionY,
+        w: metrics.minusWidth,
+        h: metrics.actionHeight,
+        color: nextDecrementEnabled ? COLORS.text : COLORS.disabledText,
+        text_size: 36,
+        radius: 18,
+        normal_color: nextDecrementEnabled ? COLORS.minusKey : COLORS.disabledItem,
+        press_color: COLORS.minusKeyPressed,
+        click_func: () => this.changeValue(-1),
+      });
+      if (decrementWidget.setEnable) decrementWidget.setEnable(nextDecrementEnabled);
+    }
+    decrementEnabled = nextDecrementEnabled;
   },
 
   refresh() {
@@ -243,35 +325,6 @@ AppWidget({
         text_style: hmUI.text_style.NONE,
       });
     }
-    if (valueWidget) {
-      valueWidget.setProperty(hmUI.prop.MORE, {
-        text: `${counter.value}`,
-        x: metrics.valueX,
-        y: metrics.valueY,
-        w: metrics.valueWidth,
-        h: metrics.valueHeight,
-        color: COLORS.text,
-        text_size: valueTextSize(counter.value),
-        align_h: hmUI.align.LEFT,
-        align_v: hmUI.align.CENTER_V,
-        text_style: hmUI.text_style.NONE,
-      });
-    }
-    if (decrementWidget) {
-      decrementWidget.setProperty(hmUI.prop.MORE, {
-        text: "−",
-        x: metrics.minusX,
-        y: metrics.actionY,
-        w: metrics.minusWidth,
-        h: metrics.actionHeight,
-        color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
-        text_size: 36,
-        radius: 18,
-        normal_color: counter.value > 0 ? COLORS.minusKey : COLORS.disabledItem,
-        press_color: COLORS.minusKeyPressed,
-        click_func: () => this.changeValue(-1),
-      });
-      if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
-    }
+    this.refreshValue(counter, true);
   },
 });
