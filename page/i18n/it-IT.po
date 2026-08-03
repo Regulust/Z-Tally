@@ -80,7 +80,7 @@ msgid "aboutFeatures"
 msgstr "Conteggio rapido • Cronologia locale"
 
 msgid "version"
-msgstr "Versione 1.1.5 (codice 18)"
+msgstr "Versione 1.1.5 (codice 19)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

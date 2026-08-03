@@ -135,7 +135,7 @@ def render_app_widget(width: int, height: int, output: Path, locale: str) -> Non
     left_width = minus_x - column_gap - content_x
     value_inset = 14
     label_height = 35
-    label_y = 24
+    label_y = 16
     value_y = action_y + round((action_height - 48) / 2)
 
     label_box = (content_x, label_y, content_x + left_width, label_y + label_height)
@@ -223,7 +223,7 @@ def main() -> None:
         render(width, height, asset_directory / "widget-preview_en-US.png", "en-US", corner_radius)
         render(width, height, asset_directory / "widget-preview_zh-CN.png", "zh-CN", corner_radius)
         card_width = min(400, width - 32)
-        card_height = 170
+        card_height = 150
         render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_en-US.png", "en-US")
         render_app_widget(card_width, card_height, PICTURES_DIR / f"app-widget-preview-{shape}_zh-CN.png", "zh-CN")
         render_home(width, height, PICTURES_DIR / f"home-preview-{shape}_en-US.png", shape, "en-US")

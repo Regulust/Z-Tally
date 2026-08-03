@@ -60,7 +60,7 @@ function detectDevice() {
 
 function prepareMetrics() {
   const device = detectDevice();
-  const desiredHeight = 170;
+  const desiredHeight = 150;
   try {
     hmUI.setAppWidgetSize({ h: desiredHeight });
   } catch (_error) {}
@@ -87,7 +87,7 @@ function prepareMetrics() {
   const actionY = h - padding - actionHeight;
   const leftWidth = minusX - columnGap - contentX;
   const valueInset = 14;
-  const labelY = 24;
+  const labelY = 16;
   const labelHeight = 35;
   const valueY = actionY + Math.round((actionHeight - 48) / 2);
   return {
