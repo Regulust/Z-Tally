@@ -2,7 +2,9 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
+import { Vibrator } from "@zos/sensor";
 import { COUNTER_IDS, loadState, saveState } from "../utils/state";
+import { HAPTIC_COUNT, playHaptic, stopHaptic } from "../utils/haptics";
 import { fitTextSize } from "../utils/text-layout";
 
 const COLORS = {
@@ -28,8 +30,9 @@ let persistTimer = null;
 let stateDirty = false;
 let renderedValueTextSize = null;
 let decrementEnabled = null;
+let vibrator = null;
 
-const PERSIST_DELAY = 150;
+const PERSIST_DELAY = 300;
 
 function text(key) {
   return getText(key) || key;
@@ -90,6 +93,8 @@ function prepareMetrics() {
   const labelY = 16;
   const labelHeight = 35;
   const valueY = actionY + Math.round((actionHeight - 48) / 2);
+  const actionGuardX = minusX - columnGap;
+  const actionGuardY = actionY - columnGap;
   return {
     w,
     h,
@@ -112,6 +117,10 @@ function prepareMetrics() {
     labelHeight,
     valueY,
     valueHeight: 48,
+    actionGuardX,
+    actionGuardY,
+    actionGuardWidth: originX + w - actionGuardX,
+    actionGuardHeight: h - actionGuardY,
   };
 }
 
@@ -132,6 +141,11 @@ AppWidget({
   onInit() {
     state = loadState();
     metrics = prepareMetrics();
+    try {
+      vibrator = new Vibrator();
+    } catch (_error) {
+      vibrator = null;
+    }
   },
 
   build() {
@@ -183,6 +197,20 @@ AppWidget({
     });
     if (valueWidget.setEnable) valueWidget.setEnable(false);
 
+    const actionGuard = hmUI.createWidget(hmUI.widget.BUTTON, {
+      text: "",
+      x: metrics.actionGuardX,
+      y: metrics.actionGuardY,
+      w: metrics.actionGuardWidth,
+      h: metrics.actionGuardHeight,
+      color: COLORS.item,
+      text_size: 1,
+      normal_color: COLORS.item,
+      press_color: COLORS.item,
+      click_func: () => {},
+    });
+    if (actionGuard.setAlpha) actionGuard.setAlpha(0);
+
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "+",
       x: metrics.plusX,
@@ -226,6 +254,7 @@ AppWidget({
 
   onDestroy() {
     this.persistNow();
+    stopHaptic(vibrator);
   },
 
   openApp() {
@@ -242,6 +271,12 @@ AppWidget({
     counter.value = Math.max(0, counter.value + delta);
     this.refreshValue(counter);
     this.schedulePersist();
+    this.pulseCount();
+  },
+
+  pulseCount() {
+    if (!state || !state.vibrationEnabled) return;
+    playHaptic(vibrator, HAPTIC_COUNT);
   },
 
   schedulePersist() {

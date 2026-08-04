@@ -2,7 +2,9 @@ import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
 import { push } from "@zos/router";
 import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from "@zos/device";
-import { loadState, saveState, updateCounterValue } from "../utils/state";
+import { Vibrator } from "@zos/sensor";
+import { loadState, saveState } from "../utils/state";
+import { HAPTIC_COUNT, playHaptic, stopHaptic } from "../utils/haptics";
 
 const COLORS = {
   item: 0x303030,
@@ -37,6 +39,13 @@ let layout = ROUND_LAYOUT;
 let valueWidget = null;
 let decrementWidget = null;
 let selectorWidgets = [];
+let vibrator = null;
+let persistTimer = null;
+let stateDirty = false;
+let renderedValueTextSize = null;
+let decrementEnabled = null;
+
+const PERSIST_DELAY = 300;
 
 function text(key) {
   return getText(key) || key;
@@ -93,6 +102,11 @@ SecondaryWidget({
     state = loadState();
     layout = detectLayout();
     selectorWidgets = [];
+    try {
+      vibrator = new Vibrator();
+    } catch (_error) {
+      vibrator = null;
+    }
   },
 
   build() {
@@ -131,6 +145,7 @@ SecondaryWidget({
     });
 
     const counter = activeCounter();
+    renderedValueTextSize = valueSize(counter.value);
     valueWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
       text: `${counter.value}`,
       x: layout.value.x,
@@ -138,27 +153,28 @@ SecondaryWidget({
       w: layout.value.w,
       h: layout.value.h,
       color: COLORS.text,
-      text_size: valueSize(counter.value),
+      text_size: renderedValueTextSize,
       radius: layout.value.radius,
       normal_color: COLORS.item,
       press_color: COLORS.itemPressed,
       click_func: () => this.increment(),
     });
 
+    decrementEnabled = counter.value > 0;
     decrementWidget = hmUI.createWidget(hmUI.widget.BUTTON, {
       text: "−1",
       x: layout.decrement.x,
       y: layout.decrement.y,
       w: layout.decrement.w,
       h: layout.decrement.h,
-      color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
+      color: decrementEnabled ? COLORS.text : COLORS.disabledText,
       text_size: layout.decrement.textSize,
       radius: layout.decrement.radius,
-      normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
+      normal_color: decrementEnabled ? COLORS.item : COLORS.disabledItem,
       press_color: COLORS.itemPressed,
       click_func: () => this.decrement(),
     });
-    if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
+    if (decrementWidget.setEnable) decrementWidget.setEnable(decrementEnabled);
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
       text: text("openApp"),
@@ -171,16 +187,27 @@ SecondaryWidget({
       radius: layout.open.radius,
       normal_color: COLORS.key,
       press_color: COLORS.keyPressed,
-      click_func: () => push({ url: mainPageUrl() }),
+      click_func: () => this.openApp(),
     });
   },
 
   onResume() {
+    this.persistNow();
     state = loadState();
     this.refresh();
   },
 
+  onPause() {
+    this.persistNow();
+  },
+
+  onDestroy() {
+    this.persistNow();
+    stopHaptic(vibrator);
+  },
+
   selectCounter(counterId) {
+    this.persistNow();
     state = loadState();
     if (state.activeCounterId === counterId) return;
     state.activeCounterId = counterId;
@@ -188,15 +215,96 @@ SecondaryWidget({
     this.refresh();
   },
 
+  openApp() {
+    this.persistNow();
+    push({ url: mainPageUrl() });
+  },
+
   increment() {
-    state = updateCounterValue(state.activeCounterId, 1);
-    this.refresh();
+    const counter = activeCounter();
+    counter.value += 1;
+    this.refreshValue(counter);
+    this.schedulePersist();
+    this.pulseCount();
   },
 
   decrement() {
-    if (activeCounter().value === 0) return;
-    state = updateCounterValue(state.activeCounterId, -1);
-    this.refresh();
+    const counter = activeCounter();
+    if (counter.value === 0) return;
+    counter.value -= 1;
+    this.refreshValue(counter);
+    this.schedulePersist();
+    this.pulseCount();
+  },
+
+  schedulePersist() {
+    stateDirty = true;
+    if (persistTimer) clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => {
+      persistTimer = null;
+      this.persistNow();
+    }, PERSIST_DELAY);
+  },
+
+  persistNow() {
+    if (!state) return;
+    if (persistTimer) {
+      clearTimeout(persistTimer);
+      persistTimer = null;
+    }
+    if (!stateDirty) return;
+    try {
+      saveState(state);
+      stateDirty = false;
+    } catch (_error) {}
+  },
+
+  pulseCount() {
+    if (!state || !state.vibrationEnabled) return;
+    playHaptic(vibrator, HAPTIC_COUNT);
+  },
+
+  refreshValue(counter, force = false) {
+    const nextTextSize = valueSize(counter.value);
+    if (valueWidget) {
+      if (!force && renderedValueTextSize === nextTextSize) {
+        valueWidget.setProperty(hmUI.prop.TEXT, `${counter.value}`);
+      } else {
+        valueWidget.setProperty(hmUI.prop.MORE, {
+          text: `${counter.value}`,
+          x: layout.value.x,
+          y: layout.value.y,
+          w: layout.value.w,
+          h: layout.value.h,
+          color: COLORS.text,
+          text_size: nextTextSize,
+          radius: layout.value.radius,
+          normal_color: COLORS.item,
+          press_color: COLORS.itemPressed,
+          click_func: () => this.increment(),
+        });
+      }
+      renderedValueTextSize = nextTextSize;
+    }
+
+    const nextDecrementEnabled = counter.value > 0;
+    if (decrementWidget && (force || decrementEnabled !== nextDecrementEnabled)) {
+      decrementWidget.setProperty(hmUI.prop.MORE, {
+        text: "−1",
+        x: layout.decrement.x,
+        y: layout.decrement.y,
+        w: layout.decrement.w,
+        h: layout.decrement.h,
+        color: nextDecrementEnabled ? COLORS.text : COLORS.disabledText,
+        text_size: layout.decrement.textSize,
+        radius: layout.decrement.radius,
+        normal_color: nextDecrementEnabled ? COLORS.item : COLORS.disabledItem,
+        press_color: COLORS.itemPressed,
+        click_func: () => this.decrement(),
+      });
+      if (decrementWidget.setEnable) decrementWidget.setEnable(nextDecrementEnabled);
+    }
+    decrementEnabled = nextDecrementEnabled;
   },
 
   refresh() {
@@ -207,36 +315,6 @@ SecondaryWidget({
         click_func: () => this.selectCounter(state.counters[index].id),
       });
     });
-    if (valueWidget) {
-      valueWidget.setProperty(hmUI.prop.MORE, {
-        text: `${counter.value}`,
-        x: layout.value.x,
-        y: layout.value.y,
-        w: layout.value.w,
-        h: layout.value.h,
-        color: COLORS.text,
-        text_size: valueSize(counter.value),
-        radius: layout.value.radius,
-        normal_color: COLORS.item,
-        press_color: COLORS.itemPressed,
-        click_func: () => this.increment(),
-      });
-    }
-    if (decrementWidget) {
-      decrementWidget.setProperty(hmUI.prop.MORE, {
-        text: "−1",
-        x: layout.decrement.x,
-        y: layout.decrement.y,
-        w: layout.decrement.w,
-        h: layout.decrement.h,
-        color: counter.value > 0 ? COLORS.text : COLORS.disabledText,
-        text_size: layout.decrement.textSize,
-        radius: layout.decrement.radius,
-        normal_color: counter.value > 0 ? COLORS.item : COLORS.disabledItem,
-        press_color: COLORS.itemPressed,
-        click_func: () => this.decrement(),
-      });
-      if (decrementWidget.setEnable) decrementWidget.setEnable(counter.value > 0);
-    }
+    this.refreshValue(counter, true);
   },
 });
