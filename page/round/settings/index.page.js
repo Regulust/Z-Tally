@@ -55,7 +55,7 @@ Page({
     const quickCardLabel = text("quickCardCounter");
     const tutorialLabel = text("tutorial");
     const aboutLabel = text("about");
-    this.addText(settingsLabel, 36, 18, 408, 48, fitTextSize(settingsLabel, 408, TYPOGRAPHY.title, 24), COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(settingsLabel, 70, 24, 340, 54, fitTextSize(settingsLabel, 340, TYPOGRAPHY.title, 24), COLORS.textTitle, hmUI.align.CENTER_H, list);
 
     this.addText(vibrationLabel, 36, 112, 292, 48, fitTextSize(vibrationLabel, 292, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, list);
     list.createWidget(hmUI.widget.SLIDE_SWITCH, {
