@@ -57,9 +57,9 @@ Page({
     const aboutLabel = text("about");
     this.addText(settingsLabel, 70, 24, 340, 54, fitTextSize(settingsLabel, 340, TYPOGRAPHY.title, 24), COLORS.textTitle, hmUI.align.CENTER_H, list);
 
-    this.addText(vibrationLabel, 36, 112, 292, 48, fitTextSize(vibrationLabel, 292, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, list);
+    this.addText(vibrationLabel, 66, 112, 240, 48, fitTextSize(vibrationLabel, 240, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, list);
     list.createWidget(hmUI.widget.SLIDE_SWITCH, {
-      x: 360,
+      x: 330,
       y: 112,
       w: 84,
       h: 48,
@@ -78,42 +78,42 @@ Page({
       60000: text("timeout1mShort"),
     }[pageState.screenBrightTime] || text("timeoutSystemShort");
     const timeoutRow = createInteractiveRow(list, {
-      x: 24,
+      x: 48,
       y: 196,
-      w: 432,
+      w: 384,
       h: 120,
     }, () => push({ url: "page/round/screen-timeout/index.page" }));
-    this.addText(timeoutTitle, 12, 10, 340, 44, fitTextSize(timeoutTitle, 340, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, timeoutRow);
-    this.addText(timeoutLabel, 12, 54, 340, 40, fitTextSize(timeoutLabel, 340, TYPOGRAPHY.subheadline, 20, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, timeoutRow);
-    this.addText("›", 380, 24, 40, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, timeoutRow);
+    this.addText(timeoutTitle, 18, 10, 300, 44, fitTextSize(timeoutTitle, 300, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, timeoutRow);
+    this.addText(timeoutLabel, 18, 54, 300, 40, fitTextSize(timeoutLabel, 300, TYPOGRAPHY.subheadline, 20, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, timeoutRow);
+    this.addText("›", 330, 24, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, timeoutRow);
 
     const quickCardRow = createInteractiveRow(list, {
-      x: 24,
+      x: 48,
       y: 324,
-      w: 432,
+      w: 384,
       h: 120,
     }, () => push({ url: "page/round/quick-card-counter/index.page" }));
-    this.addText(quickCardLabel, 12, 10, 340, 44, fitTextSize(quickCardLabel, 340, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, quickCardRow);
-    quickCardValueWidget = this.addText(counterName(pageState.quickCardCounterId), 12, 54, 340, 40, fitTextSize(counterName(pageState.quickCardCounterId), 340, TYPOGRAPHY.subheadline, 20, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, quickCardRow);
-    this.addText("›", 380, 24, 40, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, quickCardRow);
+    this.addText(quickCardLabel, 18, 10, 300, 44, fitTextSize(quickCardLabel, 300, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, quickCardRow);
+    quickCardValueWidget = this.addText(counterName(pageState.quickCardCounterId), 18, 54, 300, 40, fitTextSize(counterName(pageState.quickCardCounterId), 300, TYPOGRAPHY.subheadline, 20, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, quickCardRow);
+    this.addText("›", 330, 24, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, quickCardRow);
 
     const tutorialRow = createInteractiveRow(list, {
-      x: 24,
+      x: 48,
       y: 452,
-      w: 432,
+      w: 384,
       h: 104,
     }, () => push({ url: "page/round/tutorial/index.page" }));
-    this.addText(tutorialLabel, 12, 28, 340, 48, fitTextSize(tutorialLabel, 340, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, tutorialRow);
-    this.addText("›", 380, 16, 40, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, tutorialRow);
+    this.addText(tutorialLabel, 18, 28, 300, 48, fitTextSize(tutorialLabel, 300, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, tutorialRow);
+    this.addText("›", 330, 16, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, tutorialRow);
 
     const aboutRow = createInteractiveRow(list, {
-      x: 24,
+      x: 48,
       y: 564,
-      w: 432,
+      w: 384,
       h: 104,
     }, () => push({ url: "page/round/about/index.page" }));
-    this.addText(aboutLabel, 12, 28, 340, 48, fitTextSize(aboutLabel, 340, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, aboutRow);
-    this.addText("›", 380, 16, 40, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, aboutRow);
+    this.addText(aboutLabel, 18, 28, 300, 48, fitTextSize(aboutLabel, 300, TYPOGRAPHY.body, 22), COLORS.textTitle, hmUI.align.LEFT, aboutRow);
+    this.addText("›", 330, 16, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, aboutRow);
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
