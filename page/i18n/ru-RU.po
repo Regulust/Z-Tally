@@ -70,6 +70,24 @@ msgstr "1 минута"
 msgid "screenOnlyAffects"
 msgstr "Только для Z-Tally"
 
+msgid "workoutExtension"
+msgstr "Спортивное расширение"
+
+msgid "workoutExtensionCurrentResult"
+msgstr "Текущий результат"
+
+msgid "workoutExtensionUpdatedAt"
+msgstr "Обновлено: {time}"
+
+msgid "workoutExtensionLastResult"
+msgstr "Прошлый результат"
+
+msgid "workoutExtensionResetAt"
+msgstr "Сброшено: {time}"
+
+msgid "workoutExtensionUnavailable"
+msgstr "Установите Z-Tally Move, чтобы видеть здесь результат счёта."
+
 msgid "about"
 msgstr "О приложении"
 
@@ -80,7 +98,7 @@ msgid "aboutFeatures"
 msgstr "Быстрый счёт • Локальная история"
 
 msgid "version"
-msgstr "Версия 1.1.5 (код 25)"
+msgstr "Версия 1.1.6 (код 26)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

@@ -5,8 +5,8 @@
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
-      "code": 25,
-      "name": "1.1.5"
+      "code": 26,
+      "name": "1.1.6"
     },
     "icon": "icon.png",
     "vender": "Regulus",
@@ -35,6 +35,7 @@
             "page/round/settings/index.page",
             "page/round/quick-card-counter/index.page",
             "page/round/screen-timeout/index.page",
+            "page/round/workout-extension/index.page",
             "page/round/about/index.page"
           ]
         },
@@ -107,6 +108,7 @@
             "page/square/settings/index.page",
             "page/square/quick-card-counter/index.page",
             "page/square/screen-timeout/index.page",
+            "page/square/workout-extension/index.page",
             "page/square/about/index.page"
           ]
         },

@@ -70,6 +70,24 @@ msgstr "1 Minute"
 msgid "screenOnlyAffects"
 msgstr "Nur in Z-Tally"
 
+msgid "workoutExtension"
+msgstr "Workout-Erweiterung"
+
+msgid "workoutExtensionCurrentResult"
+msgstr "Aktuelles Ergebnis"
+
+msgid "workoutExtensionUpdatedAt"
+msgstr "Aktualisiert: {time}"
+
+msgid "workoutExtensionLastResult"
+msgstr "Letztes Ergebnis"
+
+msgid "workoutExtensionResetAt"
+msgstr "Zurückgesetzt: {time}"
+
+msgid "workoutExtensionUnavailable"
+msgstr "Z-Tally Move installieren, um das Zählergebnis hier anzuzeigen."
+
 msgid "about"
 msgstr "Info"
 
@@ -80,7 +98,7 @@ msgid "aboutFeatures"
 msgstr "Schnell zählen • Lokaler Verlauf"
 
 msgid "version"
-msgstr "Version 1.1.5 (Code 25)"
+msgstr "Version 1.1.6 (Code 26)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

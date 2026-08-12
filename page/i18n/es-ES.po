@@ -70,6 +70,24 @@ msgstr "1 minuto"
 msgid "screenOnlyAffects"
 msgstr "Solo afecta a Z-Tally"
 
+msgid "workoutExtension"
+msgstr "Extensión deportiva"
+
+msgid "workoutExtensionCurrentResult"
+msgstr "Resultado actual"
+
+msgid "workoutExtensionUpdatedAt"
+msgstr "Actualizado: {time}"
+
+msgid "workoutExtensionLastResult"
+msgstr "Último resultado"
+
+msgid "workoutExtensionResetAt"
+msgstr "Reinicio: {time}"
+
+msgid "workoutExtensionUnavailable"
+msgstr "Instala Z-Tally Move para ver aquí su resultado de conteo."
+
 msgid "about"
 msgstr "Acerca de"
 
@@ -80,7 +98,7 @@ msgid "aboutFeatures"
 msgstr "Conteo rápido • Historial local"
 
 msgid "version"
-msgstr "Versión 1.1.5 (código 25)"
+msgstr "Versión 1.1.6 (código 26)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

@@ -45,6 +45,7 @@ Page({
     const vibrationLabel = text("vibration");
     const timeoutTitle = text("screenTimeout");
     const quickCardLabel = text("quickCardCounter");
+    const workoutExtensionLabel = text("workoutExtension");
     const tutorialLabel = text("tutorial");
     const aboutLabel = text("about");
     hmUI.updateStatusBarTitle(settingsLabel);
@@ -103,9 +104,18 @@ Page({
     quickCardValueWidget = this.addText(counterName(pageState.quickCardCounterId), 12, 48, 292, 36, fitTextSize(counterName(pageState.quickCardCounterId), 292, 26, 18, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, quickCardRow);
     this.addText("›", 326, 20, 28, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, quickCardRow);
 
-    const tutorialRow = createInteractiveRow(list, {
+    const workoutExtensionRow = createInteractiveRow(list, {
       x: 12,
       y: 332,
+      w: 366,
+      h: 96,
+    }, () => push({ url: "page/square/workout-extension/index.page" }));
+    this.addText(workoutExtensionLabel, 12, 24, 292, 48, fitTextSize(workoutExtensionLabel, 292, 30, 18), COLORS.textTitle, hmUI.align.LEFT, workoutExtensionRow);
+    this.addText("›", 326, 12, 28, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, workoutExtensionRow);
+
+    const tutorialRow = createInteractiveRow(list, {
+      x: 12,
+      y: 432,
       w: 366,
       h: 96,
     }, () => push({ url: "page/square/tutorial/index.page" }));
@@ -114,7 +124,7 @@ Page({
 
     const aboutRow = createInteractiveRow(list, {
       x: 12,
-      y: 432,
+      y: 532,
       w: 366,
       h: 96,
     }, () => push({ url: "page/square/about/index.page" }));
@@ -123,7 +133,7 @@ Page({
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
-      y: 532,
+      y: 632,
       w: 390,
       h: 120,
       color: COLORS.background,

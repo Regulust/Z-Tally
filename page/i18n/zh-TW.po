@@ -70,6 +70,24 @@ msgstr "1 分鐘"
 msgid "screenOnlyAffects"
 msgstr "僅影響 Z-Tally"
 
+msgid "workoutExtension"
+msgstr "Z-Tally 運動擴展"
+
+msgid "workoutExtensionCurrentResult"
+msgstr "目前結果"
+
+msgid "workoutExtensionUpdatedAt"
+msgstr "更新時間：{time}"
+
+msgid "workoutExtensionLastResult"
+msgstr "上次結果"
+
+msgid "workoutExtensionResetAt"
+msgstr "歸零時間：{time}"
+
+msgid "workoutExtensionUnavailable"
+msgstr "可以安裝 Z-Tally 運動擴展版，在此可查看其計數結果"
+
 msgid "about"
 msgstr "關於"
 
@@ -80,7 +98,7 @@ msgid "aboutFeatures"
 msgstr "快速計數 • 本機歷史"
 
 msgid "version"
-msgstr "版本 1.1.5（code 25）"
+msgstr "版本 1.1.6（code 26）"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

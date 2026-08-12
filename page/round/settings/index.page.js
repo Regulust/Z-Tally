@@ -53,6 +53,7 @@ Page({
     const vibrationLabel = text("vibration");
     const timeoutTitle = text("screenTimeout");
     const quickCardLabel = text("quickCardCounter");
+    const workoutExtensionLabel = text("workoutExtension");
     const tutorialLabel = text("tutorial");
     const aboutLabel = text("about");
     this.addText(settingsLabel, 70, 24, 340, 54, fitTextSize(settingsLabel, 340, TYPOGRAPHY.title, 24), COLORS.textTitle, hmUI.align.CENTER_H, list);
@@ -97,9 +98,18 @@ Page({
     quickCardValueWidget = this.addText(counterName(pageState.quickCardCounterId), 18, 54, 300, 40, fitTextSize(counterName(pageState.quickCardCounterId), 300, TYPOGRAPHY.subheadline, 20, 0), COLORS.textSecondaryInfo, hmUI.align.LEFT, quickCardRow);
     this.addText("›", 330, 24, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, quickCardRow);
 
-    const tutorialRow = createInteractiveRow(list, {
+    const workoutExtensionRow = createInteractiveRow(list, {
       x: 48,
       y: 452,
+      w: 384,
+      h: 104,
+    }, () => push({ url: "page/round/workout-extension/index.page" }));
+    this.addText(workoutExtensionLabel, 18, 28, 300, 48, fitTextSize(workoutExtensionLabel, 300, TYPOGRAPHY.body, 20), COLORS.textTitle, hmUI.align.LEFT, workoutExtensionRow);
+    this.addText("›", 330, 16, 36, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, workoutExtensionRow);
+
+    const tutorialRow = createInteractiveRow(list, {
+      x: 48,
+      y: 564,
       w: 384,
       h: 104,
     }, () => push({ url: "page/round/tutorial/index.page" }));
@@ -108,7 +118,7 @@ Page({
 
     const aboutRow = createInteractiveRow(list, {
       x: 48,
-      y: 564,
+      y: 676,
       w: 384,
       h: 104,
     }, () => push({ url: "page/round/about/index.page" }));
@@ -117,7 +127,7 @@ Page({
 
     list.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
-      y: 676,
+      y: 788,
       w: 480,
       h: 120,
       color: COLORS.background,
