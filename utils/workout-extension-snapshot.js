@@ -2,6 +2,9 @@ export const WORKOUT_EXTENSION_APP_ID = 1123237;
 export const WORKOUT_EXTENSION_STORAGE_PATH = "z-tally-move-share.json";
 export const WORKOUT_EXTENSION_SNAPSHOT_KEY = "counterSnapshot";
 export const WORKOUT_EXTENSION_SCHEMA_VERSION = 1;
+export const DATE_ORDER_YMD = "YMD";
+export const DATE_ORDER_DMY = "DMY";
+export const DATE_ORDER_MDY = "MDY";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -92,9 +95,17 @@ export function readWorkoutExtensionSnapshotWith(createStorage) {
   }
 }
 
-export function formatLocalDateTime(timestamp) {
+export function formatLocalDateTime(timestamp, dateOrder = DATE_ORDER_YMD) {
   if (!isTimestamp(timestamp) || timestamp === 0) return "";
   const date = new Date(timestamp);
   const pad = (value) => `${value}`.padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const dateText = dateOrder === DATE_ORDER_DMY
+    ? `${day}-${month}-${year}`
+    : dateOrder === DATE_ORDER_MDY
+      ? `${month}-${day}-${year}`
+      : `${year}-${month}-${day}`;
+  return `${dateText} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }

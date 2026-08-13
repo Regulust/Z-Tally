@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  DATE_ORDER_DMY,
+  DATE_ORDER_MDY,
+  DATE_ORDER_YMD,
   WORKOUT_EXTENSION_APP_ID,
   WORKOUT_EXTENSION_SCHEMA_VERSION,
   WORKOUT_EXTENSION_SNAPSHOT_KEY,
@@ -129,7 +132,11 @@ test("reads the persisted snapshot without writing or caching it", () => {
   ]);
 });
 
-test("formats valid timestamps using the watch-local date and time fields", () => {
+test("formats valid timestamps in the system-selected date order", () => {
   const localTimestamp = new Date(2026, 7, 12, 9, 5, 0, 0).getTime();
   assert.equal(formatLocalDateTime(localTimestamp), "2026-08-12 09:05");
+  assert.equal(formatLocalDateTime(localTimestamp, DATE_ORDER_YMD), "2026-08-12 09:05");
+  assert.equal(formatLocalDateTime(localTimestamp, DATE_ORDER_DMY), "12-08-2026 09:05");
+  assert.equal(formatLocalDateTime(localTimestamp, DATE_ORDER_MDY), "08-12-2026 09:05");
+  assert.equal(formatLocalDateTime(localTimestamp, "unsupported"), "2026-08-12 09:05");
 });

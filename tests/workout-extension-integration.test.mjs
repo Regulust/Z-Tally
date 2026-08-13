@@ -13,7 +13,7 @@ async function readProjectFile(relativePath) {
 test("registers the independent round and square routes and release identity", async () => {
   const app = JSON.parse(await readProjectFile("app.json"));
   const pkg = JSON.parse(await readProjectFile("package.json"));
-  assert.deepEqual(app.app.version, { code: 26, name: "1.1.6" });
+  assert.deepEqual(app.app.version, { code: 27, name: "1.1.6" });
   assert.equal(pkg.version, "1.1.6");
   assert.ok(app.targets.round.module.page.pages.includes("page/round/workout-extension/index.page"));
   assert.ok(app.targets.square.module.page.pages.includes("page/square/workout-extension/index.page"));
@@ -26,6 +26,12 @@ test("settings pages expose a full interactive navigation row for the extension"
   assert.match(square, /createInteractiveRow[\s\S]*page\/square\/workout-extension\/index\.page/);
   assert.match(round, /workoutExtensionLabel/);
   assert.match(square, /workoutExtensionLabel/);
+  assert.match(round, /this\.addText\(workoutExtensionLabel,[^;]*TYPOGRAPHY\.body,/);
+  assert.match(square, /this\.addText\(workoutExtensionLabel,[^;]*, 30,/);
+  assert.doesNotMatch(round, /fitTextSize\(workoutExtensionLabel/);
+  assert.doesNotMatch(square, /fitTextSize\(workoutExtensionLabel/);
+  assert.match(round, /text_style: hmUI\.text_style\.NONE/);
+  assert.match(square, /text_style: hmUI\.text_style\.NONE/);
 });
 
 test("runtime reader uses the provider contract through read-only share-storage", async () => {
@@ -44,6 +50,11 @@ test("result pages refresh on resume and never touch Z-Tally private state", asy
     assert.match(source, /onResume\(\)/);
     assert.match(source, /readWorkoutExtensionSnapshot\(\)/);
     assert.match(source, /workoutExtensionUnavailable/);
+    assert.match(source, /getDateFormat\(\)/);
+    assert.match(source, /DATE_FORMAT_DMY/);
+    assert.match(source, /DATE_FORMAT_MDY/);
+    assert.match(source, /this\.addText\([\s\S]*unavailable,[\s\S]*TYPOGRAPHY\.caption,[\s\S]*hmUI\.text_style\.WRAP/);
+    assert.doesNotMatch(source, /fitTextSize\(unavailable/);
     assert.doesNotMatch(source, /saveState|setItem|@zos\/storage|COUNTER_IDS/);
   }
 });
@@ -71,7 +82,7 @@ test("all supported locales include extension UI copy and v1.1.6 about text", as
     const catalog = await readProjectFile(`page/i18n/${locale}.po`);
     requiredKeys.forEach((key) => assert.match(catalog, new RegExp(`msgid "${key}"`)));
     assert.match(catalog, /1\.1\.6/);
-    assert.match(catalog, /26/);
+    assert.match(catalog, /27/);
   }
   const simplifiedChinese = await readProjectFile("page/i18n/zh-CN.po");
   assert.match(simplifiedChinese, /msgstr "Z-Tally 运动扩展"/);

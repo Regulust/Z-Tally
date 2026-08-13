@@ -1,9 +1,15 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
+import { DATE_FORMAT_DMY, DATE_FORMAT_MDY, getDateFormat } from "@zos/settings";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
-import { formatLocalDateTime } from "../../../utils/workout-extension-snapshot";
+import {
+  DATE_ORDER_DMY,
+  DATE_ORDER_MDY,
+  DATE_ORDER_YMD,
+  formatLocalDateTime,
+} from "../../../utils/workout-extension-snapshot";
 import { readWorkoutExtensionSnapshot } from "../../../utils/workout-extension-storage";
 
 const COLORS = {
@@ -27,8 +33,17 @@ function countTextSize(value) {
   return TYPOGRAPHY.body;
 }
 
-function timeLabel(key, timestamp) {
-  const formatted = formatLocalDateTime(timestamp);
+function readSystemDateOrder() {
+  try {
+    const format = getDateFormat();
+    if (format === DATE_FORMAT_DMY) return DATE_ORDER_DMY;
+    if (format === DATE_FORMAT_MDY) return DATE_ORDER_MDY;
+  } catch (_error) {}
+  return DATE_ORDER_YMD;
+}
+
+function timeLabel(key, timestamp, dateOrder) {
+  const formatted = formatLocalDateTime(timestamp, dateOrder);
   return formatted ? text(key).replace("{time}", formatted) : "";
 }
 
@@ -106,17 +121,18 @@ Page({
         142,
         336,
         156,
-        fitTextSize(unavailable, 336, 20, 17, 0),
+        TYPOGRAPHY.caption,
         COLORS.textSecondaryInfo,
         hmUI.text_style.WRAP,
       );
       return;
     }
 
+    const dateOrder = readSystemDateOrder();
     const currentLabel = text("workoutExtensionCurrentResult");
     this.addText(currentLabel, 76, 100, 328, 40, fitTextSize(currentLabel, 328, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo);
     this.addText(`${snapshot.currentResult.count}`, 76, 140, 328, 72, countTextSize(snapshot.currentResult.count));
-    const updatedLabel = timeLabel("workoutExtensionUpdatedAt", snapshot.currentResult.updatedAt);
+    const updatedLabel = timeLabel("workoutExtensionUpdatedAt", snapshot.currentResult.updatedAt, dateOrder);
     if (updatedLabel) {
       this.addText(updatedLabel, 72, 216, 336, 42, fitTextSize(updatedLabel, 336, 20, 16, 0), COLORS.textSecondaryInfo);
     }
@@ -132,7 +148,7 @@ Page({
     const lastLabel = text("workoutExtensionLastResult");
     this.addText(lastLabel, 76, 300, 328, 38, fitTextSize(lastLabel, 328, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo);
     this.addText(`${snapshot.lastResult.count}`, 76, 338, 328, 66, countTextSize(snapshot.lastResult.count));
-    const resetLabel = timeLabel("workoutExtensionResetAt", snapshot.lastResult.resetAt);
+    const resetLabel = timeLabel("workoutExtensionResetAt", snapshot.lastResult.resetAt, dateOrder);
     if (resetLabel) {
       this.addText(resetLabel, 72, 408, 336, 40, fitTextSize(resetLabel, 336, 20, 16, 0), COLORS.textSecondaryInfo);
     }

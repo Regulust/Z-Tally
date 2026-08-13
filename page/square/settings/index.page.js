@@ -110,7 +110,7 @@ Page({
       w: 366,
       h: 96,
     }, () => push({ url: "page/square/workout-extension/index.page" }));
-    this.addText(workoutExtensionLabel, 12, 24, 292, 48, fitTextSize(workoutExtensionLabel, 292, 30, 18), COLORS.textTitle, hmUI.align.LEFT, workoutExtensionRow);
+    this.addText(workoutExtensionLabel, 12, 24, 292, 48, 30, COLORS.textTitle, hmUI.align.LEFT, workoutExtensionRow);
     this.addText("›", 326, 12, 28, 72, TYPOGRAPHY.title1, COLORS.textArrow, hmUI.align.CENTER_H, workoutExtensionRow);
 
     const tutorialRow = createInteractiveRow(list, {
