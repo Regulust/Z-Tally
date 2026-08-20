@@ -85,6 +85,12 @@ msgstr "上次結果"
 msgid "workoutExtensionResetAt"
 msgstr "歸零時間：{time}"
 
+msgid "workoutExtensionCountHistory"
+msgstr "計數歷史"
+
+msgid "workoutExtensionNoHistory"
+msgstr "暫無計數歷史"
+
 msgid "workoutExtensionUnavailable"
 msgstr "可以安裝 Z-Tally 運動擴展版，在此可查看其計數結果"
 
@@ -98,7 +104,7 @@ msgid "aboutFeatures"
 msgstr "快速計數 • 本機歷史"
 
 msgid "version"
-msgstr "版本 1.2.0（code 28）"
+msgstr "版本 1.2.1（code 29）"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

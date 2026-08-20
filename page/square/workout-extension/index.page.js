@@ -1,15 +1,22 @@
 import * as hmUI from "@zos/ui";
 import { getText } from "@zos/i18n";
-import { DATE_FORMAT_DMY, DATE_FORMAT_MDY, getDateFormat } from "@zos/settings";
+import {
+  DATE_FORMAT_DMY,
+  DATE_FORMAT_MDY,
+  TIME_FORMAT_12,
+  getDateFormat,
+  getTimeFormat,
+} from "@zos/settings";
 import { TYPOGRAPHY } from "../../../utils/theme";
 import { fitTextSize } from "../../../utils/text-layout";
 import { applyStoredScreenBrightTime } from "../../../utils/screen-bright";
+import { formatLocalDateTime } from "../../../utils/workout-extension-snapshot";
 import {
-  DATE_ORDER_DMY,
-  DATE_ORDER_MDY,
-  DATE_ORDER_YMD,
-  formatLocalDateTime,
-} from "../../../utils/workout-extension-snapshot";
+  dateOrderFromSystem,
+  historyCountTextSize,
+  resetTimeLines,
+  timeOrderFromSystem,
+} from "../../../utils/workout-extension-view";
 import { readWorkoutExtensionSnapshot } from "../../../utils/workout-extension-storage";
 
 const COLORS = {
@@ -19,6 +26,10 @@ const COLORS = {
   divider: 0x2a2c30,
 };
 
+const HISTORY_START_Y = 224;
+const HISTORY_ROW_HEIGHT = 76;
+const FOOTER_HEIGHT = 104;
+
 let widgets = [];
 let isBuilt = false;
 
@@ -26,25 +37,38 @@ function text(key) {
   return getText(key) || key;
 }
 
-function countTextSize(value) {
+function currentCountTextSize(value) {
   const digits = `${value}`.length;
-  if (digits <= 5) return TYPOGRAPHY.largeTitle;
-  if (digits <= 8) return TYPOGRAPHY.title1;
-  return TYPOGRAPHY.body;
+  if (digits <= 4) return 42;
+  if (digits <= 7) return 34;
+  if (digits <= 10) return 27;
+  return 22;
 }
 
-function readSystemDateOrder() {
+function readSystemFormats() {
+  let dateFormat;
+  let timeFormat;
   try {
-    const format = getDateFormat();
-    if (format === DATE_FORMAT_DMY) return DATE_ORDER_DMY;
-    if (format === DATE_FORMAT_MDY) return DATE_ORDER_MDY;
+    dateFormat = getDateFormat();
   } catch (_error) {}
-  return DATE_ORDER_YMD;
+  try {
+    timeFormat = getTimeFormat();
+  } catch (_error) {}
+  return {
+    dateOrder: dateOrderFromSystem(dateFormat, DATE_FORMAT_DMY, DATE_FORMAT_MDY),
+    timeOrder: timeOrderFromSystem(timeFormat, TIME_FORMAT_12),
+  };
 }
 
-function timeLabel(key, timestamp, dateOrder) {
-  const formatted = formatLocalDateTime(timestamp, dateOrder);
-  return formatted ? text(key).replace("{time}", formatted) : "";
+function createText(parent, value, options) {
+  return parent.createWidget(hmUI.widget.TEXT, {
+    text: value,
+    color: COLORS.textTitle,
+    align_h: hmUI.align.CENTER_H,
+    align_v: hmUI.align.CENTER_V,
+    text_style: hmUI.text_style.NONE,
+    ...options,
+  });
 }
 
 Page({
@@ -76,21 +100,6 @@ Page({
     return created;
   },
 
-  addText(value, x, y, w, h, size, color = COLORS.textTitle, style = hmUI.text_style.NONE) {
-    return this.addWidget(hmUI.widget.TEXT, {
-      text: value,
-      x,
-      y,
-      w,
-      h,
-      color,
-      text_size: size,
-      align_h: hmUI.align.CENTER_H,
-      align_v: hmUI.align.CENTER_V,
-      text_style: style,
-    });
-  },
-
   clearWidgets() {
     widgets.slice().reverse().forEach((item) => {
       try {
@@ -110,46 +119,141 @@ Page({
       h: 386,
       color: COLORS.background,
     });
+    const list = this.addWidget(hmUI.widget.VIEW_CONTAINER, {
+      x: 0,
+      y: 64,
+      w: 390,
+      h: 386,
+      scroll_enable: 1,
+      bounce: 0,
+    });
 
     const snapshot = readWorkoutExtensionSnapshot();
     if (!snapshot) {
-      const unavailable = text("workoutExtensionUnavailable");
-      this.addText(
-        unavailable,
-        42,
-        154,
-        306,
-        144,
-        TYPOGRAPHY.caption,
-        COLORS.textSecondaryInfo,
-        hmUI.text_style.WRAP,
-      );
+      createText(list, text("workoutExtensionUnavailable"), {
+        x: 40,
+        y: 82,
+        w: 310,
+        h: 144,
+        color: COLORS.textSecondaryInfo,
+        text_size: TYPOGRAPHY.caption,
+        text_style: hmUI.text_style.WRAP,
+      });
+      list.createWidget(hmUI.widget.FILL_RECT, {
+        x: 0,
+        y: 270,
+        w: 390,
+        h: 116,
+        color: COLORS.background,
+      });
+      this.addWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
       return;
     }
 
-    const dateOrder = readSystemDateOrder();
+    const { dateOrder, timeOrder } = readSystemFormats();
     const currentLabel = text("workoutExtensionCurrentResult");
-    this.addText(currentLabel, 40, 92, 310, 38, fitTextSize(currentLabel, 310, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo);
-    this.addText(`${snapshot.currentResult.count}`, 40, 130, 310, 66, countTextSize(snapshot.currentResult.count));
-    const updatedLabel = timeLabel("workoutExtensionUpdatedAt", snapshot.currentResult.updatedAt, dateOrder);
-    if (updatedLabel) {
-      this.addText(updatedLabel, 36, 198, 318, 38, fitTextSize(updatedLabel, 318, 19, 15, 0), COLORS.textSecondaryInfo);
+    createText(list, currentLabel, {
+      x: 36,
+      y: 12,
+      w: 318,
+      h: 36,
+      color: COLORS.textSecondaryInfo,
+      text_size: fitTextSize(currentLabel, 318, TYPOGRAPHY.caption, 18),
+    });
+    createText(list, `${snapshot.currentResult.count}`, {
+      x: 24,
+      y: 50,
+      w: 126,
+      h: 64,
+      text_size: currentCountTextSize(snapshot.currentResult.count),
+    });
+    const updatedAt = formatLocalDateTime(snapshot.currentResult.updatedAt, dateOrder, timeOrder);
+    if (updatedAt) {
+      const updatedLabel = text("workoutExtensionUpdatedAt").replace("{time}", updatedAt);
+      createText(list, updatedLabel, {
+        x: 164,
+        y: 50,
+        w: 202,
+        h: 64,
+        color: COLORS.textSecondaryInfo,
+        text_size: fitTextSize(updatedLabel, 202, 18, 14, 4),
+        text_style: hmUI.text_style.WRAP,
+      });
     }
 
-    if (!snapshot.lastResult) return;
-    this.addWidget(hmUI.widget.FILL_RECT, {
+    list.createWidget(hmUI.widget.FILL_RECT, {
       x: 105,
-      y: 258,
+      y: 144,
       w: 180,
       h: 2,
       color: COLORS.divider,
     });
-    const lastLabel = text("workoutExtensionLastResult");
-    this.addText(lastLabel, 40, 270, 310, 36, fitTextSize(lastLabel, 310, TYPOGRAPHY.caption, 18), COLORS.textSecondaryInfo);
-    this.addText(`${snapshot.lastResult.count}`, 40, 306, 310, 62, countTextSize(snapshot.lastResult.count));
-    const resetLabel = timeLabel("workoutExtensionResetAt", snapshot.lastResult.resetAt, dateOrder);
-    if (resetLabel) {
-      this.addText(resetLabel, 36, 372, 318, 38, fitTextSize(resetLabel, 318, 19, 15, 0), COLORS.textSecondaryInfo);
+    const historyLabel = text("workoutExtensionCountHistory");
+    createText(list, historyLabel, {
+      x: 36,
+      y: 164,
+      w: 318,
+      h: 38,
+      color: COLORS.textSecondaryInfo,
+      text_size: fitTextSize(historyLabel, 318, TYPOGRAPHY.caption, 18),
+    });
+
+    if (snapshot.resetHistory.length === 0) {
+      createText(list, text("workoutExtensionNoHistory"), {
+        x: 40,
+        y: HISTORY_START_Y,
+        w: 310,
+        h: 68,
+        color: COLORS.textSecondaryInfo,
+        text_size: TYPOGRAPHY.caption,
+        text_style: hmUI.text_style.WRAP,
+      });
+      list.createWidget(hmUI.widget.FILL_RECT, {
+        x: 0,
+        y: HISTORY_START_Y + HISTORY_ROW_HEIGHT,
+        w: 390,
+        h: FOOTER_HEIGHT,
+        color: COLORS.background,
+      });
+    } else {
+      snapshot.resetHistory.forEach((item, index) => {
+        const y = HISTORY_START_Y + index * HISTORY_ROW_HEIGHT;
+        createText(list, `${item.count}`, {
+          x: 24,
+          y,
+          w: 126,
+          h: 60,
+          text_size: historyCountTextSize(item.count, true),
+        });
+        const resetTime = resetTimeLines(item.resetAt, dateOrder, timeOrder);
+        if (resetTime.date) {
+          createText(list, resetTime.date, {
+            x: 170,
+            y: y + 3,
+            w: 196,
+            h: 27,
+            color: COLORS.textSecondaryInfo,
+            text_size: 19,
+          });
+          createText(list, resetTime.time, {
+            x: 170,
+            y: y + 30,
+            w: 196,
+            h: 27,
+            color: COLORS.textSecondaryInfo,
+            text_size: 19,
+          });
+        }
+      });
+      list.createWidget(hmUI.widget.FILL_RECT, {
+        x: 0,
+        y: HISTORY_START_Y + snapshot.resetHistory.length * HISTORY_ROW_HEIGHT,
+        w: 390,
+        h: FOOTER_HEIGHT,
+        color: COLORS.background,
+      });
     }
+
+    this.addWidget(hmUI.widget.PAGE_SCROLLBAR, { target: list });
   },
 });

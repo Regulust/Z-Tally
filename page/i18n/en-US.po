@@ -85,6 +85,12 @@ msgstr "Last result"
 msgid "workoutExtensionResetAt"
 msgstr "Reset: {time}"
 
+msgid "workoutExtensionCountHistory"
+msgstr "Count history"
+
+msgid "workoutExtensionNoHistory"
+msgstr "No count history"
+
 msgid "workoutExtensionUnavailable"
 msgstr "Install Z-Tally Move to view its count result here."
 
@@ -98,7 +104,7 @@ msgid "aboutFeatures"
 msgstr "Fast counting • Local history"
 
 msgid "version"
-msgstr "Version 1.2.0 (code 28)"
+msgstr "Version 1.2.1 (code 29)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

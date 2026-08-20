@@ -85,6 +85,12 @@ msgstr "Прошлый результат"
 msgid "workoutExtensionResetAt"
 msgstr "Сброшено: {time}"
 
+msgid "workoutExtensionCountHistory"
+msgstr "История счёта"
+
+msgid "workoutExtensionNoHistory"
+msgstr "История счёта пуста"
+
 msgid "workoutExtensionUnavailable"
 msgstr "Установите Z-Tally Move, чтобы видеть здесь результат счёта."
 
@@ -98,7 +104,7 @@ msgid "aboutFeatures"
 msgstr "Быстрый счёт • Локальная история"
 
 msgid "version"
-msgstr "Версия 1.2.0 (код 28)"
+msgstr "Версия 1.2.1 (код 29)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

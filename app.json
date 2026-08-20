@@ -5,8 +5,8 @@
     "appName": "Z-Tally",
     "appType": "app",
     "version": {
-      "code": 28,
-      "name": "1.2.0"
+      "code": 29,
+      "name": "1.2.1"
     },
     "icon": "icon.png",
     "vender": "Regulus",

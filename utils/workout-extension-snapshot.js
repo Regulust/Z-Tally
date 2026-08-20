@@ -2,9 +2,12 @@ export const WORKOUT_EXTENSION_APP_ID = 1123237;
 export const WORKOUT_EXTENSION_STORAGE_PATH = "z-tally-move-share.json";
 export const WORKOUT_EXTENSION_SNAPSHOT_KEY = "counterSnapshot";
 export const WORKOUT_EXTENSION_SCHEMA_VERSION = 1;
+export const WORKOUT_EXTENSION_HISTORY_LIMIT = 10;
 export const DATE_ORDER_YMD = "YMD";
 export const DATE_ORDER_DMY = "DMY";
 export const DATE_ORDER_MDY = "MDY";
+export const TIME_ORDER_12 = "12";
+export const TIME_ORDER_24 = "24";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -28,6 +31,16 @@ function parseRawSnapshot(rawSnapshot) {
   return JSON.parse(rawSnapshot);
 }
 
+function parseResetResult(value) {
+  if (!isRecord(value)) return null;
+  if (!isNonNegativeInteger(value.count)) return null;
+  if (!isTimestamp(value.resetAt)) return null;
+  return {
+    count: value.count,
+    resetAt: value.resetAt,
+  };
+}
+
 export function parseWorkoutExtensionSnapshot(rawSnapshot) {
   try {
     const snapshot = parseRawSnapshot(rawSnapshot);
@@ -39,15 +52,15 @@ export function parseWorkoutExtensionSnapshot(rawSnapshot) {
     if (!isNonNegativeInteger(snapshot.currentResult.count)) return null;
     if (!isTimestamp(snapshot.currentResult.updatedAt)) return null;
 
-    let lastResult = null;
-    if (snapshot.lastResult !== null) {
-      if (!isRecord(snapshot.lastResult)) return null;
-      if (!isNonNegativeInteger(snapshot.lastResult.count)) return null;
-      if (!isTimestamp(snapshot.lastResult.resetAt)) return null;
-      lastResult = {
-        count: snapshot.lastResult.count,
-        resetAt: snapshot.lastResult.resetAt,
-      };
+    const lastResult = parseResetResult(snapshot.lastResult);
+    let resetHistory;
+    if (Array.isArray(snapshot.resetHistory)) {
+      resetHistory = snapshot.resetHistory
+        .map(parseResetResult)
+        .filter(Boolean)
+        .slice(0, WORKOUT_EXTENSION_HISTORY_LIMIT);
+    } else {
+      resetHistory = lastResult ? [lastResult] : [];
     }
 
     return {
@@ -59,6 +72,7 @@ export function parseWorkoutExtensionSnapshot(rawSnapshot) {
         updatedAt: snapshot.currentResult.updatedAt,
       },
       lastResult,
+      resetHistory,
     };
   } catch (_error) {
     return null;
@@ -95,17 +109,37 @@ export function readWorkoutExtensionSnapshotWith(createStorage) {
   }
 }
 
-export function formatLocalDateTime(timestamp, dateOrder = DATE_ORDER_YMD) {
+export function formatLocalDate(timestamp, dateOrder = DATE_ORDER_YMD) {
   if (!isTimestamp(timestamp) || timestamp === 0) return "";
   const date = new Date(timestamp);
   const pad = (value) => `${value}`.padStart(2, "0");
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1);
   const day = pad(date.getDate());
-  const dateText = dateOrder === DATE_ORDER_DMY
+  return dateOrder === DATE_ORDER_DMY
     ? `${day}-${month}-${year}`
     : dateOrder === DATE_ORDER_MDY
       ? `${month}-${day}-${year}`
       : `${year}-${month}-${day}`;
-  return `${dateText} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+export function formatLocalTime(timestamp, timeOrder = TIME_ORDER_24) {
+  if (!isTimestamp(timestamp) || timestamp === 0) return "";
+  const date = new Date(timestamp);
+  const pad = (value) => `${value}`.padStart(2, "0");
+  const hours = date.getHours();
+  if (timeOrder === TIME_ORDER_12) {
+    return `${pad(hours % 12 || 12)}:${pad(date.getMinutes())} ${hours < 12 ? "AM" : "PM"}`;
+  }
+  return `${pad(hours)}:${pad(date.getMinutes())}`;
+}
+
+export function formatLocalDateTime(
+  timestamp,
+  dateOrder = DATE_ORDER_YMD,
+  timeOrder = TIME_ORDER_24,
+) {
+  const dateText = formatLocalDate(timestamp, dateOrder);
+  const timeText = formatLocalTime(timestamp, timeOrder);
+  return dateText && timeText ? `${dateText} ${timeText}` : "";
 }
