@@ -98,7 +98,7 @@ msgid "aboutFeatures"
 msgstr "Fast counting • Local history"
 
 msgid "version"
-msgstr "Version 1.1.6 (code 27)"
+msgstr "Version 1.2.0 (code 28)"
 
 msgid "targetDevice"
 msgstr "For Amazfit"

@@ -13,8 +13,8 @@ async function readProjectFile(relativePath) {
 test("registers the independent round and square routes and release identity", async () => {
   const app = JSON.parse(await readProjectFile("app.json"));
   const pkg = JSON.parse(await readProjectFile("package.json"));
-  assert.deepEqual(app.app.version, { code: 27, name: "1.1.6" });
-  assert.equal(pkg.version, "1.1.6");
+  assert.deepEqual(app.app.version, { code: 28, name: "1.2.0" });
+  assert.equal(pkg.version, "1.2.0");
   assert.ok(app.targets.round.module.page.pages.includes("page/round/workout-extension/index.page"));
   assert.ok(app.targets.square.module.page.pages.includes("page/square/workout-extension/index.page"));
 });
@@ -68,7 +68,7 @@ test("round and square result layouts retain their respective safe canvases", as
   assert.match(square, /x: 0,[\s\S]*y: 64/);
 });
 
-test("all supported locales include extension UI copy and v1.1.6 about text", async () => {
+test("all supported locales include extension UI copy and v1.2.0 about text", async () => {
   const locales = ["en-US", "zh-CN", "zh-TW", "de-DE", "es-ES", "it-IT", "pt-PT", "ru-RU"];
   const requiredKeys = [
     "workoutExtension",
@@ -81,10 +81,18 @@ test("all supported locales include extension UI copy and v1.1.6 about text", as
   for (const locale of locales) {
     const catalog = await readProjectFile(`page/i18n/${locale}.po`);
     requiredKeys.forEach((key) => assert.match(catalog, new RegExp(`msgid "${key}"`)));
-    assert.match(catalog, /1\.1\.6/);
-    assert.match(catalog, /27/);
+    assert.match(catalog, /1\.2\.0/);
+    assert.match(catalog, /28/);
   }
   const simplifiedChinese = await readProjectFile("page/i18n/zh-CN.po");
   assert.match(simplifiedChinese, /msgstr "Z-Tally 运动扩展"/);
   assert.match(simplifiedChinese, /可以安装 Z-Tally运动扩展版，此处可以查看其计数结果/);
+});
+
+test("changelog records the 1.2.0 read-only Move integration", async () => {
+  const changelog = await readProjectFile("CHANGELOG.md");
+  assert.match(changelog, /## 1\.2\.0/);
+  assert.match(changelog, /version code 28/i);
+  assert.match(changelog, /read-only/i);
+  assert.match(changelog, /Z-Tally Move/);
 });
